@@ -22,7 +22,7 @@ let total_size =
     (fun _ a -> ignore (Unix.close_process_in inp); a)
 
 type app_state = {
-  compl: completion_state;
+  compl: state;
   prompt: string;
 }
 let draw_matches state =
@@ -30,7 +30,8 @@ let draw_matches state =
     | [] -> []
     | ({display} as candidate, rest) :: q -> 
        let size = fst (Graphics.text_size (display ^ " ")) in
-       if Graphics.(current_x () + size) > total_size then
+       Printf.printf "%d ≟ %d\n" (Graphics.current_x() + size) total_size;
+       if Graphics.(index + size) > total_size then
         []
       else
         (candidate, rest) :: go (index + size) q
@@ -47,13 +48,9 @@ let draw_matches state =
 
 let init_state = {
   prompt = "Prompt:";
-  compl = {
-    before_cursor = ""; after_cursor = "";
-    sources = [[], S (((), []), 
-                      Completion.concat " " 
-                        (from_list ["firefox", "firefox"; "cp", "cp"]) (kleene "," filename))];
-    matches = [];
-  }
+  compl = make_state Sources.(
+    [concat " " 
+        binaries (kleene "," filename)])
 }
 let rec main state =
   draw_matches state;
