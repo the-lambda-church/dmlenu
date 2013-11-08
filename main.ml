@@ -49,7 +49,9 @@ let init_state = {
   prompt = "Prompt:";
   compl = {
     before_cursor = ""; after_cursor = "";
-    sources = [[], filename];
+    sources = [[], S (((), []), 
+                      Completion.concat " " 
+                        (from_list ["firefox", "firefox"; "cp", "cp"]) (kleene "," filename))];
     matches = [];
   }
 }
@@ -61,9 +63,10 @@ let rec main state =
       print_endline 
         (if state.compl.matches = [] then state.compl.before_cursor
          else (fst (List.hd state.compl.matches)).display)
-    | (* backspace *) '\t' -> main { state with compl = complete state.compl }
+    | (* complete *) '\t' -> main { state with compl = complete state.compl }
     | (* backspace *) '\b' -> main { state with compl = remove state.compl }
-    | (* backspace *) '<' -> main { state with compl = left state.compl }
+    | (* left *) '<' -> main { state with compl = left state.compl }
+    | (* right *) '>' -> main { state with compl = right state.compl }
     | (* any other *) c -> main { state with compl = add_char c state.compl }
 
 let _ = main init_state
