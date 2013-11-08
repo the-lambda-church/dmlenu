@@ -39,7 +39,7 @@ let draw_matches state =
   Graphics.set_window_title "dmlenu";
   Graphics.moveto 0 0;
   Graphics.(draw_string 
-              (Printf.sprintf "%s%s%s  " state.prompt 
+              (Printf.sprintf "%s%s|%s  " state.prompt 
                  state.compl.before_cursor state.compl.after_cursor));
   List.iter draw_match (go (Graphics.current_x()) state.compl.matches)
 
@@ -51,7 +51,6 @@ let init_state = {
     before_cursor = ""; after_cursor = "";
     sources = [[], filename];
     matches = [];
-    separator = "/"
   }
 }
 let rec main state =
@@ -64,6 +63,7 @@ let rec main state =
          else (fst (List.hd state.compl.matches)).display)
     | (* backspace *) '\t' -> main { state with compl = complete state.compl }
     | (* backspace *) '\b' -> main { state with compl = remove state.compl }
+    | (* backspace *) '<' -> main { state with compl = left state.compl }
     | (* any other *) c -> main { state with compl = add_char c state.compl }
 
 let _ = main init_state
