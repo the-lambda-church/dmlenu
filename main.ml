@@ -30,7 +30,6 @@ let draw_matches state =
     | [] -> []
     | ({display} as candidate, rest) :: q -> 
        let size = fst (Graphics.text_size (display ^ " ")) in
-       Printf.printf "%d ≟ %d\n" (Graphics.current_x() + size) total_size;
        if Graphics.(index + size) > total_size then
         []
       else
