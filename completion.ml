@@ -30,53 +30,59 @@ type state = {
 
   
 let compute_matches before after sources = 
-  let candidates = List.concat (List.map fst sources) in
-  let matches = List.filter_map (fun candidate ->
+  let aux candidate =
     match candidate.matching_function before after with
     | None -> None
-    | Some list -> Some (candidate, list)) candidates in
-  matches
-
-let on_modify state = 
-  let sources = List.map (fun (candidates, ST (sstate, source)) ->
-    let new_state, candidates = source.compute sstate state.before_cursor state.after_cursor in
-      candidates, ST (new_state, source)) state.sources
+    | Some list -> Some (candidate, list)
   in
-  let matches = compute_matches state.before_cursor state.after_cursor sources in
-  { state with matches; sources }
+  List.filter_map aux (List.concat (List.map fst sources))
+
+let on_modify st = 
+  let sources =
+    List.map (fun (candidates, ST (sstate, source)) ->
+        let new_state, candidates =
+          source.compute sstate st.before_cursor st.after_cursor
+        in
+        candidates, ST (new_state, source)
+      ) st.sources
+  in
+  let matches = compute_matches st.before_cursor st.after_cursor sources in
+  { st with matches ; sources }
 
 let make_state sources = 
-  on_modify
-    { before_cursor = "";
-      after_cursor = "";
-      sources = List.map (fun (S s) -> [], ST (s.default, s)) sources;
-      matches = [] }
-let add_char c state = 
-  on_modify { state with before_cursor = state.before_cursor ^ String.of_char c }
-  
+  on_modify {
+    before_cursor = "";
+    after_cursor = "";
+    sources = List.map (fun (S s) -> [], ST (s.default, s)) sources;
+    matches = [];
+  }
+
+let add_char c st = 
+  on_modify { st with before_cursor = st.before_cursor ^ String.of_char c }
 
 let remove state = 
-  if state.before_cursor = "" then state
-  else
-    on_modify { state with before_cursor = String.rchop state.before_cursor }
+  if state.before_cursor = "" then state else
+  on_modify { state with before_cursor = String.rchop state.before_cursor }
+
 let complete state = 
   let candidate = (fst (List.hd state.matches)) in
-  let before, after = candidate.completion_function state.before_cursor state.after_cursor in
-  on_modify { state with before_cursor = before; after_cursor = after }
+  let before_cursor, after_cursor =
+    candidate.completion_function state.before_cursor state.after_cursor
+  in
+  on_modify { state with before_cursor ; after_cursor }
 
 let left state = 
-  if state.before_cursor <> "" then
-    let c = state.before_cursor.[String.length state.before_cursor-1] in
-     on_modify { state with before_cursor = String.rchop state.before_cursor;
-       after_cursor = String.of_char c ^ state.after_cursor }
-  else
-    state
+  if state.before_cursor = "" then state else
+  let c = state.before_cursor.[String.length state.before_cursor - 1] in
+  on_modify { state with
+    before_cursor = String.rchop state.before_cursor;
+    after_cursor  = String.of_char c ^ state.after_cursor;
+  }
   
 let right state = 
-  if state.after_cursor <> "" then
-    let c = state.after_cursor.[0] in
-     on_modify { state with before_cursor = state.before_cursor ^ String.of_char c;
-       after_cursor = String.lchop state.after_cursor }
-  else
-    state
-  
+  if state.after_cursor = "" then state else
+  let c = state.after_cursor.[0] in
+  on_modify { state with
+    before_cursor = state.before_cursor ^ String.of_char c;
+    after_cursor  = String.lchop state.after_cursor;
+  }
