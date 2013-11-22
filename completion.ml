@@ -57,8 +57,9 @@ let make_state sources =
     matches = [];
   }
 
-let add_char c st = 
-  on_modify { st with before_cursor = st.before_cursor ^ String.of_char c }
+let add_string s state = 
+  on_modify { state with before_cursor = state.before_cursor ^ s }
+  
 
 let remove state = 
   if state.before_cursor = "" then state else

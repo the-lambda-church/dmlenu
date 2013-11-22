@@ -50,7 +50,7 @@ type state = {
 val make_state: ex_source list -> state
 (** Creates an initial state out of a list of sources *)
 
-val add_char : char -> state -> state
+val add_string : string -> state -> state
 (** Computes the new state corresponding to the user pressing a character *)
 
 (** {3 Edition commands} *)

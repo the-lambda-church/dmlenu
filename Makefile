@@ -1,7 +1,10 @@
-BIN=completion.cmo sources.cmo main.cmo
+BIN=draw.cmo completion.cmo sources.cmo main.cmo
 OCAMLC=ocamlfind ocamlc -package graphics,batteries -g
-dmlenu: $(BIN:.cmo=.cmi) $(BIN)
-	$(OCAMLC) $(BIN) -o dmlenu -linkpkg
+OBJECTS=draw.o draw-ml.o
+%.o: %.c
+	ocamlc -c $< -o $@ -g
+dmlenu: $(OBJECTS) $(BIN:.cmo=.cmi) $(BIN)
+	$(OCAMLC) -custom $(OBJECTS) -cclib -lX11 $(BIN) -o dmlenu -linkpkg -g
 
 %.cmo: %.ml
 	$(OCAMLC) -c $< -o $@
@@ -10,4 +13,4 @@ dmlenu: $(BIN:.cmo=.cmi) $(BIN)
 	$(OCAMLC) -c $< -o $@
 
 clean:
-	rm *cm*
+	rm -f *cm*

@@ -3,16 +3,13 @@ open Batteries
 open Completion
 (* Variable to be made parametric *)
 let prompt = ref "Prompt:"
-let draw_match (candidate, list) =
-  try
-    List.iter (fun (b, start, stop) ->
-      if b then Graphics.(set_color red)
-      else Graphics.(set_color black);
-      Graphics.draw_string 
-        (String.sub candidate.display start (stop - start)))
-    list;
-  Graphics.draw_string "  "
-  with _ -> ()
+let bg = try Sys.getenv "DMENU_NORMAL_BACKGROUND" with _ -> "#ffffff"
+let fg = try Sys.getenv "DMENU_NORMAL_FOREGROUND" with _ -> "#000000"
+let bg_focus = try Sys.getenv "DMENU_FOCUS_BACKGROUND" with _ -> "#ff0000"
+let fg_focus = try Sys.getenv "DMENU_FOCUS_FOREGROUND" with _ -> "#000000"
+let fg_match = try Sys.getenv "DMENU_FOCUS_FOREGROUND_MATCH" with _ -> "#ff0000"
+let draw_match x (candidate, list) =
+  10+Draw.draw_text candidate.display x list (fg, fg_match, bg)
   
 let total_size = 
   let inp = Unix.open_process_in ~autoclose: true
@@ -29,20 +26,21 @@ let draw_matches state =
   let rec go index = function
     | [] -> []
     | ({display} as candidate, rest) :: q -> 
-       let size = fst (Graphics.text_size (display ^ " ")) in
-       if Graphics.(index + size) > total_size then
+       let size = Draw.size (display) + 10 in
+       if (index + size) > Draw.width () then
         []
       else
         (candidate, rest) :: go (index + size) q
   in
-  Graphics.open_graph (Printf.sprintf " %dx8" total_size);
-  Graphics.set_window_title "dmlenu";
-  Graphics.moveto 0 0;
-  Graphics.(draw_string 
-              (Printf.sprintf "%s%s|%s  " state.prompt 
-                 state.compl.before_cursor state.compl.after_cursor));
-  List.iter draw_match (go (Graphics.current_x()) state.compl.matches)
+  let x = 0 in
+  let x = Draw.(text ~x ~fg:fg_focus ~bg:bg_focus "%s" state.prompt) in
+  let x = 5+Draw.(text ~x ~fg ~bg "%s|%s" state.compl.before_cursor state.compl.after_cursor) in
+    ignore (List.fold_left draw_match x (go x state.compl.matches))
 
+let draw_window state =
+  Draw.clear "#000000";
+  draw_matches state;
+  Draw.mapdc ()  
 (*let candidates = IO.lines_of stdin |> List.of_enum*)
 
 let init_state = {
@@ -51,18 +49,15 @@ let init_state = {
     [concat " " 
         binaries (kleene "," filename)])
 }
-let rec main state =
-  draw_matches state;
-  match Graphics.read_key ()  with
-    | (* escape *) '\027' -> Graphics.close_graph ()
-    | (* enter *) '\r' -> 
-      print_endline 
-        (if state.compl.matches = [] then state.compl.before_cursor
-         else (fst (List.hd state.compl.matches)).display)
-    | (* complete *) '\t' -> main { state with compl = complete state.compl }
-    | (* backspace *) '\b' -> main { state with compl = remove state.compl }
-    | (* left *) '<' -> main { state with compl = left state.compl }
-    | (* right *) '>' -> main { state with compl = right state.compl }
-    | (* any other *) c -> main { state with compl = add_char c state.compl }
 
-let _ = main init_state
+let state = ref init_state
+let _ = Draw.setup true "#000000" 0; ignore (Draw.grabkeys ()); draw_window !state;
+  Draw.run (fun (k, s) -> 
+    state := { !state with compl = (match k with (* fuck you *)
+    | 0xff08 -> remove
+    | 0xff09 -> complete
+    | 0xff51 -> left
+    | 0xff53 -> right
+    | _ -> add_string s) !state.compl };
+    draw_window !state)
+  
