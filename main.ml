@@ -116,6 +116,10 @@ let run stdin bottom focus_foreground focus_background
     | 0xff09 -> complete
     | 0xff51 -> left
     | 0xff53 -> right
+    | 0xff0d -> fun {matches; before_cursor; after_cursor} ->
+      print_endline (try (fst (List.hd matches)).real;
+      with _ -> before_cursor ^ after_cursor);
+      exit 0
     | _ -> add_string s) !state.compl };
     draw_window conf !state)
   
