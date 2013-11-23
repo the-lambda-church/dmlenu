@@ -2,17 +2,16 @@
 open Batteries
 open Completion
 open Cmdliner
-
 module Parameter = struct
     let prompt = 
       let doc = "Prompt of the menu" in
       Arg.(value & opt string "" & info ["p"; "prompt"] ~docv: "PROMPT" ~doc)
     let normal_background_default = 
-      try Sys.getenv "DMENU_NORMAL_BACKGROUND" with _ -> "#ffffff"
+      try Sys.getenv "DMENU_NORMAL_BACKGROUND" with _ -> "#222222"
     let normal_foreground_default = 
-      try Sys.getenv "DMENU_NORMAL_FOREGROUND" with _ -> "#000000"
-    let focus_background_default = try Sys.getenv "DMENU_FOCUS_BACKGROUND" with _ -> "#ff0000"
-    let focus_foreground_default = try Sys.getenv "DMENU_FOCUS_FOREGROUND" with _ -> "#000000"
+      try Sys.getenv "DMENU_NORMAL_FOREGROUND" with _ -> "#bbbbbb"
+    let focus_background_default = try Sys.getenv "DMENU_FOCUS_BACKGROUND" with _ -> "#005577"
+    let focus_foreground_default = try Sys.getenv "DMENU_FOCUS_FOREGROUND" with _ -> "#eeeeee"
     let match_foreground_default = try Sys.getenv "DMENU_FOCUS_FOREGROUND_MATCH" with _ -> "#ff0000"
 
     let window_background = "#000000"
