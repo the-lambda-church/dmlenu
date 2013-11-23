@@ -26,3 +26,4 @@ val from_list : (string * string) list -> t
 val kleene : string -> (t -> t)
 val concat : string -> t -> t -> t
 val binaries : t
+val stdin : ?sep: string -> unit -> t

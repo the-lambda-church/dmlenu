@@ -164,6 +164,12 @@ let concat sep (S source) (S source') =
     | _ -> (s1, s2), []
   in
   S { delay = false; default = (source.default, source'.default) ; compute }
+
+let stdin ?sep () = 
+  IO.lines_of stdin |> Enum.map (fun s ->
+    match sep with
+    | None -> s, s
+    | Some c -> try String.split s ~by: c with _ -> s, s) |> List.of_enum |> from_list
       
 let binaries = 
   let aux s =
