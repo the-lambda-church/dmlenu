@@ -130,41 +130,7 @@ let from_list list =
   in
   S { delay = false; default = (); compute = (fun () _ _ -> (), candidates) }
 
-let reindex_candidates sep = 
-  let reindex_one c = { c with
-    matching_function   = match_in_word sep c.matching_function ;
-    completion_function = complete_in_word sep c.completion_function  ;
-  }
-  in
-  List.map reindex_one
-
-let kleene sep (S source) = 
-  let compute states before after =
-    let { index ; before_inside ; after_inside } = get_word sep before after in
-    let state =
-      try List.assoc index states
-      with Not_found -> source.default
-    in
-    let new_state, lst = source.compute state before_inside after_inside in
-    let candidates = reindex_candidates sep lst in
-    (index, new_state) :: List.filter (fun (k, _) -> k <> index) states, candidates
-  in
-  S { delay = false ; default = [] ; compute }
-
-let concat sep (S source) (S source') =
-  let compute (s1, s2) before after =
-    let {index; before_inside; after_inside} = get_word ~once:true sep before after in
-    match index with
-    | 0 ->
-      let s1', candidates = source.compute s1 before_inside after_inside in
-      (s1', s2), reindex_candidates sep candidates
-    | 1 ->
-      let s2', candidates = source'.compute s2 before_inside after_inside in
-      (s1, s2'), reindex_candidates sep candidates
-    | _ -> (s1, s2), []
-  in
-  S { delay = false; default = (source.default, source'.default) ; compute }
-
+let from_list_ list = List.map (fun x -> x, x) list |> from_list
 let stdin ?sep () = 
   IO.lines_of stdin |> Enum.map (fun s ->
     match sep with
@@ -178,3 +144,53 @@ let binaries =
   in
   String.nsplit ~by:":" (getenv "PATH") |> List.map aux |> List.concat |> from_list
   
+type ('a, 'b) sum = Left of 'a | Right of 'b
+let reindex sep str = 
+  let reindex_one c = { c with
+    matching_function   = match_in_word sep c.matching_function ;
+    completion_function = complete_in_word sep c.completion_function  ;
+    real = str ^ c.real
+  }
+  in List.map reindex_one
+
+let dependant_sum sep (S a) func = 
+  S { delay = false; default = Left (a.default, []);
+      compute = fun state before after ->
+        try
+          let (name, after') = String.split ~by: sep before in
+          let real_name, ST (state, source) = match state with
+          | Right x -> x
+          | Left (state, candidates) -> 
+            let real_name = 
+              try 
+                (List.find (fun c -> c.display = name) candidates).real 
+              with _ -> name
+            in
+            let (S a) = func name in
+            real_name, ST (a.default, a)
+          in
+          let state, data = source.compute state after' after in
+          Right (real_name, ST (state, source)), reindex sep (real_name ^ sep) data
+        with _ -> 
+          let after' = 
+            try 
+              String.split ~by: sep (after) |> fst 
+            with _ -> after in
+          match state with
+          | Left (state, _) -> 
+            let state, data = a.compute state before after' in
+            Left (state, data), reindex sep "" data
+          | Right _ -> 
+            let state, data = a.compute a.default before after' in
+            Left (state, data), reindex sep "" data
+    }
+      
+
+let concat sep s1 s2 = dependant_sum sep s1 (fun _ -> s2)
+let rec kleene sep s = dependant_sum sep s (fun _ -> kleene sep s)
+
+let test = dependant_sum " " binaries
+  (fun binary_name ->
+    let file =  (Sys.getenv "HOME" / ".sources" / binary_name)  in
+      from_list_ (File.lines_of file |> List.of_enum))
+

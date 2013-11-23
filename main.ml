@@ -101,9 +101,9 @@ let run stdin bottom focus_foreground focus_background
     prompt = "Prompt:";
     compl = make_state 
       (if conf.stdin then [Sources.stdin ()]
-       else Sources.( 
-         [concat " " 
-             binaries (kleene "," filename)]))
+       else [Sources.( 
+         concat " " binaries
+           (kleene " " filename))])
   } in
   let state = ref init_state in
   Draw.setup (not conf.bottom) conf.window_background conf.lines; 
