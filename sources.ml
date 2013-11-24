@@ -209,7 +209,10 @@ let paths ~coupled_with =
       let directory =
         let tail = dirname before in
         if before.[0] = '.' then Sys.getcwd () / tail
-        else if before.[0] = '~' then Sys.getenv "HOME" / tail
+        else if before.[0] = '~' then (
+          let home = Sys.getenv "HOME" in
+          if tail = "~" || tail = "~/" then home else home / tail
+        )
         else tail
       in
       (* TODO: add cache as in [filename] *)
