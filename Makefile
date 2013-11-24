@@ -21,9 +21,11 @@ $(CONFIGURE):
 
 install: $(CONFIGURE) dmlenu
 	install dmlenu $(DEST_DIR)/dmlenu
+	install dmlenu_run $(DEST_DIR)/dmlenu_run
 
 uninstall: $(CONFIGURE)
 	rm $(DEST_DIR)/dmlenu
+	rm $(DEST_DIR)/dmlenu_run
 
 clean:
 	rm -f Makefile.config
