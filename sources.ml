@@ -142,7 +142,9 @@ let binaries =
     try Array.to_list (Sys.readdir s) |> List.map (fun s' -> s', s / s')
     with _ -> []
   in
-  String.nsplit ~by:":" (getenv "PATH") |> List.map aux |> List.concat |> from_list
+  String.nsplit ~by:":" (getenv "PATH") |> List.map aux |> List.concat
+  |> List.sort (fun (s1, _) (s2, _) -> String.compare s1 s2)
+  |> from_list
   
 type ('a, 'b) sum = Left of 'a | Right of 'b
 let reindex sep str = 
