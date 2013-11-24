@@ -66,11 +66,14 @@ let remove state =
   on_modify { state with before_cursor = String.rchop state.before_cursor }
 
 let complete state = 
-  let candidate = (fst (List.hd state.matches)) in
-  let before_cursor, after_cursor =
-    candidate.completion_function state.before_cursor state.after_cursor
-  in
-  on_modify { state with before_cursor ; after_cursor }
+  try
+    let candidate = (fst (List.hd state.matches)) in
+    let before_cursor, after_cursor =
+      candidate.completion_function state.before_cursor state.after_cursor
+    in
+    on_modify { state with before_cursor ; after_cursor }
+  with Failure "hd" ->
+    state
 
 let left state = 
   if state.before_cursor = "" then state else
