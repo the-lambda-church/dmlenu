@@ -3,9 +3,6 @@ open Completion
 open Cmdliner
 
 module Parameter = struct
-    let prompt = 
-      let doc = "Prompt of the menu" in
-      Arg.(value & opt string "" & info ["p"; "prompt"] ~docv: "PROMPT" ~doc)
     let normal_background_default = 
       try Sys.getenv "DMENU_NORMAL_BACKGROUND" with _ -> "#222222"
     let normal_foreground_default = 
@@ -16,9 +13,14 @@ module Parameter = struct
 
     let window_background = "#000000"
 
+    let prompt =
+      let doc = "Prompt to be displayed on the left of the input field" in
+      Arg.(value & opt string "" & info ["p"; "prompt"] ~docv:"PROMPT" ~doc)
+
     let normal_background = 
       let doc = "Normal background (for non focused elements)" in
       Arg.(value & opt string normal_background_default & info ["nb"] ~docv: "NB" ~doc)
+
     let focus_background = 
       let doc = "Focus background color (for focused elements)" in
       Arg.(value & opt string focus_background_default & info ["fb"] ~docv: "fB" ~doc)
@@ -63,46 +65,57 @@ type conf = {
   lines: int;
   window_background: string;
 }
+
 let draw_match conf x (candidate, list) =
-  10+Draw.draw_text candidate.display x list (conf.normal_foreground, conf.match_foreground, conf.normal_background)
+  10 + Draw.draw_text candidate.display x list
+         (conf.normal_foreground, conf.match_foreground, conf.normal_background)
   
 type app_state = {
   compl: state;
   prompt: string;
 }
+
 let draw_matches conf state =
   let rec go index = function
     | [] -> []
     | ({display} as candidate, rest) :: q -> 
-       let size = Draw.size (display) + 10 in
-       if (index + size) > Draw.width () then
-        []
-      else
-        (candidate, rest) :: go (index + size) q
+      let size = Draw.size (display) + 10 in
+      if (index + size) > Draw.width () then [] else
+      (candidate, rest) :: go (index + size) q
   in
-  let x = 0 in
-  let x = Draw.(text ~x ~fg:conf.focus_foreground ~bg:conf.focus_background "%s" state.prompt) in
-  let x = 5+Draw.(text ~x ~fg:conf.normal_foreground ~bg:conf.normal_background
-                    "%s|%s" state.compl.before_cursor state.compl.after_cursor) in
-    ignore (List.fold_left (draw_match conf) x (go x state.compl.matches))
+  let x =
+    if state.prompt = "" then 0 else
+    Draw.(text ~x:0 ~fg:conf.focus_foreground ~bg:conf.focus_background "%s" state.prompt)
+  in
+  let x =
+    5 + Draw.(
+      text ~x ~fg:conf.normal_foreground ~bg:conf.normal_background "%s|%s"
+        state.compl.before_cursor state.compl.after_cursor
+    )
+  in
+  ignore (List.fold_left (draw_match conf) x (go x state.compl.matches))
 
 let draw_window conf state =
   Draw.clear "#000000";
   draw_matches conf state;
   Draw.mapdc ()  
 
-let run stdin bottom focus_foreground focus_background 
-    normal_foreground normal_background match_foreground window_background lines = 
-  let conf = { lines; stdin; bottom; focus_foreground; focus_background; normal_foreground;
-               normal_background; match_foreground; window_background } in
+let run prompt stdin bottom focus_foreground focus_background normal_foreground
+      normal_background match_foreground window_background lines = 
+  let conf = {
+    lines; stdin; bottom; focus_foreground; focus_background; normal_foreground;
+    normal_background; match_foreground; window_background
+  }
+  in
   let init_state = {
-    prompt = "Prompt:";
+    prompt ;
     compl = make_state 
       (if conf.stdin then [Sources.stdin ()]
        else [Sources.( 
          concat " " binaries
            (kleene " " filename))])
-  } in
+  }
+  in
   let state = ref init_state in
   Draw.setup (not conf.bottom) conf.window_background conf.lines; 
   ignore (Draw.grabkeys ()); 
@@ -132,13 +145,12 @@ let run stdin bottom focus_foreground focus_background
   
 let info = 
   let doc = "print a menu with customizable completion" in
-  let man  = [] in
-  Term.info "dmlenu" ~version:"0.0" ~doc ~man
+  Term.info "dmlenu" ~version:"0.0" ~doc ~man:[]
 
 let dmlenu =
   Parameter.(
     Term.(
-      pure run $ stdin $  bottom $ focus_foreground $ focus_background $
+      pure run $ prompt $ stdin $  bottom $ focus_foreground $ focus_background $
         normal_foreground $ normal_background $ match_foreground $
         window_background $ lines
     )
