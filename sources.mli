@@ -40,6 +40,10 @@ val concat : string -> t -> t -> t
 val binaries : t
 (** A source that completes a binary of the system *)
 
+val paths : coupled_with:t -> t
+(** A source that complete like [coupled_with] except when what is before the
+    cursor is (syntactically) a path, i.e. start with "/", "~/", or "./" *)
+
 val stdin : ?sep: string -> unit -> t
 (** A source that reads its elements off stdin. If separator is not
     supplied, then there is a candidate per line and the real and

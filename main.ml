@@ -111,9 +111,7 @@ let run prompt stdin bottom focus_foreground focus_background normal_foreground
     prompt ;
     compl = make_state 
       (if conf.stdin then [Sources.stdin ()]
-       else [Sources.( 
-         concat " " binaries
-           (kleene " " filename))])
+       else [Sources.(kleene " " (paths ~coupled_with:binaries))])
   }
   in
   let state = ref init_state in

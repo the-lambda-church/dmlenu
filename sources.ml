@@ -191,6 +191,50 @@ let dependant_sum sep (S a) func =
 let concat sep s1 s2 = dependant_sum sep s1 (fun _ -> s2)
 let rec kleene sep s = dependant_sum sep s (fun _ -> kleene sep s)
 
+let paths ~coupled_with =
+  let (S coupled_with) = coupled_with in
+  let compute state before after =
+    if
+      before <> "" && (
+        before.[0] = '/' ||
+        String.starts_with before "./" ||
+        String.starts_with before "~/"
+      )
+    then (
+      let directory =
+        let tail = dirname before in
+        if before.[0] = '.' then Sys.getcwd () / tail
+        else if before.[0] = '~' then Sys.getenv "HOME" / tail
+        else tail
+      in
+      let files = try Sys.readdir directory with _ -> [||] in
+      let candidates =
+        Array.to_list files |>
+        List.map (fun file ->
+          let real = directory / file in
+          let display =
+            if Sys.file_exists real && Sys.is_directory real then 
+              file ^ "/"
+            else file
+          in
+          let completion_function =
+            complete_in_word ~drop_cont:true "/" (fun _ _ -> display, "")
+          in
+          let matching_function =
+            match_in_word "/" (fun bef aft ->
+              match_strict display (basename (bef^aft)) "")
+          in
+          { display ; real ; completion_function ; matching_function }
+        )
+      in
+      state, candidates
+    ) else (
+      coupled_with.compute state before after
+    )
+  in
+  S { delay = false ; default = coupled_with.default ; compute }
+
+
 let test = dependant_sum " " binaries
   (fun binary_name ->
     let file =  (Sys.getenv "HOME" / ".sources" / binary_name)  in
