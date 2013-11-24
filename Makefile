@@ -1,5 +1,5 @@
 BIN=draw.cmo completion.cmo sources.cmo main.cmo
-OCAMLC=ocamlfind ocamlc -package graphics,batteries,cmdliner -g
+OCAMLC=ocamlfind ocamlc -package batteries,cmdliner -g
 OBJECTS=draw.o draw-ml.o
 %.o: %.c
 	ocamlc -c $< -o $@ -g

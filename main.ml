@@ -1,7 +1,7 @@
-(* :batteries,graphics: *)
 open Batteries
 open Completion
 open Cmdliner
+
 module Parameter = struct
     let prompt = 
       let doc = "Prompt of the menu" in
