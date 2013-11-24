@@ -147,8 +147,9 @@ let binaries =
     try Array.to_list (Sys.readdir s) |> List.filter_map helper
     with _ -> []
   in
+  let lower_compare s1 s2 = String.(compare (lowercase s1) (lowercase s2)) in
   String.nsplit ~by:":" (getenv "PATH") |> List.map aux |> List.concat
-  |> List.sort (fun (s1, _) (s2, _) -> String.compare s1 s2)
+  |> List.sort (fun (s1, _) (s2, _) -> lower_compare s1 s2)
   |> from_list
   
 type ('a, 'b) sum = Left of 'a | Right of 'b
@@ -245,8 +246,21 @@ let paths ~coupled_with =
   S { delay = false ; default = ("", []), coupled_with.default ; compute }
 
 
-let test = dependant_sum " " binaries
-  (fun binary_name ->
-    let file =  (Sys.getenv "HOME" / ".sources" / binary_name)  in
-      from_list_ (File.lines_of file |> List.of_enum))
-
+let binaries_with_subcommands ?prefix () =
+  let prefix =
+    match prefix with
+    | None   -> Sys.getenv "HOME" / ".config/dmlenu"
+    | Some p -> p
+  in
+  let initial = paths ~coupled_with:binaries in
+  let rec get_new_source source_name =
+    let file = prefix / source_name  in
+    let new_src =
+      if Sys.file_exists file then
+        from_list_ (File.lines_of file |> List.of_enum)
+      else
+        initial
+    in
+    dependant_sum " " new_src (fun x -> get_new_source (source_name ^ x))
+  in
+  dependant_sum " " initial get_new_source

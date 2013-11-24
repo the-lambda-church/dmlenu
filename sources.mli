@@ -57,4 +57,4 @@ val dependant_sum : string -> t -> (string -> t) -> t
     which source to use for the remaining part. The two parts are
     separated by [sep]. *)
 
-val test : t
+val binaries_with_subcommands : ?prefix:string -> unit -> t
