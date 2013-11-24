@@ -45,7 +45,7 @@ module Parameter = struct
 
     let bottom = 
       let doc = "If set, display the menu at the bottom of the screen" in
-      Arg.(value & opt bool false & info ["b"; "bottom"] ~docv: "BOTTOM" ~doc)
+      Arg.(value & flag & info ["b"; "bottom"] ~docv: "BOTTOM" ~doc)
 
     let stdin = 
       let doc = "If set, read the candidates off stdin" in
