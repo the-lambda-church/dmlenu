@@ -47,11 +47,11 @@ module Parameter = struct
 
     let bottom = 
       let doc = "If set, display the menu at the bottom of the screen" in
-      Arg.(value & flag & info ["b"; "bottom"] ~docv: "BOTTOM" ~doc)
+      Arg.(value & flag & info ["b"; "bottom"] ~doc)
 
     let stdin = 
       let doc = "If set, read the candidates off stdin" in
-      Arg.(value & opt bool false & info ["s"; "stdin"] ~docv: "STDIN" ~doc)
+      Arg.(value & flag & info ["s"; "stdin"] ~doc)
 end
 
 type conf = {
@@ -109,9 +109,11 @@ let run prompt stdin bottom focus_foreground focus_background normal_foreground
   in
   let init_state = {
     prompt ;
-    compl = make_state 
-      (if conf.stdin then [Sources.stdin ()]
-       else [Sources.(kleene " " (paths ~coupled_with:binaries))])
+    compl =
+      let open Sources in
+      let coupled_with = if conf.stdin then stdin () else binaries in
+      make_state [kleene " " (paths ~coupled_with)]
+      ;
   }
   in
   let state = ref init_state in
