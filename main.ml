@@ -90,8 +90,6 @@ let draw_window conf state =
   Draw.clear "#000000";
   draw_matches conf state;
   Draw.mapdc ()  
-(*let candidates = IO.lines_of stdin |> List.of_enum*)
-
 
 let run stdin bottom focus_foreground focus_background 
     normal_foreground normal_background match_foreground window_background lines = 
@@ -109,26 +107,44 @@ let run stdin bottom focus_foreground focus_background
   Draw.setup (not conf.bottom) conf.window_background conf.lines; 
   ignore (Draw.grabkeys ()); 
   draw_window conf !state;
-  Draw.run (fun (k, s) -> 
-    state := { !state with compl = (match k with (* fuck you *)
+  let compl_fun key str =
+    match key with
+    (* beurk *)
     | 0xff08 -> remove
     | 0xff09 -> complete
     | 0xff51 -> left
     | 0xff53 -> right
-    | 0xff0d -> fun {matches; before_cursor; after_cursor} ->
-      print_endline (try (fst (List.hd matches)).real;
-      with _ -> before_cursor ^ after_cursor);
-      exit 0
-    | _ -> add_string s) !state.compl };
-    draw_window conf !state)
+    | 0xff0d ->
+      begin fun { matches ; before_cursor ; after_cursor ; _ } ->
+        let result =
+          try (fst (List.hd matches)).real
+          with _ -> before_cursor ^ after_cursor
+        in
+        print_endline result ;
+        exit 0
+      end
+    | _ -> add_string str
+  in
+  Draw.run (fun (k, s) -> 
+    state := { !state with compl = compl_fun k s !state.compl } ;
+    draw_window conf !state
+  )
   
 let info = 
   let doc = "print a menu with customizable completion" in
   let man  = [] in
   Term.info "dmlenu" ~version:"0.0" ~doc ~man
 
-let dmlenu = Parameter.(Term.(pure run $ stdin $  bottom $ focus_foreground $ focus_background $
-                                normal_foreground $ normal_background $ match_foreground $ window_background $ lines))
-let _ = match Term.eval (dmlenu, info) with
+let dmlenu =
+  Parameter.(
+    Term.(
+      pure run $ stdin $  bottom $ focus_foreground $ focus_background $
+        normal_foreground $ normal_background $ match_foreground $
+        window_background $ lines
+    )
+  )
+
+let _ =
+  match Term.eval (dmlenu, info) with
   | `Error _ -> exit 1
   | _ -> exit 0
