@@ -198,7 +198,7 @@ let rec kleene sep s = dependant_sum sep s (fun _ -> kleene sep s)
 
 let paths ~coupled_with =
   let (S coupled_with) = coupled_with in
-  let compute state before after =
+  let compute ((old_dir, cache), other_state as state) before after =
     if
       before <> "" && (
         before.[0] = '/' ||
@@ -215,7 +215,7 @@ let paths ~coupled_with =
         )
         else tail
       in
-      (* TODO: add cache as in [filename] *)
+      if directory = old_dir && cache <> [] then state, cache else
       let files = try Sys.readdir directory with _ -> [||] in
       let candidates =
         Array.to_list files |>
@@ -236,12 +236,13 @@ let paths ~coupled_with =
           { display ; real ; completion_function ; matching_function }
         )
       in
-      state, candidates
+      ((directory, candidates), other_state), candidates
     ) else (
-      coupled_with.compute state before after
+      let state', candidates = coupled_with.compute other_state before after in
+      ((old_dir, cache), state'), candidates
     )
   in
-  S { delay = false ; default = coupled_with.default ; compute }
+  S { delay = false ; default = ("", []), coupled_with.default ; compute }
 
 
 let test = dependant_sum " " binaries
