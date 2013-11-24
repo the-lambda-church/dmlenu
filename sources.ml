@@ -139,7 +139,12 @@ let stdin ?sep () =
       
 let binaries = 
   let aux s =
-    try Array.to_list (Sys.readdir s) |> List.map (fun s' -> s', s / s')
+    let helper s' =
+      let full_path = s / s' in
+      let { Unix. st_perm ; _ } = Unix.stat full_path in
+      if st_perm land 1 = 1 then Some (s', full_path) else None
+    in
+    try Array.to_list (Sys.readdir s) |> List.filter_map helper
     with _ -> []
   in
   String.nsplit ~by:":" (getenv "PATH") |> List.map aux |> List.concat
@@ -207,6 +212,7 @@ let paths ~coupled_with =
         else if before.[0] = '~' then Sys.getenv "HOME" / tail
         else tail
       in
+      (* TODO: add cache as in [filename] *)
       let files = try Sys.readdir directory with _ -> [||] in
       let candidates =
         Array.to_list files |>
