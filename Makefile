@@ -1,3 +1,5 @@
+-include Makefile.config
+
 BIN=draw.cmo completion.cmo sources.cmo main.cmo
 OCAMLC=ocamlfind ocamlc -package batteries,cmdliner -g
 OBJECTS=draw.o draw-ml.o
@@ -12,5 +14,21 @@ dmlenu: $(OBJECTS) $(BIN:.cmo=.cmi) $(BIN)
 %.cmi: %.mli
 	$(OCAMLC) -c $< -o $@
 
+CONFIGURE = Makefile.config
+$(CONFIGURE):
+	@echo "Please run ./configure"
+	@false
+
+install: $(CONFIGURE) dmlenu
+	install dmlenu $(DEST_DIR)/dmlenu
+
+uninstall: $(CONFIGURE)
+	rm $(DEST_DIR)/dmlenu
+
 clean:
+	rm -f Makefile.config
 	rm -f *cm*
+	rm -f *.o
+	rm -f dmlenu
+
+.PHONY: clean install uninstall
