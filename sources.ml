@@ -211,7 +211,7 @@ let paths ~coupled_with =
         if before.[0] = '.' then Sys.getcwd () / tail
         else if before.[0] = '~' then (
           let home = Sys.getenv "HOME" in
-          if tail = "~" || tail = "~/" then home else home / tail
+          if tail = "~" then home else home / (String.sub tail 2 (String.length tail - 2))
         )
         else tail
       in
