@@ -1,10 +1,11 @@
 -include Makefile.config
 
-BIN=draw.cmo completion.cmo sources.cmo main.cmo
+BIN=draw.cmo completion.cmo sources.cmo dmlenu.cmo main.cmo
 OCAMLC=ocamlfind ocamlc -package batteries,cmdliner -g
 OBJECTS=draw.o draw-ml.o
 %.o: %.c
 	ocamlc -c $< -o $@ -g
+
 dmlenu: $(OBJECTS) $(BIN:.cmo=.cmi) $(BIN)
 	$(OCAMLC) -custom $(OBJECTS) -cclib -lX11 $(BIN) -o dmlenu -linkpkg -g
 
