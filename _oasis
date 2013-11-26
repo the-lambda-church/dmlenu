@@ -1,0 +1,39 @@
+OASISFormat: 0.3
+OCamlVersion: >= 4.01
+
+Name: Dmlenu
+Version: 0.1
+
+LicenseFile: LICENSE
+License: MIT
+
+Authors:
+  Simon Castellan
+  Thomas Refis
+
+BuildTools: ocamlbuild
+Plugins: META (0.3), DevFiles (0.3)
+
+Synopsis: An OCaml library to easily create dmenu-like applications
+
+Flag application
+  Description: Build a generalist dmenu like application with the library
+  Default: false
+
+Library "dmlenu"
+  Build: true
+  Install: true
+  Path: lib
+  CCLib: -lX11
+  Modules: Completion, Dmlenu, Draw, Sources
+  CSources: draw-ml.c, draw.h, draw.c
+  BuildDepends: batteries
+  XMetaDescription: An OCaml library to easily create dmenu-like applications
+
+Executable "dmlenu"
+  Build$: flag(application)
+  Install$: flag(application)
+  Path: examples
+  MainIs: main.ml
+  BuildDepends: batteries,cmdliner,dmlenu
+  CompiledObject: best

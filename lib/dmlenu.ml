@@ -1,6 +1,5 @@
 open Batteries
 open Completion
-open Cmdliner
 
 type conf = {
   stdin: bool;
