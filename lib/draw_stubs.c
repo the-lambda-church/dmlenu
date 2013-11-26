@@ -11,7 +11,7 @@
 #include <X11/extensions/Xinerama.h>
 #endif
 
-#include "draw.h"
+#include "draw_funs.h"
 
 static DC *dc = NULL;
 static const char *font = NULL;

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <X11/Xlib.h>
-#include "draw.h"
+#include "draw_funs.h"
 
 #define MAX(a, b)  ((a) > (b) ? (a) : (b))
 #define MIN(a, b)  ((a) < (b) ? (a) : (b))
