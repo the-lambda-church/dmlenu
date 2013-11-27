@@ -62,7 +62,15 @@ Executable "dmlenu_subcommands"
   Install:              true
   Path:                 examples
   MainIs:               with_subcommands.ml
-  BuildDepends:         yojson,dmlenu
+  BuildDepends:         dmlenu,dmlenu.extra
+  CompiledObject:       best
+
+Executable "dmlenu_workspaces"
+  Build$:               flag(all)
+  Install:              true
+  Path:                 examples
+  MainIs:               i3_workspaces.ml
+  BuildDepends:         dmlenu,dmlenu.extra
   CompiledObject:       best
 
 Document "dmlenu-api"
