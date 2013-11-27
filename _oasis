@@ -1,11 +1,11 @@
 OASISFormat: 0.3
-OCamlVersion: >= 4.01
+OCamlVersion: >= 4.00.1
 
 Name: Dmlenu
 Version: 0.1
 
-LicenseFile: LICENSE
 License: MIT
+LicenseFile: LICENSE
 
 Authors:
   Simon Castellan
@@ -17,41 +17,46 @@ Plugins: META (0.3), DevFiles (0.3)
 Synopsis: An OCaml library to easily create dmenu-like examples
 
 Flag examples
-  Description: Build a generalist dmenu like examples with the library
-  Default: false
+  Description:  Build a generalist dmenu like examples with the library
+  Default:      false
 
 Library "dmlenu"
-  Build: true
-  Install: true
-  Path: lib
-  CCLib: -lX11
-  InternalModules: Draw
-  Modules: Completion, Dmlenu, Sources
-  CSources: draw_funs.h, draw_funs.c, draw_stubs.c
-  BuildDepends: batteries
-  XMetaDescription: An OCaml library to easily create dmenu-like examples
+  Build:                true
+  Install:              true
+  Path:                 lib
+  CCLib:                -lX11
+  InternalModules:      Draw
+  Modules:              Completion, Dmlenu, Sources
+  CSources:             draw_funs.h, draw_funs.c, draw_stubs.c
+  BuildDepends:         batteries
+  XMetaDescription:     An OCaml library to easily create dmenu-like examples
 
 Executable "dmlenu"
-  Build$: flag(examples)
-  Install: true
-  Path: examples
-  MainIs: main.ml
-  BuildDepends: batteries,cmdliner,dmlenu
-  CompiledObject: best
+  Build$:               flag(examples)
+  Install:              true
+  Path:                 examples
+  MainIs:               main.ml
+  BuildDepends:         batteries,cmdliner,dmlenu
+  CompiledObject:       best
 
 Executable "dmlenu_subcommands"
-  Build$: flag(examples)
-  Install: true
-  Path: examples
-  MainIs: with_subcommands.ml
-  BuildDepends: yojson,dmlenu
-  CompiledObject: best
+  Build$:               flag(examples)
+  Install:              true
+  Path:                 examples
+  MainIs:               with_subcommands.ml
+  BuildDepends:         yojson,dmlenu
+  CompiledObject:       best
 
 Document "dmlenu-api"
-  Title: API reference for Dmlenu
-  Build: true
-  Install: true
-  InstallDir: $htmldir/dmlenu
-  Type: ocamlbuild (0.3)
-  XOCamlbuildPath: ./
+  Title:                API reference for Dmlenu
+  Build:                true
+  Install:              true
+  InstallDir:           $htmldir/dmlenu
+  Type:                 ocamlbuild (0.3)
+  XOCamlbuildPath:      ./
   XOCamlbuildLibraries: dmlenu
+
+SourceRepository head
+  Type:         git
+  Location:     https://github.com/asmanur/dmlenu.git
+  Browser:      https://github.com/asmanur/dmlenu
