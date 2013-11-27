@@ -20,6 +20,14 @@ Flag examples
   Description:  Build a generalist dmenu like examples with the library
   Default:      false
 
+Flag extra
+  Description:  Compile and install extra (environment dependent) sources.
+  Default:      true
+
+Flag all
+  Description:  Equivalent to --enable-examples --enable-extra
+  Default$:     flag(extra) && flag(examples)
+
 Library "dmlenu"
   Build:                true
   Install:              true
@@ -31,8 +39,18 @@ Library "dmlenu"
   BuildDepends:         batteries
   XMetaDescription:     An OCaml library to easily create dmenu-like examples
 
+Library "dmlenu-extra"
+  FindlibName:          extra
+  FindlibParent:        dmlenu
+  Build$:               flag(extra) || flag(all)
+  Install:              true
+  Path:                 lib
+  Modules:              Extra_sources
+  BuildDepends:         dmlenu, yojson
+  XMetaDescription:     Extra sources for the dmlenu library.
+
 Executable "dmlenu"
-  Build$:               flag(examples)
+  Build$:               flag(examples) || flag(all)
   Install:              true
   Path:                 examples
   MainIs:               main.ml
@@ -40,7 +58,7 @@ Executable "dmlenu"
   CompiledObject:       best
 
 Executable "dmlenu_subcommands"
-  Build$:               flag(examples)
+  Build$:               flag(all)
   Install:              true
   Path:                 examples
   MainIs:               with_subcommands.ml
@@ -54,7 +72,7 @@ Document "dmlenu-api"
   InstallDir:           $htmldir/dmlenu
   Type:                 ocamlbuild (0.3)
   XOCamlbuildPath:      ./
-  XOCamlbuildLibraries: dmlenu
+  XOCamlbuildLibraries: dmlenu, dmlenu.extra
 
 SourceRepository head
   Type:         git
