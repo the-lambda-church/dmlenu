@@ -71,7 +71,8 @@ let run prompt stdin bottom focus_foreground focus_background normal_foreground
       ;
   }
   in
-  run init_state conf
+  let inputed = run init_state conf in
+  Printf.printf "%s\n%!" inputed
 
 let info = 
   let doc = "print a menu with customizable completion" in

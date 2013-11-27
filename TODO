@@ -3,7 +3,4 @@
 
 - Selection should return the current input, it should complete beforehand.
 
-- Clean up [Dmenu]: run should return a [string option] instead of printing
-  something (or not) to stdout.
-
 - Add "loose" matching functions

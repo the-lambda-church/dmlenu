@@ -23,6 +23,6 @@ type app_state = {
 
 (** {3 Execution} *)
 
-val run : app_state -> conf -> unit
+val run : app_state -> conf -> string
   (** [run initial_state conf] creates the window and handles user inputs.
-      Outputing the selection on stdout at the end. *)
+      Returns the user selection when it finishes. *)

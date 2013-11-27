@@ -60,6 +60,8 @@ let draw_window conf state =
   draw_matches conf state;
   Draw.mapdc ()  
 
+exception Finished of string
+
 let run (init_state : app_state) (conf : conf) =
   let state = ref init_state in
   Draw.setup (not conf.bottom) conf.window_background conf.lines; 
@@ -78,12 +80,17 @@ let run (init_state : app_state) (conf : conf) =
           try (fst (List.hd matches)).real
           with _ -> before_cursor ^ after_cursor
         in
-        print_endline result ;
-        exit 0
+        raise (Finished result)
       end
     | _ -> add_string str
   in
-  Draw.run (fun (k, s) -> 
-    state := { !state with compl = compl_fun k s !state.compl } ;
-    draw_window conf !state
-  )
+  try
+    Draw.run (fun (k, s) -> 
+      state := { !state with compl = compl_fun k s !state.compl } ;
+      draw_window conf !state
+    ) ;
+    (* [Draw.run] either calls [exit], raise [Finished] or runs forever *)
+    Printf.eprintf "FATAL ERROR: [Draw.run] terminated." ;
+    exit (-1)
+  with Finished result ->
+    result
