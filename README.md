@@ -19,4 +19,5 @@ Building and installing
 Documentation
 -------------
 
-Once `oasis setup` has run, just call `make doc`
+Once `oasis setup` has run, just call `make doc`.  
+Or just go to : http://asmanur.github.io/dmlenu/
