@@ -1,6 +1,5 @@
-B ../_build/examples
-
 PKG cmdliner
 PKG yojson
+PKG dmlenu
 
 REC
