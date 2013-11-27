@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="next" href="Dmlenu.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Completion" rel="Chapter" href="Completion.html">
+<link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
+<link title="Sources" rel="Chapter" href="Sources.html"><title>Completion</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Dmlenu.html" title="Dmlenu">Next</a>
+</div>
+<h1>Module <a href="type_Completion.html">Completion</a></h1>
+
+<pre><span class="keyword">module</span> Completion: <code class="code">sig</code> <a href="Completion.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Completion engine<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEmatch_result"><span class="keyword">type</span> <code class="type"></code>match_result</span> = <code class="type">(bool * int * int) list option</code> </pre>
+<div class="info ">
+This is the interface of the completion engine.
+<p>
+
+    The completion engine works with <a href="Completion.html#TYPEsource"><code class="code">Completion.source</code></a>s that returns <a href="Completion.html#TYPEcandidate"><code class="code">Completion.candidate</code></a>s.<br>
+</div>
+
+
+<pre><code><span id="TYPEcandidate"><span class="keyword">type</span> <code class="type"></code>candidate</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTcandidate.display">display</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The string that should be displayed for the candidate</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTcandidate.real">real</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The string that will be printed out if this candidate is picked</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTcandidate.matching_function">matching_function</span>&nbsp;: <code class="type">string -> string -> <a href="Completion.html#TYPEmatch_result">match_result</a></code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >How to tell if the candidate is matching the current input.
+      Should take the string before and after the cursor and return a
+      list of matching and non matching position in the string</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTcandidate.completion_function">completion_function</span>&nbsp;: <code class="type">string -> string -> string * string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Takes the string before and after the point and return the new
+      string before and after the cursor, after completing this
+      candidate</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+}
+
+<div class="info ">
+A candidate, as returned by sources<br>
+</div>
+
+
+<pre><code><span id="TYPEsource"><span class="keyword">type</span> <code class="type">'a</code> source</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsource.delay">delay</span>&nbsp;: <code class="type">bool</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Should we wait for a delay before computing candidates ?</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsource.default">default</span>&nbsp;: <code class="type">'a</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Default value for the state</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsource.compute">compute</span>&nbsp;: <code class="type">'a -> string -> string -> 'a * <a href="Completion.html#TYPEcandidate">candidate</a> list</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >computes takes the current state, the string before/after the
+      cursor and returns the new state along with a list of candidate</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+}
+
+<div class="info ">
+<h3 id="3_Sources">Sources</h3><br>
+</div>
+
+
+<pre><code><span id="TYPEex_source"><span class="keyword">type</span> <code class="type"></code>ex_source</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTex_source.S"><span class="constructor">S</span></span> <span class="keyword">:</span> <code class="type">'a <a href="Completion.html#TYPEsource">source</a></code> <span class="keyword">-></span> <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Existential closure of <a href="Completion.html#TYPEsource"><code class="code">Completion.source</code></a></td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+
+
+<pre><code><span id="TYPEsource_state"><span class="keyword">type</span> <code class="type"></code>source_state</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsource_state.ST"><span class="constructor">ST</span></span> <span class="keyword">:</span> <code class="type">'a * 'a <a href="Completion.html#TYPEsource">source</a></code> <span class="keyword">-></span> <code class="type"><a href="Completion.html#TYPEsource_state">source_state</a></code></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEstate"><span class="keyword">type</span> <code class="type"></code>state</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstate.before_cursor">before_cursor</span>&nbsp;: <code class="type">string</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstate.after_cursor">after_cursor</span>&nbsp;: <code class="type">string</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstate.sources">sources</span>&nbsp;: <code class="type">(<a href="Completion.html#TYPEcandidate">candidate</a> list * <a href="Completion.html#TYPEsource_state">source_state</a>) list</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstate.matches">matches</span>&nbsp;: <code class="type">(<a href="Completion.html#TYPEcandidate">candidate</a> * (bool * int * int) list) list</code>;</code></td>
+
+</tr></table>
+}
+
+<div class="info ">
+<h2 id="2_State">State</h2>
+<p>
+The state of the completion engine<br>
+</div>
+
+
+<pre><span id="VALmake_state"><span class="keyword">val</span> make_state</span> : <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a> list -> <a href="Completion.html#TYPEstate">state</a></code></pre><div class="info ">
+Creates an initial state out of a list of sources<br>
+</div>
+
+<pre><span id="VALadd_string"><span class="keyword">val</span> add_string</span> : <code class="type">string -> <a href="Completion.html#TYPEstate">state</a> -> <a href="Completion.html#TYPEstate">state</a></code></pre><div class="info ">
+Computes the new state corresponding to the user pressing a character<br>
+</div>
+
+<pre><span id="VALleft"><span class="keyword">val</span> left</span> : <code class="type"><a href="Completion.html#TYPEstate">state</a> -> <a href="Completion.html#TYPEstate">state</a></code></pre><div class="info ">
+<h3 id="3_Editioncommands">Edition commands</h3>
+<p>
+Computes the new state corresponding to the user going left<br>
+</div>
+
+<pre><span id="VALright"><span class="keyword">val</span> right</span> : <code class="type"><a href="Completion.html#TYPEstate">state</a> -> <a href="Completion.html#TYPEstate">state</a></code></pre><div class="info ">
+Computes the new state corresponding to the user going right<br>
+</div>
+
+<pre><span id="VALremove"><span class="keyword">val</span> remove</span> : <code class="type"><a href="Completion.html#TYPEstate">state</a> -> <a href="Completion.html#TYPEstate">state</a></code></pre><div class="info ">
+Computes the new state corresponding to the user removing the
+    character to the right of the cursor<br>
+</div>
+
+<pre><span id="VALcomplete"><span class="keyword">val</span> complete</span> : <code class="type"><a href="Completion.html#TYPEstate">state</a> -> <a href="Completion.html#TYPEstate">state</a></code></pre><div class="info ">
+Computes the new state corresponding to the user completing the entry<br>
+</div>
+</body></html>

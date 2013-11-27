@@ -1,0 +1,155 @@
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Completion" rel="Chapter" href="Completion.html">
+<link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
+<link title="Sources" rel="Chapter" href="Sources.html"><title>Index of values</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Index of values</h1>
+<table>
+<tr><td align="left"><br>A</td></tr>
+<tr><td><a href="Completion.html#VALadd_string">add_string</a> [<a href="Completion.html">Completion</a>]</td>
+<td><div class="info">
+Computes the new state corresponding to the user pressing a character
+</div>
+</td></tr>
+<tr><td><a href="Sources.html#VALadd_subcommand">add_subcommand</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+<code class="code">add_subcommand ~name source</code> adds <code class="code">source</code> under the name <code class="code">name</code> in the
+    list of subcommands used by <code class="code">binaries_with_subcommands</code>
+</div>
+</td></tr>
+<tr><td align="left"><br>B</td></tr>
+<tr><td><a href="Sources.html#VALbinaries">binaries</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+A source that completes a binary of the system
+</div>
+</td></tr>
+<tr><td><a href="Sources.html#VALbinaries_with_subcommands">binaries_with_subcommands</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+Behaves as <code class="code">paths ~coupled_with:binaries</code> for the first completions, then
+    looks in the subcommands list (see <a href="Sources.html#VALadd_subcommand"><code class="code">Sources.add_subcommand</code></a> and
+    <a href="Sources.html#VALset_default_subcommand_hook"><code class="code">Sources.set_default_subcommand_hook</code></a>) for the following completions.
+</div>
+</td></tr>
+<tr><td align="left"><br>C</td></tr>
+<tr><td><a href="Completion.html#VALcomplete">complete</a> [<a href="Completion.html">Completion</a>]</td>
+<td><div class="info">
+Computes the new state corresponding to the user completing the entry
+</div>
+</td></tr>
+<tr><td><a href="Sources.html#VALcomplete_in_word">complete_in_word</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+<code class="code">complete_in_word ?drop_cont separator f</code> completes only in the
+    current word (according to separator).
+</div>
+</td></tr>
+<tr><td><a href="Sources.html#VALconcat">concat</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+<code class="code">concat sep s1 s2</code> builds a new source that completes an element
+    of <code class="code">s1</code> followed by an element of <code class="code">s2</code>, separated by <code class="code">sep</code>
+</div>
+</td></tr>
+<tr><td align="left"><br>D</td></tr>
+<tr><td><a href="Dmlenu.html#VALdefault_conf">default_conf</a> [<a href="Dmlenu.html">Dmlenu</a>]</td>
+<td></td></tr>
+<tr><td><a href="Sources.html#VALdependant_sum">dependant_sum</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+<code class="code">dependant_sum sep s f</code> builds the dependant sum of (s, f), ie.
+</div>
+</td></tr>
+<tr><td align="left"><br>F</td></tr>
+<tr><td><a href="Sources.html#VALfilename">filename</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+A source that completes to filename
+</div>
+</td></tr>
+<tr><td><a href="Sources.html#VALfrom_list">from_list</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+A source built from a list (display, real)
+</div>
+</td></tr>
+<tr><td><a href="Sources.html#VALfrom_list_">from_list_</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+A source built from a list of candidates (display and real are the same)
+</div>
+</td></tr>
+<tr><td align="left"><br>K</td></tr>
+<tr><td><a href="Sources.html#VALkleene">kleene</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+<code class="code">kleene sep s</code> builds a new source that completes
+    finite list of elements in <code class="code">s</code> separated by <code class="code">sep</code>
+</div>
+</td></tr>
+<tr><td align="left"><br>L</td></tr>
+<tr><td><a href="Completion.html#VALleft">left</a> [<a href="Completion.html">Completion</a>]</td>
+<td><div class="info">
+Edition commands
+</div>
+</td></tr>
+<tr><td align="left"><br>M</td></tr>
+<tr><td><a href="Completion.html#VALmake_state">make_state</a> [<a href="Completion.html">Completion</a>]</td>
+<td><div class="info">
+Creates an initial state out of a list of sources
+</div>
+</td></tr>
+<tr><td><a href="Sources.html#VALmatch_in_word">match_in_word</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+<code class="code">match_in_word separator f</code> matches a query if the current word
+    (according to <code class="code">separator</code>) matches f
+</div>
+</td></tr>
+<tr><td><a href="Sources.html#VALmatch_strict">match_strict</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+<code class="code">match_strict s</code> is a matching
+    function that matches only queries that
+    are substrings of <code class="code">s</code>
+</div>
+</td></tr>
+<tr><td align="left"><br>P</td></tr>
+<tr><td><a href="Sources.html#VALpaths">paths</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+A source that complete like <code class="code">coupled_with</code> except when what is before the
+    cursor is (syntactically) a path, i.e.
+</div>
+</td></tr>
+<tr><td align="left"><br>R</td></tr>
+<tr><td><a href="Completion.html#VALremove">remove</a> [<a href="Completion.html">Completion</a>]</td>
+<td><div class="info">
+Computes the new state corresponding to the user removing the
+    character to the right of the cursor
+</div>
+</td></tr>
+<tr><td><a href="Completion.html#VALright">right</a> [<a href="Completion.html">Completion</a>]</td>
+<td><div class="info">
+Computes the new state corresponding to the user going right
+</div>
+</td></tr>
+<tr><td><a href="Dmlenu.html#VALrun">run</a> [<a href="Dmlenu.html">Dmlenu</a>]</td>
+<td><div class="info">
+<code class="code">run initial_state conf</code> creates the window and handles user inputs.
+</div>
+</td></tr>
+<tr><td align="left"><br>S</td></tr>
+<tr><td><a href="Sources.html#VALset_default_subcommand_hook">set_default_subcommand_hook</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+When <code class="code">binaries_with_subcommands</code> doesn't find a subcommand of a given name
+    <code class="code">n</code> it will call the default subcommand hook with the string <code class="code">n</code>.
+</div>
+</td></tr>
+<tr><td><a href="Sources.html#VALstdin">stdin</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+A source that reads its elements off stdin.
+</div>
+</td></tr>
+</table>
+</body>
+</html>
