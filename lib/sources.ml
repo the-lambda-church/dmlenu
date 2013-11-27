@@ -141,8 +141,12 @@ let binaries =
   let aux s =
     let helper s' =
       let full_path = s / s' in
-      let { Unix. st_perm ; _ } = Unix.stat full_path in
-      if st_perm land 1 = 1 then Some (s', full_path) else None
+      try
+        let { Unix. st_perm ; _ } = Unix.stat full_path in
+        if st_perm land 1 = 1 then Some (s', full_path) else None
+      with Unix.Unix_error (Unix.ENOENT, "stat", _) ->
+        (* File doesn't exist... Broken link? *)
+        None
     in
     try Array.to_list (Sys.readdir s) |> List.filter_map helper
     with _ -> []
