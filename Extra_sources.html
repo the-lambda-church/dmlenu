@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Sources.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Completion" rel="Chapter" href="Completion.html">
+<link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
+<link title="Sources" rel="Chapter" href="Sources.html">
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>Extra_sources</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Sources.html" title="Sources">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Module <a href="type_Extra_sources.html">Extra_sources</a></h1>
+
+<pre><span class="keyword">module</span> Extra_sources: <code class="code">sig</code> <a href="Extra_sources.html">..</a> <code class="code">end</code></pre><div class="info module top">
+More specific sources.
+<p>
+
+    These are environment dependent, and require yojson to compile. They are
+    shipped with the <code class="code">dmlenu.extra</code> findlib package.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="VALchromium_bookmarks"><span class="keyword">val</span> chromium_bookmarks</span> : <code class="type">unit -> <a href="Sources.html#TYPEt">Sources.t</a></code></pre><div class="info ">
+Offers completion on bookmarks names, and returns the bookmark url.<br>
+</div>
+
+<pre><span id="VALmpc_playlists"><span class="keyword">val</span> mpc_playlists</span> : <code class="type">unit -> <a href="Sources.html#TYPEt">Sources.t</a></code></pre><div class="info ">
+List of mpc playlists. Completion can then be used with commands like
+    <code class="code">mpc load</code>.<br>
+</div>
+
+<pre><span id="VALi3_workspaces"><span class="keyword">val</span> i3_workspaces</span> : <code class="type">unit -> <a href="Sources.html#TYPEt">Sources.t</a></code></pre><div class="info ">
+List of existing i3 workspaces.<br>
+</div>
+</body></html>
