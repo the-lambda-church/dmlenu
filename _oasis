@@ -14,10 +14,10 @@ Authors:
 BuildTools: ocamldoc, ocamlbuild
 Plugins: META (0.3), DevFiles (0.3)
 
-Synopsis: An OCaml library to easily create dmenu-like applications
+Synopsis: An OCaml library to easily create dmenu-like examples
 
-Flag application
-  Description: Build a generalist dmenu like application with the library
+Flag examples
+  Description: Build a generalist dmenu like examples with the library
   Default: false
 
 Library "dmlenu"
@@ -29,19 +29,19 @@ Library "dmlenu"
   Modules: Completion, Dmlenu, Sources
   CSources: draw_funs.h, draw_funs.c, draw_stubs.c
   BuildDepends: batteries
-  XMetaDescription: An OCaml library to easily create dmenu-like applications
+  XMetaDescription: An OCaml library to easily create dmenu-like examples
 
 Executable "dmlenu"
-  Build$: flag(application)
+  Build$: flag(examples)
   Install: true
   Path: examples
   MainIs: main.ml
   BuildDepends: batteries,cmdliner,dmlenu
   CompiledObject: best
 
-Executable "dynamic"
-  Build$: flag(application)
-  Install: false
+Executable "dmlenu_subcommands"
+  Build$: flag(examples)
+  Install: true
   Path: examples
   MainIs: with_subcommands.ml
   BuildDepends: yojson,dmlenu

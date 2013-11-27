@@ -22,8 +22,25 @@ let chromium_bookmarks =
   in
   Sources.from_list main
 
+let mpc_playlists =
+  let ic = Unix.open_process_in "mpc lsplaylists" in
+  let rec loop () =
+    try 
+      let playlist = input_line ic in
+      playlist :: loop ()
+    with End_of_file -> []
+  in
+  let playlists = loop () in
+  ignore (Unix.close_process_in ic) ;
+  Sources.from_list_ playlists
+
+(** {3 Main} *)
+
 let () =
   Sources.add_subcommand ~name:"chromium" chromium_bookmarks ;
+  Sources.add_subcommand ~name:"mpcload" mpc_playlists
+
+let run =
   let open Dmlenu in
   let app_state = {
     prompt = "" ;
