@@ -32,7 +32,7 @@ Library "dmlenu"
 
 Executable "dmlenu"
   Build$: flag(application)
-  Install$: flag(application)
+  Install: true
   Path: examples
   MainIs: main.ml
   BuildDepends: batteries,cmdliner,dmlenu
