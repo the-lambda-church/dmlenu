@@ -14,6 +14,8 @@ type conf = {
   window_background: string;
 }
 
+val default_conf : conf
+
 type app_state = {
   compl: Completion.state;
   prompt: string;

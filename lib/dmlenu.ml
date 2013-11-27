@@ -13,6 +13,19 @@ type conf = {
   window_background: string;
 }
 
+let default_conf = {
+  stdin = false ;
+  bottom = false ;
+  normal_background = "#222222" ;
+  normal_foreground = "#bbbbbb" ;
+  focus_background = "#005577" ;
+  focus_foreground = "#eeeeee" ;
+  match_foreground = "#ff0000" ;
+  lines = 0 ;
+  window_background = "#000000" ;
+}
+
+
 let draw_match conf x (candidate, list) =
   10 + Draw.draw_text candidate.display x list
          (conf.normal_foreground, conf.match_foreground, conf.normal_background)

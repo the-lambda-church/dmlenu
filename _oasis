@@ -39,6 +39,14 @@ Executable "dmlenu"
   BuildDepends: batteries,cmdliner,dmlenu
   CompiledObject: best
 
+Executable "dynamic"
+  Build$: flag(application)
+  Install: false
+  Path: examples
+  MainIs: with_subcommands.ml
+  BuildDepends: yojson,dmlenu
+  CompiledObject: best
+
 Document "dmlenu-api"
   Title: API reference for Dmlenu
   Build: true
