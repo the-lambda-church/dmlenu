@@ -1,6 +1,8 @@
 - Allow use of arrows to browse through candidate.
     (note: the way dmenu does that works well.)
 
+- Selection should return the current input, it should complete beforehand.
+
 - Clean up [Dmenu]: run should return a [string option] instead of printing
   something (or not) to stdout.
 
