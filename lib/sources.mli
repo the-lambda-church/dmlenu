@@ -2,6 +2,7 @@
 open Completion
 
 (** {3 Matching function & completion function} *)
+
 val match_strict: string -> (string -> string -> match_result)
 (** [match_strict s] is a matching
     function that matches only queries that
@@ -18,7 +19,7 @@ val complete_in_word : ?drop_cont : bool -> string -> (string -> string -> strin
 
 type t = Completion.ex_source
 
-(** {1 Source examples} *)
+(** {3 Predefined sources and sources builder} *)
 
 val filename : t
 (** A source that completes to filename *)
@@ -57,4 +58,22 @@ val dependant_sum : string -> t -> (string -> t) -> t
     which source to use for the remaining part. The two parts are
     separated by [sep]. *)
 
-val binaries_with_subcommands : ?prefix:string -> unit -> t
+(** {2 An interactive source} *)
+
+val add_subcommand : name:string -> t -> unit
+(** [add_subcommand ~name source] adds [source] under the name [name] in the
+    list of subcommands used by [binaries_with_subcommands] *)
+
+val set_default_subcommand_hook : (string -> t) -> unit
+(** When [binaries_with_subcommands] doesn't find a subcommand of a given name
+    [n] it will call the default subcommand hook with the string [n].
+
+    The default behavior of this hook (i.e. if this function is never called) is
+    to look for a file ["$HOME/.config/dmlenu/n"] and treat each line of this
+    file as a completion candidate; if the file doesn't exists it behaves as
+    [paths ~coupled_with:binaries]. *)
+
+val binaries_with_subcommands : t
+(** Behaves as [paths ~coupled_with:binaries] for the first completions, then
+    looks in the subcommands list (see {!add_subcommand} and
+    {!set_default_subcommand_hook}) for the following completions. *)

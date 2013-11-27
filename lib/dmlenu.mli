@@ -1,3 +1,7 @@
+(** Main module of the library.
+
+    Use it to build your own dmenu-like application. *)
+
 type conf = {
   stdin: bool;
   bottom: bool;
@@ -14,6 +18,8 @@ type app_state = {
   compl: Completion.state;
   prompt: string;
 }
+
+(** {3 Execution} *)
 
 val run : app_state -> conf -> unit
   (** [run initial_state conf] creates the window and handles user inputs.

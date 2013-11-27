@@ -246,20 +246,33 @@ let paths ~coupled_with =
   S { delay = false ; default = ("", []), coupled_with.default ; compute }
 
 
-let binaries_with_subcommands ?prefix () =
-  let prefix =
-    match prefix with
-    | None   -> Sys.getenv "HOME" / ".config/dmlenu"
-    | Some p -> p
-  in
-  let initial = paths ~coupled_with:binaries in
-  let rec get_new_source source_name =
-    let file = prefix / source_name  in
-    let new_src =
+let subcommands : (string * t) list ref = ref []
+let default_subcommand_hook : (string -> t) ref =
+  ref (
+    fun source_name ->
+      let prefix = Sys.getenv "HOME" / ".config/dmlenu" in
+      let file = prefix / source_name  in
       if Sys.file_exists file then
         from_list_ (File.lines_of file |> List.of_enum)
       else
-        initial
+        paths ~coupled_with:binaries
+  )
+
+
+let add_subcommand ~name source = subcommands := (name, source) :: !subcommands
+let set_default_subcommand_hook fn = default_subcommand_hook := fn
+
+let get_subcommand_by_name name =
+  try Some (List.assoc name !subcommands)
+  with Not_found -> None
+
+let binaries_with_subcommands =
+  let initial = paths ~coupled_with:binaries in
+  let rec get_new_source source_name =
+    let new_src =
+      match get_subcommand_by_name source_name with
+      | None -> !default_subcommand_hook source_name
+      | Some src -> src
     in
     dependant_sum " " new_src (fun x -> get_new_source (source_name ^ x))
   in
