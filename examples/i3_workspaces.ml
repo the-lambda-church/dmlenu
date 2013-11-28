@@ -13,6 +13,10 @@ let () =
     | "rename" ->
       let ws = get_workspace "rename to:" in
       Unix.execvp "i3-msg" [| "i3-msg"; "-q"; "rename"; "workspace"; "to"; ws |]
+    | "move" ->
+      let ws = get_workspace "move to:" in
+      Unix.execvp "i3-msg"
+        [| "i3-msg"; "-q"; "move"; "window"; "to"; "workspace"; ws |]
     | _ ->
       let ws = get_workspace "Go to:" in
       Unix.execvp "i3-msg" [| "i3-msg" ; "-q" ; "workspace" ; ws |]
