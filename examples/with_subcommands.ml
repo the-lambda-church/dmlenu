@@ -9,5 +9,6 @@ let run =
     compl = Completion.make_state [ Sources.binaries_with_subcommands ] ;
   }
   in
-  let command = run app_state default_conf in
-  Printf.printf "%s\n%!" command
+  match run app_state default_conf with
+  | None -> ()
+  | Some command -> Printf.printf "%s\n%!" command

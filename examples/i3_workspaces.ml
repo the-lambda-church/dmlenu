@@ -5,7 +5,9 @@ let get_workspace prompt =
     compl = Completion.make_state [ Extra_sources.i3_workspaces () ] ;
   }
   in
-  run app_state default_conf
+  match run app_state default_conf with
+  | None -> exit 0
+  | Some ws -> ws
 
 let () =
   try

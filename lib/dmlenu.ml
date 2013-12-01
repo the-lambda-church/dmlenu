@@ -62,35 +62,28 @@ let draw_window conf state =
 
 exception Finished of string
 
-let run (init_state : app_state) (conf : conf) =
-  let state = ref init_state in
+let run { prompt ; compl } (conf : conf) =
   Draw.setup (not conf.bottom) conf.window_background conf.lines; 
   ignore (Draw.grabkeys ()); 
-  draw_window conf !state;
-  let compl_fun key str =
+  let rec loop state =
+    draw_window conf { prompt ; compl = state } ;
+    let (key, str) = Draw.next_event () in
     match key with
     (* beurk *)
-    | 0xff08 -> remove
-    | 0xff09 -> complete
-    | 0xff51 -> left
-    | 0xff53 -> right
+    | 0xff1b -> None
+    | 0xff08 -> loop (remove state)
+    | 0xff09 -> loop (complete state)
+    | 0xff51 -> loop (left state)
+    | 0xff53 -> loop (right state)
     | 0xff0d ->
-      begin fun { matches ; before_cursor ; after_cursor ; _ } ->
-        let result =
-          try (fst (List.hd matches)).real
-          with _ -> before_cursor ^ after_cursor
-        in
-        raise (Finished result)
-      end
-    | _ -> add_string str
+      let { matches ; before_cursor ; after_cursor ; _ } = state in
+      let result =
+        try (fst (List.hd matches)).real
+        with _ -> before_cursor ^ after_cursor
+      in
+      Some result
+    | _ ->
+      Printf.eprintf "keysym = %x\n%!" key ;
+      loop (add_string str state)
   in
-  try
-    Draw.run (fun (k, s) -> 
-      state := { !state with compl = compl_fun k s !state.compl } ;
-      draw_window conf !state
-    ) ;
-    (* [Draw.run] either calls [exit], raise [Finished] or runs forever *)
-    Printf.eprintf "FATAL ERROR: [Draw.run] terminated." ;
-    exit (-1)
-  with Finished result ->
-    result
+  loop compl

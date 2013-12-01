@@ -2,6 +2,8 @@
 
     Use it to build your own dmenu-like application. *)
 
+(** {2 Configuration} *)
+
 type conf = {
   stdin: bool;
   bottom: bool;
@@ -23,6 +25,9 @@ type app_state = {
 
 (** {3 Execution} *)
 
-val run : app_state -> conf -> string
-  (** [run initial_state conf] creates the window and handles user inputs.
-      Returns the user selection when it finishes. *)
+val run : app_state -> conf -> string option
+(** [run initial_state conf] creates the window and handles user inputs.
+    Returns [Some user_input] when the user valid a completion (i.e. hits RET)
+    or [None] when the user cancels (i.e. hits ESC)
+
+    N.B. this function is blocking. *)
