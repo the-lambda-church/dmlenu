@@ -83,7 +83,6 @@ let run { prompt ; compl } (conf : conf) =
       in
       Some result
     | _ ->
-      Printf.eprintf "keysym = %x\n%!" key ;
       loop (add_string str state)
   in
   loop compl
