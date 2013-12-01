@@ -4,3 +4,11 @@
 - Selection should return the current input, it shouldn't complete beforehand.
 
 - Add "loose" matching functions
+
+- Handle spaces in candidates names.
+  i.e. we should know that "~/my directory/" is a single element, not two
+  ("~/my" "directory/").
+
+- Invert "control flow": instead of calling [Draw.run] which loops until the
+  user quits or confirm his selection, we should call a "next_keyboard_event"
+  function of type "unit -> keysym Lwt.t" (or a blocking version without Lwt).
