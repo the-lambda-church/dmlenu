@@ -34,7 +34,7 @@ Library "dmlenu"
   Path:                 lib
   CCLib:                -lX11
   InternalModules:      Draw
-  Modules:              Completion, Dmlenu, Sources
+  Modules:              Matching, Completion, Dmlenu, Sources
   CSources:             draw_funs.h, draw_funs.c, draw_stubs.c
   BuildDepends:         batteries
   XMetaDescription:     An OCaml library to easily create dmenu-like examples

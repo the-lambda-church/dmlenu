@@ -6,7 +6,7 @@ let run =
   let open Dmlenu in
   let app_state = {
     prompt = "" ;
-    compl = Completion.make_state [ Sources.binaries_with_subcommands ] ;
+    compl = Completion.make_state (Sources.binaries_with_subcommands) ;
   }
   in
   match run app_state default_conf with

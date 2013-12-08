@@ -3,20 +3,13 @@
 (** This is the interface of the completion engine.
 
     The completion engine works with {!source}s that returns {!candidate}s. *)
-type match_result = ((bool * int * int) list) option
 type candidate = {
   display: string;
   (** The string that should be displayed for the candidate *)
   real: string;
   (** The string that will be printed out if this candidate is picked *)
-  matching_function: (string -> string -> match_result);
-  (** How to tell if the candidate is matching the current input.
-      Should take the string before and after the cursor and return a
-      list of matching and non matching position in the string *)
-  completion_function: string -> string -> string * string;
-  (** Takes the string before and after the point and return the new
-      string before and after the cursor, after completing this
-      candidate *)
+  matching_function: (query: string -> Matching.result option);
+  (** How to tell if the candidate is matching the current input. *)
 }
 (** A candidate, as returned by sources *)
 
@@ -28,7 +21,7 @@ type 'a source = {
   (** Should we wait for a delay before computing candidates ? *)
   default: 'a;
   (** Default value for the state *)
-  compute: 'a -> string -> string -> 'a * candidate list;
+  compute: 'a -> string -> 'a * candidate list;
   (** computes takes the current state, the string before/after the
       cursor and returns the new state along with a list of candidate *)
 }
@@ -38,20 +31,28 @@ type ex_source = S : 'a source -> ex_source
 
 type source_state = ST : 'a * 'a source -> source_state
 
+type program = Program of ex_source list * (string -> string -> program)
+(** A completion program: a list of current source and a way to get
+    the next sources depending on the current input (real, display) *)
 (** {2 State} *)
 type state = {
   before_cursor: string;
   after_cursor: string;
   sources: (candidate list * source_state) list;
-  matches: (candidate * (bool * int * int) list) list;
+  matches: (candidate * Matching.result) list;
+  entries: (program * string * string) list;
+  program: program;
 }
 (** The state of the completion engine *)
 
-val make_state: ex_source list -> state
-(** Creates an initial state out of a list of sources *)
+val make_state: program -> state
+(** Creates an initial state out of a program *)
 
 val add_string : string -> state -> state
 (** Computes the new state corresponding to the user pressing a character *)
+
+val empty_program : program
+(** The program that does not offer any completion *)
 
 (** {3 Edition commands} *)
 val left : state -> state

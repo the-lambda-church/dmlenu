@@ -2,7 +2,8 @@ let get_workspace prompt =
   let open Dmlenu in
   let app_state = {
     prompt ;
-    compl = Completion.make_state [ Extra_sources.i3_workspaces () ] ;
+    compl = Completion.(make_state 
+                          (Program ([Extra_sources.i3_workspaces ()], fun _ _ -> empty_program))) ;
   }
   in
   match run app_state default_conf with

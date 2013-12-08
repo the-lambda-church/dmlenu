@@ -47,6 +47,9 @@ let draw_matches conf state =
     if state.prompt = "" then 0 else
     Draw.(text ~x:0 ~fg:conf.focus_foreground ~bg:conf.focus_background "%s" state.prompt)
   in
+  let x = List.fold_left Draw.(fun x (_, _, display) ->
+    2+text ~x ~fg: conf.focus_foreground ~bg:conf.focus_background "%s" display) x state.compl.entries
+  in
   let x =
     5 + Draw.(
       text ~x ~fg:conf.normal_foreground ~bg:conf.normal_background "%s|%s"
@@ -62,7 +65,7 @@ let draw_window conf state =
 
 exception Finished of string
 
-let run { prompt ; compl } (conf : conf) =
+let run_list { prompt ; compl } (conf : conf) =
   Draw.setup (not conf.bottom) conf.window_background conf.lines; 
   ignore (Draw.grabkeys ()); 
   let rec loop state =
@@ -78,11 +81,16 @@ let run { prompt ; compl } (conf : conf) =
     | 0xff0d ->
       let { matches ; before_cursor ; after_cursor ; _ } = state in
       let result =
-        try (fst (List.hd matches)).real
-        with _ -> before_cursor ^ after_cursor
+        List.map (fun (_, s, _) -> s) state.entries @
+          if before_cursor ^ after_cursor = "" then []
+          else
+            [try (fst (List.hd matches)).real
+              with _ -> before_cursor ^ after_cursor]
       in
       Some result
     | _ ->
       loop (add_string str state)
   in
   loop compl
+
+let run a b = Option.map (String.concat " ") (run_list a b)

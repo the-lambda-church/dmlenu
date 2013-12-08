@@ -61,9 +61,9 @@ let complete_in_word ?(drop_cont = false) separator f before after =
   let before, after = w.new_word (f w.before_inside w.after_inside) in
   before, if drop_cont then "" else after
 
-let match_in_word separator f before after = 
-  let { before_inside ; after_inside ; _ } = get_word separator before after in
-  f before_inside after_inside
+let match_in_word separator f ~query = 
+  let { word ; _ } = get_word separator query "" in
+  f word
 
 let match_strict candidate before after = 
   let query = before ^ after in
@@ -90,8 +90,8 @@ let basename s =
 
 (* An example of source *)
 let filename =
-  let compute (old_dir, cache) before after =
-    let directory = getenv "HOME" / dirname before in
+  let compute (old_dir, cache) query =
+    let directory = getenv "HOME" / dirname query in
     if old_dir = directory && cache <> [] then
       (directory, cache), cache
     else
@@ -105,14 +105,12 @@ let filename =
               file ^ "/"
             else file
           in
-          let completion_function =
-            complete_in_word ~drop_cont:true "/" (fun _ _ -> display, "")
-          in
           let matching_function =
-            match_in_word "/" (fun bef aft ->
-                match_strict display (basename (bef^aft)) "")
+            match_in_word "/" (fun query ->
+                Matching.match_query ~case: false ~query: (basename query) 
+                  ~candidate: display)
           in
-          { display ; real ; completion_function ; matching_function }
+          { display ; real ; matching_function }
         )
       in
       (directory, candidates), candidates
@@ -122,13 +120,13 @@ let filename =
 let from_list list = 
   let candidates =
     let aux (display, real) = {
-      display; real; matching_function = match_strict display;
-      completion_function = (fun _ _ -> display, "")
+      display; real; 
+      matching_function = Matching.match_query ~case: true ~candidate: display;
     }
     in
     List.map aux list
   in
-  S { delay = false; default = (); compute = (fun () _ _ -> (), candidates) }
+  S { delay = false; default = (); compute = (fun () _ -> (), candidates) }
 
 let from_list_ list = List.map (fun x -> x, x) list |> from_list
 let stdin ?sep () = 
@@ -157,10 +155,9 @@ let binaries =
   |> from_list
   
 type ('a, 'b) sum = Left of 'a | Right of 'b
-let reindex sep str = 
+(*let reindex sep str = 
   let reindex_one c = { c with
     matching_function   = match_in_word sep c.matching_function ;
-    completion_function = complete_in_word sep c.completion_function  ;
     real = str ^ c.real
   }
   in List.map reindex_one
@@ -200,21 +197,22 @@ let dependant_sum sep (S a) func =
 
 let concat sep s1 s2 = dependant_sum sep s1 (fun _ -> s2)
 let rec kleene sep s = dependant_sum sep s (fun _ -> kleene sep s)
+*)
 
 let paths ~coupled_with =
   let (S coupled_with) = coupled_with in
-  let compute ((old_dir, cache), other_state as state) before after =
+  let compute ((old_dir, cache), other_state as state) query =
     if
-      before <> "" && (
-        before.[0] = '/' ||
-        String.starts_with before "./" ||
-        String.starts_with before "~/"
+      query <> "" && (
+        query.[0] = '/' ||
+        String.starts_with query "./" ||
+        String.starts_with query "~/"
       )
     then (
       let directory =
-        let tail = dirname before in
-        if before.[0] = '.' then Sys.getcwd () / tail
-        else if before.[0] = '~' then (
+        let tail = dirname query in
+        if query.[0] = '.' then Sys.getcwd () / tail
+        else if query.[0] = '~' then (
           let home = Sys.getenv "HOME" in
           if tail = "~" then home else home / (String.sub tail 2 (String.length tail - 2))
         )
@@ -231,19 +229,16 @@ let paths ~coupled_with =
               file ^ "/"
             else file
           in
-          let completion_function =
-            complete_in_word ~drop_cont:true "/" (fun _ _ -> display, "")
-          in
           let matching_function =
-            match_in_word "/" (fun bef aft ->
-              match_strict display (basename (bef^aft)) "")
+            match_in_word "/" (fun q ->
+              Matching.match_query ~case: true ~candidate: display ~query: (basename q))
           in
-          { display ; real ; completion_function ; matching_function }
+          { display ; real ; matching_function }
         )
       in
       ((directory, candidates), other_state), candidates
     ) else (
-      let state', candidates = coupled_with.compute other_state before after in
+      let state', candidates = coupled_with.compute other_state query in
       ((old_dir, cache), state'), candidates
     )
   in
@@ -278,6 +273,6 @@ let binaries_with_subcommands =
       | None -> !default_subcommand_hook source_name
       | Some src -> src
     in
-    dependant_sum " " new_src (fun x -> get_new_source (source_name ^ x))
+    Program ([new_src], (fun _ x -> get_new_source (source_name ^ x)))
   in
-  dependant_sum " " initial get_new_source
+  Program ([initial], fun _ -> get_new_source)
