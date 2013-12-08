@@ -39,7 +39,8 @@ type state = {
   before_cursor: string;
   after_cursor: string;
   sources: (candidate list * source_state) list;
-  matches: (candidate * Matching.result) list;
+  before_matches: (candidate * Matching.result) list;
+  after_matches: (candidate * Matching.result) list;
   entries: (program * string * string) list;
   program: program;
 }
@@ -55,11 +56,32 @@ val empty_program : program
 (** The program that does not offer any completion *)
 
 (** {3 Edition commands} *)
-val left : state -> state
+val cursor_left : state -> state
 (** Computes the new state corresponding to the user going left *)
 
-val right : state -> state
+val cursor_right : state -> state
 (** Computes the new state corresponding to the user going right *)
+
+val left : state -> state
+(** Computes the new state corresponding to the user selecting the candidate on the left *)
+
+val right : state -> state
+(** Computes the new state corresponding to the user selecting the candidate on the right *)
+
+val pageup : 
+  ((candidate * Matching.result) list -> 
+   (candidate * Matching.result) list * (candidate * Matching.result) list) ->
+  state -> state
+(** Computes the new state corresponding to the user selecting the
+    first non visible candidate on the left. It expects a functions
+    that given a list of candidate returns the list of the candidate
+    visible on the screen and the rest. *)
+
+val pagedown : 
+  ((candidate * Matching.result) list -> 
+   (candidate * Matching.result) list * (candidate * Matching.result) list) -> 
+  state -> state
+(** Computes the new state corresponding to the user selecting the first non visible candidate on the right *)
 
 val remove : state -> state
 (** Computes the new state corresponding to the user removing the

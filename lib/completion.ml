@@ -22,7 +22,8 @@ type state = {
   before_cursor: string;
   after_cursor: string;
   sources: (candidate list * source_state) list;
-  matches: (candidate * Matching.result) list;
+  before_matches: (candidate * Matching.result) list;
+  after_matches: (candidate * Matching.result) list;
   entries: (program * string * string) list;
   program: program;
 }
@@ -46,8 +47,8 @@ let on_modify st =
         candidates, ST (new_state, source)
       ) st.sources
   in
-  let matches = compute_matches st.before_cursor st.after_cursor sources in
-  { st with matches ; sources }
+  let after_matches = compute_matches st.before_cursor st.after_cursor sources in
+  { st with before_matches = []; after_matches ; sources }
 
 let make_state (Program (sources, _) as program) = 
   on_modify {
@@ -55,7 +56,7 @@ let make_state (Program (sources, _) as program) =
     after_cursor = "";
     sources = List.map (fun (S s) -> [], ST (s.default, s)) sources;
     program;
-    matches = [];
+    after_matches = []; before_matches = [];
     entries = []
   }
 
@@ -77,21 +78,21 @@ let remove state =
 
 let complete state = 
   try
-    let candidate = (fst (List.hd state.matches)) in
+    let candidate = (fst (List.hd state.after_matches)) in
     let (Program (_, f)) = state.program in
     let (Program (sources, _) as program) = f candidate.real candidate.display in
     on_modify { 
       before_cursor = "" ; 
       after_cursor = ""; 
       program;
-      matches = [];
+      after_matches = []; before_matches = [];
       sources = List.map (fun (S x) -> [], ST (x.default, x)) sources;
       entries = state.entries @ [state.program, candidate.real, candidate.display]
     }
   with Failure "hd" ->
     state
 
-let left state = 
+let cursor_left state = 
   if state.before_cursor = "" then state else
   let c = state.before_cursor.[String.length state.before_cursor - 1] in
   on_modify { state with
@@ -99,10 +100,40 @@ let left state =
     after_cursor  = String.of_char c ^ state.after_cursor;
   }
   
-let right state = 
+let cursor_right state = 
   if state.after_cursor = "" then state else
   let c = state.after_cursor.[0] in
   on_modify { state with
     before_cursor = state.before_cursor ^ String.of_char c;
     after_cursor  = String.lchop state.after_cursor;
   }
+
+let left state = 
+  match state.before_matches with
+  | [] -> 
+    state
+  | t :: before_matches -> 
+    { state with before_matches; after_matches = t :: state.after_matches }
+
+let right state = 
+  match state.after_matches with
+  | [] -> 
+    state
+  | t :: after_matches -> 
+    { state with after_matches; before_matches = t :: state.before_matches }
+  
+
+let pageup f state = 
+  let visible, invisible = f state.before_matches in
+  { state with 
+    before_matches = invisible;
+    after_matches = List.rev visible @ state.after_matches
+  }
+
+let pagedown f state = 
+  let visible, invisible = f state.after_matches in
+  { state with 
+    after_matches = invisible;
+    before_matches = List.rev visible @ state.before_matches
+  }
+    
