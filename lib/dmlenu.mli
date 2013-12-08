@@ -31,3 +31,6 @@ val run : app_state -> conf -> string option
     or [None] when the user cancels (i.e. hits ESC)
 
     N.B. this function is blocking. *)
+
+val run_list : app_state -> conf -> string list option
+(** Same as {!run} but returns the list of completed tokens *)
