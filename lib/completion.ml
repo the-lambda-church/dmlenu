@@ -60,8 +60,6 @@ let make_state (Program (sources, _) as program) =
     entries = []
   }
 
-let add_string s state = 
-  on_modify { state with before_cursor = state.before_cursor ^ s }
   
 
 let remove state = 
@@ -91,6 +89,13 @@ let complete state =
     }
   with Failure "hd" ->
     state
+
+let add_string s state = 
+  let state' = on_modify { state with before_cursor = state.before_cursor ^ s } in
+  if state'.after_matches = [] && state.after_matches <> [] && s = " " then
+    complete state
+  else
+    state'
 
 let cursor_left state = 
   if state.before_cursor = "" then state else
