@@ -66,9 +66,10 @@ let remove state =
   if state.before_cursor = "" then 
     match List.rev state.entries with
     | [] -> state
-    | (program, _, _) :: rest -> 
+    | (Program (sources, _) as program, _, _) :: rest ->
       on_modify { state with 
         before_cursor = ""; after_cursor = ""; program;
+        sources = List.map (fun (S x) -> [], ST (x.default, x)) sources;
         entries = rest
       }
   else
