@@ -93,11 +93,11 @@ let complete state =
 
 let add_string s state = 
   let state' = on_modify { state with before_cursor = state.before_cursor ^ s } in
-  if state'.after_matches = [] && state.after_matches <> [] && s = " " then
-    complete state
-  else
-    state'
-
+  try 
+    if state.before_cursor ^ state.after_cursor = (fst (List.hd state.after_matches)).display then
+      complete state
+    else state'
+  with _ -> state'
 let cursor_left state = 
   if state.before_cursor = "" then state else
   let c = state.before_cursor.[String.length state.before_cursor - 1] in
