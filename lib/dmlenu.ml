@@ -41,7 +41,7 @@ let displayable_matches x =
     | [] -> [], []
     | ({display} as candidate, rest) :: q as l-> 
       let size = Draw.size (display) + 10 in
-      if (index + size) > Draw.width () then [], l else
+      if (index + size) > Draw.width () - 5 then [], l else
       let a, b = go (index+size) q in
       (candidate, rest) :: a, b
   in
@@ -64,9 +64,21 @@ let draw_matches conf state =
   match state.compl.after_matches with
   | [] -> x
   | t :: q ->
+    let tuple =
+      conf.normal_foreground, conf.match_foreground, conf.normal_background
+    in
+    let x =
+      match state.compl.before_matches with
+      | [] -> x
+      | _ -> Draw.draw_text "<" x [(false, 0, 1)] tuple
+    in
     let x' = draw_match ~hl: true conf x t in
-    ignore (List.fold_left (draw_match conf) x'
-              (fst (displayable_matches x' q)));
+    let displayable, rest = displayable_matches x' q in
+    let border = List.fold_left (draw_match conf) x' displayable in
+    begin match rest with
+    | [] -> ()
+    | _ -> ignore (Draw.draw_text ">" border [(false, 0, 1)] tuple)
+    end ;
     x
 
 let draw_window conf state =
