@@ -135,7 +135,7 @@ let right state =
     cursor_right state
   else
     match state.after_matches with
-    | [] -> 
+    | [] | [ _ ]-> 
       state
     | t :: after_matches -> 
       { state with after_matches; before_matches = t :: state.before_matches }
