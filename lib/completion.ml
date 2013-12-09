@@ -79,9 +79,10 @@ let remove state =
 let next_entry candidate state = 
   let (Program (_, f)) = state.program in
   let (Program (sources, _) as program) = f candidate.real candidate.display in
-  { state with
+  {
     before_cursor = "";
     after_cursor = "";
+    after_matches = []; before_matches = [];
     program;
     sources = List.map (fun (S x) -> [], ST (x.default, x)) sources;
     entries = state.entries @ [state.program, candidate.real, candidate.display]
