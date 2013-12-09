@@ -1,4 +1,5 @@
 external setup : bool -> string -> int -> unit = "caml_setup"
+external quit : unit -> unit = "caml_xquit"
 external width : unit -> int = "caml_width"
 external grabkeys : unit -> bool = "caml_grabkeyboard"
 external next_event : unit -> (int * string) = "caml_next_event"

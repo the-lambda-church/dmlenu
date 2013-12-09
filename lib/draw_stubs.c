@@ -211,10 +211,22 @@ caml_next_event(value unit) {
     caml_failwith("unexpected return from XNextEvent") ;
 }
 
-    value
+value
 caml_setup (value topbar, value bg, value lines)
 {
     CAMLparam1(topbar);
     setup(Int_val(topbar), String_val (bg), Int_val (lines));
     CAMLreturn(Val_unit);
 }
+
+value
+caml_xquit(value unit)
+{
+    CAMLparam1(unit);
+
+    XUngrabKeyboard(dc->dpy, CurrentTime);
+    XDestroyWindow(dc->dpy, win);
+    XCloseDisplay(dc->dpy);
+    CAMLreturn(Val_unit);
+}
+  

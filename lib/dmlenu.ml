@@ -83,9 +83,13 @@ let run_list { prompt ; compl } (conf : conf) =
   let rec loop state =
     let last_x = draw_window conf { prompt ; compl = state } in
     let (key, str) = Draw.next_event () in
+    let ret k = 
+      Draw.quit ();
+      k
+    in
     match key with
     (* beurk *)
-    | 0xff1b -> []
+    | 0xff1b -> ret []
     | 0xff08 -> loop (remove state)
     | 0xff09 -> loop (complete state)
     | 0xff51 -> loop (left state)
@@ -101,7 +105,7 @@ let run_list { prompt ; compl } (conf : conf) =
             [try (fst (List.hd after_matches)).real
               with _ -> before_cursor ^ after_cursor]
       in
-      result
+      ret result
     | _ ->
       loop (add_string str state)
   in
