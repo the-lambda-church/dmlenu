@@ -1,4 +1,5 @@
 #include <caml/callback.h>
+#include <stdio.h>
 #include <caml/mlvalues.h>
 #include <caml/memory.h>
 #include <caml/alloc.h>
@@ -22,7 +23,7 @@ static Window win;
 static XIC xic;
 static int bh, mw, mh;
 static int screen;
-
+static int bottom = 0;
 value 
 caml_grabkeyboard(value unit) {
     CAMLparam1(unit);
@@ -148,15 +149,19 @@ caml_clear(value bg)
     CAMLreturn(Val_unit);
 }
 value
-caml_drawtext(value string, value x, value matches, value colors) {
-    CAMLparam4(string, x, matches, colors);
+caml_drawtext(value string, value pos, value matches, value colors) {
+    CAMLparam4(string, pos, matches, colors);
     size_t size = textw(dc, String_val (string));
-    drawrect(dc, Int_val(x), 0, size, mh, True, getcolor(dc, String_val(Field(colors, 2))));
-
+    int x = Int_val(Field(pos, 0));
+    if (bottom)
+            dc->y = Int_val(Field(pos, 1)) * bh + dc->font.ascent+1;
+    else
+            dc->y = dc->font.ascent+1 + Int_val(Field(pos, 1)) * bh;
+    drawrect(dc, x, dc->y-dc->font.ascent-1, size, bh, True, getcolor(dc, String_val(Field(colors, 2))));
     int start, stop;
     unsigned long fg;
-    int xoff = Int_val(x) + dc->font.height/2;
-    dc->y = dc->font.ascent+1;
+    int xoff = x + dc->font.height/2;
+
     const char *str = String_val (string);
     value head;
     while (matches != Val_int(0)) {
@@ -168,7 +173,7 @@ caml_drawtext(value string, value x, value matches, value colors) {
         stop = Int_val(Field (head, 2));
         xoff += drawtext(dc, str, start, stop, fg);
     }
-    CAMLreturn(Val_int(Int_val(x) + size));
+    CAMLreturn(Val_int(x + size));
 }
 
 value
@@ -216,6 +221,7 @@ caml_setup (value topbar, value bg, value lines)
 {
     CAMLparam1(topbar);
     setup(Int_val(topbar), String_val (bg), Int_val (lines));
+    bottom = !Int_val(topbar);
     CAMLreturn(Val_unit);
 }
 

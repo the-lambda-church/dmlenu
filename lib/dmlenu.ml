@@ -26,8 +26,8 @@ let default_conf = {
 }
 
 
-let draw_match ?(hl = false) conf x (candidate, list) =
-  10 + Draw.draw_text candidate.display x list
+let draw_match ?(hl = false) line conf x (candidate, list) =
+  10 + Draw.draw_text candidate.display (x, line) list
     (conf.normal_foreground, conf.match_foreground, 
      if hl then conf.focus_background else conf.normal_background)
   
@@ -47,17 +47,17 @@ let displayable_matches x =
   in
   go x
 
-let draw_matches conf state =
+let draw_matches line conf state =
   let x =
     if state.prompt = "" then 0 else
-    Draw.(text ~x:0 ~fg:conf.focus_foreground ~bg:conf.focus_background "%s" state.prompt)
+    Draw.(text ~line ~x:0 ~fg:conf.focus_foreground ~bg:conf.focus_background "%s" state.prompt)
   in
   let x = List.fold_left Draw.(fun x (_, _, display) ->
-    2+text ~x ~fg: conf.focus_foreground ~bg:conf.focus_background "%s" display) x state.compl.entries
+    2+text ~line ~x ~fg: conf.focus_foreground ~bg:conf.focus_background "%s" display) x state.compl.entries
   in
   let x =
     5 + Draw.(
-      text ~x ~fg:conf.normal_foreground ~bg:conf.normal_background "%s|%s"
+      text ~line ~x ~fg:conf.normal_foreground ~bg:conf.normal_background "%s|%s"
         state.compl.before_cursor state.compl.after_cursor
     )
   in
@@ -70,20 +70,20 @@ let draw_matches conf state =
     let x =
       match state.compl.before_matches with
       | [] -> x
-      | _ -> Draw.draw_text "<" x [(false, 0, 1)] tuple
+      | _ -> Draw.draw_text "<" (x, line) [(false, 0, 1)] tuple
     in
-    let x' = draw_match ~hl: true conf x t in
+    let x' = draw_match ~hl: true line conf x t in
     let displayable, rest = displayable_matches x' q in
-    let border = List.fold_left (draw_match conf) x' displayable in
+    let border = List.fold_left (draw_match line conf) x' displayable in
     begin match rest with
     | [] -> ()
-    | _ -> ignore (Draw.draw_text ">" border [(false, 0, 1)] tuple)
+    | _ -> ignore (Draw.draw_text ">" (border, line) [(false, 0, 1)] tuple)
     end ;
     x
 
 let draw_window conf state =
   Draw.clear "#000000";
-  let x = draw_matches conf state in
+  let x = draw_matches 0 conf state in
   Draw.mapdc ();
   x
 
