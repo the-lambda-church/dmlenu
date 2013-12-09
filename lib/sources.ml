@@ -180,7 +180,7 @@ let switch list =
     compute = fun st query ->
       let (S source) = snd (List.find (fun (f, b) -> f query) list) in
       match st with
-      | Some (ST (state, source') as st) when Obj.magic source' == Obj.magic source ->
+      | Some (ST (state, source')) when Obj.magic source' == Obj.magic source ->
         let state, answer = source'.compute state query in
         Some (ST (state, source')), answer
       | _ -> 
@@ -189,17 +189,12 @@ let switch list =
   }
 
 let paths ~coupled_with = 
-  let is_path query = 
-    query <> "" && (
-      query.[0] = '/' ||
-        String.starts_with query "./" ||
-        String.starts_with query "~/")
-  in
-  switch [flip String.starts_with "./", filename (Sys.getcwd ());
-          flip String.starts_with "~/", filename (getenv "HOME");
-          flip String.starts_with "/", filename "/";
-          (fun _ -> true), coupled_with]
-
+  switch [
+    flip String.starts_with "./", filename (Sys.getcwd ());
+    flip String.starts_with "~/", filename (getenv "HOME");
+    flip String.starts_with "/", filename "/";
+    (fun _ -> true), coupled_with
+  ]
 
 let subcommands : (string * t Lazy.t) list ref = ref []
 let default_subcommand_hook : (string -> t) ref =
