@@ -107,6 +107,7 @@ let add_string s state =
       complete state
     else state'
   with _ -> state'
+
 let cursor_left state = 
   if state.before_cursor = "" then state else
   let c = state.before_cursor.[String.length state.before_cursor - 1] in
@@ -125,32 +126,19 @@ let cursor_right state =
 
 let left state = 
   match state.before_matches with
-  | [] -> 
-    begin match state.before_cursor with
-    | "" -> state
-    | str ->
-      let len = String.length str in
-      let before_cursor = String.sub str 0 (len - 1) in
-      let after  = String.sub str (len - 1) 1 in
-      { state with before_cursor ; after_cursor = after ^ state.after_cursor }
-    end
+  | [] -> cursor_left state
   | t :: before_matches -> 
     { state with before_matches; after_matches = t :: state.after_matches }
 
 let right state = 
-  match state.after_cursor with
-  | "" ->
-    begin match state.after_matches with
+  if state.after_cursor <> "" then
+    cursor_right state
+  else
+    match state.after_matches with
     | [] -> 
       state
     | t :: after_matches -> 
       { state with after_matches; before_matches = t :: state.before_matches }
-    end
-  | str ->
-    let len = String.length str in
-    let before = String.sub str 0 1 in
-    let after_cursor  = String.sub str 1 (len - 1) in
-    { state with before_cursor = state.before_cursor ^ before ; after_cursor }
 
 let pageup f state = 
   let visible, invisible = f state.before_matches in
