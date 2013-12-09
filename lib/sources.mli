@@ -5,8 +5,8 @@ type t = Completion.ex_source
 
 (** {3 Predefined sources and sources builder} *)
 
-val filename : t
-(** A source that completes to filename *)
+val filename : string -> t
+(** A source that completes filenames in a given directory (or absolute filenames) *)
 
 val from_list : (string * string) list -> t
 (** A source built from a list (display, real) *)
@@ -25,6 +25,13 @@ val concat : string -> t -> t -> t*)
 val binaries : t
 (** A source that completes a binary of the system *)
 
+val switch : ((string -> bool) * t) list -> t
+(** [switch guards] is a source that behaves like the sources in
+    [guards]. To know what it source it behave like, it applies the
+    predicate to the input and uses the first matching source. *)
+
+val empty : t
+(** The empty source. *)
 val paths : coupled_with:t -> t
 (** A source that complete like [coupled_with] except when what is before the
     cursor is (syntactically) a path, i.e. start with "/", "~/", or "./" *)
