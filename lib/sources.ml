@@ -120,11 +120,7 @@ let filename root =
                 Matching.match_query ~case: false ~query: (basename query) 
                   ~candidate: display)
           in
-          let completion = 
-            if String.starts_with real root then
-              String.lchop ~n: (String.length root) real
-            else real
-          in
+          let completion = real in
           { display ; 
             completion;
             real ; matching_function }
@@ -199,7 +195,9 @@ let paths ~coupled_with =
         String.starts_with query "./" ||
         String.starts_with query "~/")
   in
-  switch [is_path, filename (getenv "HOME");
+  switch [flip String.starts_with "./", filename (Sys.getcwd ());
+          flip String.starts_with "~/", filename (getenv "HOME");
+          flip String.starts_with "/", filename "/";
           (fun _ -> true), coupled_with]
 
 
