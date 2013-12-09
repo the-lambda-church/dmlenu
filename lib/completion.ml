@@ -91,7 +91,9 @@ let complete state =
   try
     let candidate = (fst (List.hd state.after_matches)) in
     let state' = on_modify { state with before_cursor = candidate.completion; after_cursor = "" } in
-    if List.exists (fun ({ display }, _) -> display = candidate.completion) state.after_matches then
+    if List.exists
+      (fun ({ display }, _) -> display = candidate.completion) 
+      state'.after_matches then
       next_entry candidate state
     else
       state'
