@@ -32,5 +32,6 @@ val run : app_state -> conf -> string option
 
     N.B. this function is blocking. *)
 
-val run_list : app_state -> conf -> string list option
+(* TODO: move before [run], more explicit documentation *)
+val run_list : app_state -> conf -> string list
 (** Same as {!run} but returns the list of completed tokens *)

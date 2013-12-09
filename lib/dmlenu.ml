@@ -85,7 +85,7 @@ let run_list { prompt ; compl } (conf : conf) =
     let (key, str) = Draw.next_event () in
     match key with
     (* beurk *)
-    | 0xff1b -> None
+    | 0xff1b -> []
     | 0xff08 -> loop (remove state)
     | 0xff09 -> loop (complete state)
     | 0xff51 -> loop (left state)
@@ -101,10 +101,13 @@ let run_list { prompt ; compl } (conf : conf) =
             [try (fst (List.hd after_matches)).real
               with _ -> before_cursor ^ after_cursor]
       in
-      Some result
+      result
     | _ ->
       loop (add_string str state)
   in
   loop compl
 
-let run a b = Option.map (String.concat " ") (run_list a b)
+let run a b =
+  match run_list a b with
+  | []  -> None
+  | lst -> Some (String.concat " " lst)

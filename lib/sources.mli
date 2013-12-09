@@ -44,7 +44,7 @@ val stdin : ?sep: string -> unit -> t
 
 (** {2 An interactive source} *)
 
-val add_subcommand : name:string -> t -> unit
+val add_subcommand : name:string -> t Lazy.t -> unit
 (** [add_subcommand ~name source] adds [source] under the name [name] in the
     list of subcommands used by [binaries_with_subcommands] *)
 

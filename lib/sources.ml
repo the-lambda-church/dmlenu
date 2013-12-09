@@ -245,7 +245,7 @@ let paths ~coupled_with =
   S { delay = false ; default = ("", []), coupled_with.default ; compute }
 
 
-let subcommands : (string * t) list ref = ref []
+let subcommands : (string * t Lazy.t) list ref = ref []
 let default_subcommand_hook : (string -> t) ref =
   ref (
     fun source_name ->
@@ -258,8 +258,9 @@ let default_subcommand_hook : (string -> t) ref =
   )
 
 
-let add_subcommand ~name source = subcommands := (name, source) :: !subcommands
 let set_default_subcommand_hook fn = default_subcommand_hook := fn
+let add_subcommand ~name lazy_source =
+  subcommands := (name, lazy_source) :: !subcommands
 
 let get_subcommand_by_name name =
   try Some (List.assoc name !subcommands)
@@ -271,7 +272,7 @@ let binaries_with_subcommands =
     let new_src =
       match get_subcommand_by_name source_name with
       | None -> !default_subcommand_hook source_name
-      | Some src -> src
+      | Some src -> Lazy.force src
     in
     Program ([new_src], (fun _ x -> get_new_source (source_name ^ x)))
   in
