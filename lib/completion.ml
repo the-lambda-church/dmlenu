@@ -79,7 +79,7 @@ let remove state =
 let next_entry candidate state = 
   let (Program (_, f)) = state.program in
   let (Program (sources, _) as program) = f candidate.real candidate.display in
-  {
+  on_modify {
     before_cursor = "";
     after_cursor = "";
     after_matches = []; before_matches = [];
@@ -91,9 +91,10 @@ let complete state =
   try
     let candidate = (fst (List.hd state.after_matches)) in
     let state' = on_modify { state with before_cursor = candidate.completion; after_cursor = "" } in
-    match state'.after_matches with
-    | [{ display }, _] when display = candidate.completion -> next_entry candidate state
-    | _ -> state'
+    if List.exists (fun ({ display }, _) -> display = candidate.completion) state.after_matches then
+      next_entry candidate state
+    else
+      state'
   with Failure "hd" ->
     state
 
