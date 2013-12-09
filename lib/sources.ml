@@ -81,17 +81,20 @@ type t = ex_source
 let dirname s = 
   if s = "" then ""
   else if s.[String.length s -1] = '/' then s
-  else Filename.dirname s
+  else match Filename.dirname s with
+  | "." -> ""
+  | s -> s
 
 let basename s = 
   if s = "" then ""
   else if s.[String.length s -1] = '/' then ""
   else Filename.basename s
 
-let expand_tilde = 
-  Str.global_replace (Str.regexp "^~") (getenv "HOME")
-
+let expand_tilde s = try
+  Str.global_replace (Str.regexp "^~") (getenv "HOME") s
+  with _ -> s
 let filename root =
+  let root = root / "" in (* make it end by a slash *)
   let compute (old_dir, cache) query =
     let query = expand_tilde query in
     let directory = if query <> "" && query.[0] = '/' then
@@ -117,7 +120,14 @@ let filename root =
                 Matching.match_query ~case: false ~query: (basename query) 
                   ~candidate: display)
           in
-          { display ; completion = real; real ; matching_function }
+          let completion = 
+            if String.starts_with real root then
+              String.lchop ~n: (String.length root) real
+            else real
+          in
+          { display ; 
+            completion;
+            real ; matching_function }
         )
       in
       (directory, candidates), candidates
