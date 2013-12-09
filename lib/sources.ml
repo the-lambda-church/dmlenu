@@ -110,7 +110,7 @@ let filename =
                 Matching.match_query ~case: false ~query: (basename query) 
                   ~candidate: display)
           in
-          { display ; real ; matching_function }
+          { display ; completion = real; real ; matching_function }
         )
       in
       (directory, candidates), candidates
@@ -120,7 +120,7 @@ let filename =
 let from_list list = 
   let candidates =
     let aux (display, real) = {
-      display; real; 
+      display; real; completion = display;
       matching_function = Matching.match_query ~case: true ~candidate: display;
     }
     in
@@ -224,16 +224,16 @@ let paths ~coupled_with =
         Array.to_list files |>
         List.map (fun file ->
           let real = directory / file in
-          let display =
+          let real, display =
             if Sys.file_exists real && Sys.is_directory real then 
-              file ^ "/"
-            else file
+              real ^ "/", file ^ "/"
+            else real, file
           in
           let matching_function =
             match_in_word "/" (fun q ->
               Matching.match_query ~case: true ~candidate: display ~query: (basename q))
           in
-          { display ; real ; matching_function }
+          { completion = real; display ; real ; matching_function }
         )
       in
       ((directory, candidates), other_state), candidates

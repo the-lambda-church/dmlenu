@@ -5,6 +5,7 @@ open Batteries
 type candidate = {
   display: string;
   real: string;
+  completion: string;
   matching_function: (query: string -> Matching.result option);
 }
 
@@ -75,19 +76,23 @@ let remove state =
   else
   on_modify { state with before_cursor = String.rchop state.before_cursor }
 
+let next_entry candidate state = 
+  let (Program (_, f)) = state.program in
+  let (Program (sources, _) as program) = f candidate.real candidate.display in
+  { state with
+    before_cursor = "";
+    after_cursor = "";
+    program;
+    sources = List.map (fun (S x) -> [], ST (x.default, x)) sources;
+    entries = state.entries @ [state.program, candidate.real, candidate.display]
+  }  
 let complete state = 
   try
     let candidate = (fst (List.hd state.after_matches)) in
-    let (Program (_, f)) = state.program in
-    let (Program (sources, _) as program) = f candidate.real candidate.display in
-    on_modify { 
-      before_cursor = "" ; 
-      after_cursor = ""; 
-      program;
-      after_matches = []; before_matches = [];
-      sources = List.map (fun (S x) -> [], ST (x.default, x)) sources;
-      entries = state.entries @ [state.program, candidate.real, candidate.display]
-    }
+    let state' = on_modify { state with before_cursor = candidate.completion; after_cursor = "" } in
+    match state'.after_matches with
+    | [{ display }, _] when display = candidate.completion -> next_entry candidate state
+    | _ -> state'
   with Failure "hd" ->
     state
 

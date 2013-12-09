@@ -8,6 +8,8 @@ type candidate = {
   (** The string that should be displayed for the candidate *)
   real: string;
   (** The string that will be printed out if this candidate is picked *)
+  completion: string;
+  (** The string to use when this candidate is completed *)
   matching_function: (query: string -> Matching.result option);
   (** How to tell if the candidate is matching the current input. *)
 }
