@@ -95,7 +95,7 @@ let expand_tilde s = try
   with _ -> s
 let filename root =
   let root = root / "" in (* make it end by a slash *)
-  let compute (old_dir, cache) query =
+  let compute (old_dir, cache) _ query =
     let query = expand_tilde query in
     let directory = if query <> "" && query.[0] = '/' then
         dirname query
@@ -122,7 +122,7 @@ let filename root =
           in
           let completion = real in
           { display ; 
-            completion;
+            completion; documentation = lazy [];
             real ; matching_function }
         )
       in
@@ -133,13 +133,13 @@ let filename root =
 let from_list list = 
   let candidates =
     let aux (display, real) = {
-      display; real; completion = display;
+      display; real; completion = display; documentation = lazy [];
       matching_function = Matching.match_query ~case: true ~candidate: display;
     }
     in
     List.map aux list
   in
-  S { delay = false; default = (); compute = (fun () _ -> (), candidates) }
+  S { delay = false; default = (); compute = (fun () _ _ -> (), candidates) }
 
 let from_list_ list = List.map (fun x -> x, x) list |> from_list
 let stdin ?sep () = 
@@ -170,21 +170,21 @@ let binaries =
 let empty = S {
   delay = false;
   default = ();
-  compute = fun _ _ -> (), []
+  compute = fun _ _ _ -> (), []
 }
 
 let switch list = 
   S {
     delay = false;
     default = None;
-    compute = fun st query ->
+    compute = fun st entries query ->
       let (S source) = snd (List.find (fun (f, b) -> f query) list) in
       match st with
       | Some (ST (state, source')) when Obj.magic source' == Obj.magic source ->
-        let state, answer = source'.compute state query in
+        let state, answer = source'.compute state entries query in
         Some (ST (state, source')), answer
       | _ -> 
-        let state, answer = source.compute source.default query in
+        let state, answer = source.compute source.default entries query in
         Some (ST (state, source)), answer
   }
 

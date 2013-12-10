@@ -6,6 +6,7 @@ type candidate = {
   display: string;
   real: string;
   completion: string;
+  documentation: string list Lazy.t;
   matching_function: (query: string -> Matching.result option);
 }
 
@@ -14,7 +15,7 @@ type candidate = {
 type 'a source = {
   delay: bool;
   default: 'a;
-  compute: 'a -> string -> 'a * candidate list;
+  compute: 'a -> (string * string) list -> string -> 'a * candidate list;
 }
 type source_state = ST : 'a * 'a source -> source_state
 type ex_source = S : 'a source -> ex_source
@@ -43,7 +44,9 @@ let on_modify st =
   let sources =
     List.map (fun (candidates, ST (sstate, source)) ->
         let new_state, candidates =
-          source.compute sstate (st.before_cursor ^ st.after_cursor)
+          source.compute sstate
+            (List.map (fun (_, a, b) -> a, b) st.entries)
+            (st.before_cursor ^ st.after_cursor)
         in
         candidates, ST (new_state, source)
       ) st.sources

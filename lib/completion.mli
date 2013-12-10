@@ -10,6 +10,9 @@ type candidate = {
   (** The string that will be printed out if this candidate is picked *)
   completion: string;
   (** The string to use when this candidate is completed *)
+  documentation: string list Lazy.t;
+  (** The documentation of the candidate.  It might be displayed below
+      the input line depending on the configuration. *)
   matching_function: (query: string -> Matching.result option);
   (** How to tell if the candidate is matching the current input. *)
 }
@@ -23,9 +26,10 @@ type 'a source = {
   (** Should we wait for a delay before computing candidates ? *)
   default: 'a;
   (** Default value for the state *)
-  compute: 'a -> string -> 'a * candidate list;
-  (** computes takes the current state, the string before/after the
-      cursor and returns the new state along with a list of candidate *)
+  compute: 'a -> (string * string) list -> string -> 'a * candidate list;
+(** computes takes the already matched entries (real, display), the current entry,
+    the string before/after the cursor and returns the new state
+    along with a list of candidate *)
 }
 
 type ex_source = S : 'a source -> ex_source
