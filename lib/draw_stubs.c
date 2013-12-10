@@ -47,11 +47,11 @@ caml_width(value unit)
 
 void
 setup(int topbar, const char *bg, unsigned int lines) {
+    int x = 0, y = 0; /* position of the window */
     if (!dc) {
         dc = initdc();
     }
     initfont(dc, font);
-    int x, y;
     screen = DefaultScreen(dc->dpy);
     Window root = RootWindow(dc->dpy, screen);
     XSetWindowAttributes swa;
@@ -117,7 +117,7 @@ setup(int topbar, const char *bg, unsigned int lines) {
             DefaultDepth(dc->dpy, screen), CopyFromParent,
             DefaultVisual(dc->dpy, screen),
             CWOverrideRedirect | CWBackPixel | CWEventMask, &swa);
-
+XResizeWindow(dc->dpy, win, mw, mh);
     /* open input methods */
     xim = XOpenIM(dc->dpy, NULL, NULL, NULL);
     xic = XCreateIC(xim, XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
@@ -148,13 +148,29 @@ caml_clear(value bg)
     drawrect(dc, 0, 0, mw, mh, True, getcolor(dc, String_val (bg)));
     CAMLreturn(Val_unit);
 }
+
+value
+caml_resize(value line)
+{
+    CAMLparam1(line);
+     mh = (Int_val(line) + 1) * bh;
+    if(bottom) {
+        XMoveWindow(dc->dpy, win, 0, DisplayHeight(dc->dpy, screen) - mh);
+    }
+
+    XResizeWindow(dc->dpy, win, mw, mh);
+    resizedc(dc, mw, mh);
+    CAMLreturn(Val_unit);
+}
+
 value
 caml_drawtext(value string, value pos, value matches, value colors) {
     CAMLparam4(string, pos, matches, colors);
     size_t size = textw(dc, String_val (string));
     int x = Int_val(Field(pos, 0));
     if (bottom)
-            dc->y = Int_val(Field(pos, 1)) * bh + dc->font.ascent+1;
+      /* magic formula */
+            dc->y = mh - (bh - dc->font.ascent - 1 + Int_val(Field(pos, 1)) * bh);
     else
             dc->y = dc->font.ascent+1 + Int_val(Field(pos, 1)) * bh;
     drawrect(dc, x, dc->y-dc->font.ascent-1, size, bh, True, getcolor(dc, String_val(Field(colors, 2))));

@@ -81,8 +81,24 @@ let draw_matches line conf state =
     end ;
     x
 
+let draw_documentation conf state =
+  let m = state.compl.after_matches in
+  if conf.lines > 0 && m <> [] then
+    let l = Lazy.force (fst (List.hd m)).documentation in
+    let size = min (List.length l) conf.lines in
+    List.iter print_endline l;
+    let _ = Draw.resize size in
+    List.iteri (fun line s ->
+      ignore
+        (Draw.text ~line: (line+1) ~x: 0
+           ~fg:conf.normal_foreground
+           ~bg:conf.normal_background "%s" s)) (List.take size l)
+
 let draw_window conf state =
   Draw.clear "#000000";
+  (* Adjust the topbar first otherwise it messes up what has already
+     been drawn *)
+  let _ = draw_documentation conf state in
   let x = draw_matches 0 conf state in
   Draw.mapdc ();
   x
