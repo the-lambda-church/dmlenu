@@ -117,7 +117,7 @@ let filename root =
       in
       (directory, candidates), candidates
   in
-  S { delay = false ; default = (getenv "HOME", []) ; compute }
+  S { delay = false ; default = (root, []) ; compute }
 
 let from_list list = 
   let candidates =
