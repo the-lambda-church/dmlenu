@@ -44,11 +44,12 @@ type state = {
   before_matches: (candidate * Matching.result) list;
   after_matches: (candidate * Matching.result) list;
   entries: (program * string * string) list;
+  separator : string;
   program: program;
 }
 (** The state of the completion engine *)
 
-val make_state: program -> state
+val make_state: ?separator:string -> program -> state
 (** Creates an initial state out of a program *)
 
 val add_string : string -> state -> state

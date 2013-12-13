@@ -26,6 +26,7 @@ type state = {
   before_matches: (candidate * Matching.result) list;
   after_matches: (candidate * Matching.result) list;
   entries: (program * string * string) list;
+  separator : string ;
   program: program;
 }
 
@@ -51,11 +52,12 @@ let on_modify st =
   let after_matches = compute_matches st.before_cursor st.after_cursor sources in
   { st with before_matches = []; after_matches ; sources }
 
-let make_state (Program (sources, _) as program) = 
+let make_state ?(separator=" ") (Program (sources, _) as program) = 
   on_modify {
     before_cursor = "";
     after_cursor = "";
     sources = List.map (fun (S s) -> [], ST (s.default, s)) sources;
+    separator;
     program;
     after_matches = []; before_matches = [];
     entries = []
@@ -83,6 +85,7 @@ let next_entry candidate state =
     before_cursor = "";
     after_cursor = "";
     after_matches = []; before_matches = [];
+    separator = state.separator;
     program;
     sources = List.map (fun (S x) -> [], ST (x.default, x)) sources;
     entries = state.entries @ [state.program, candidate.real, candidate.display]
@@ -103,10 +106,15 @@ let complete state =
 let add_string s state = 
   let state' = on_modify { state with before_cursor = state.before_cursor ^ s } in
   try 
-    if state.before_cursor ^ state.after_cursor = (fst (List.hd state.after_matches)).display then
+    if 
+      s = state.separator &&
+      state.before_cursor ^ state.after_cursor = (fst (List.hd state.after_matches)).display
+    then
       complete state
-    else state'
-  with _ -> state'
+    else
+      state'
+  with _ ->
+    state'
 
 let cursor_left state = 
   if state.before_cursor = "" then state else
