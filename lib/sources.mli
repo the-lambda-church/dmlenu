@@ -8,8 +8,8 @@ type t = Completion.ex_source
 val files : ?filter:(string -> bool) -> string -> t
 (** A source that completes filenames in a given directory (or absolute filenames) *)
 
-val from_list : (string * string) list -> t
-val from_list_rev : (string * string) list -> t
+val from_list : (string * string * string) list -> t
+val from_list_rev : (string * string * string) list -> t
 (** A source built from a list (display, real) *)
 
 val from_list_ : string list -> t

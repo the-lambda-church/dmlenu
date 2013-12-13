@@ -26,9 +26,26 @@ let default_conf = {
 }
 
 let draw_match ?(hl = false) line conf x (candidate, list) =
-  10 + Draw.draw_text candidate.display (x, line) list
+  let tuple =
     (conf.normal_foreground, conf.match_foreground, 
      if hl then conf.focus_background else conf.normal_background)
+  in
+  let x = Draw.draw_text candidate.display (x, line) list tuple in
+  if line <> 0 then (
+    let str =
+      let rec shorten s =
+        if Draw.size (candidate.display ^ s) <= Draw.width () - 10 then s else
+        let s =
+          try "..." ^ String.sub s 10 (String.length s - 10) with _ -> ""
+        in
+        shorten s
+      in
+      shorten candidate.doc
+    in
+    let x = Draw.width () - (Draw.size str) - 10 in
+    ignore (Draw.draw_text str (x, line) [(false, 0, String.length str)] tuple)
+  ) ;
+  10 + x
   
 type app_state = {
   compl: state;

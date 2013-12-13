@@ -8,6 +8,9 @@ type candidate = {
   (** The string that should be displayed for the candidate *)
   real: string;
   (** The string that will be printed out if this candidate is picked *)
+  doc : string;
+  (** A "documentation" string that will be printed on the right of the
+      candidate if the window takes more than 1 line. *)
   completion: string;
   (** The string to use when this candidate is completed *)
   matching_function: (string -> Matching.result option);

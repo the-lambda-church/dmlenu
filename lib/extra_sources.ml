@@ -8,7 +8,7 @@ let chromium_bookmarks =
     let mk_entry ?prefix name url =
       let prefix str = match prefix with None -> str | Some s -> s / str in
       let name = prefix (if name = "" then url else name) in
-      (name, url)
+      (name, url, url)
     in
     let file = Sys.getenv "HOME" / ".config/chromium/Default/Bookmarks" in
     let data = J.from_file file |> J.Util.member "roots" in

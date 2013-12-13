@@ -113,15 +113,15 @@ let files ?(filter=fun x -> true) root =
             )
           in
           let completion = real in
-          Some { display ; completion; real ; matching_function }
+          Some { display ; completion; real ; doc=abs_path ; matching_function }
         )
       in
       (directory, candidates), candidates
   in
   S { delay = false ; default = (root, []) ; compute }
 
-let from_list_aux (display, real) = {
-  display; real; completion = display;
+let from_list_aux (display, real, doc) = {
+  display; real; completion = display; doc ;
   matching_function = Matching.match_query ~candidate:display;
 }
 
@@ -133,14 +133,18 @@ let from_list list =
   let candidates = List.map from_list_aux list in
   S { delay = false; default = (); compute = (fun () _ -> (), candidates) }
 
-let from_list_ list = List.map (fun x -> x, x) list |> from_list
-let from_list_rev_ list = List.rev_map (fun x -> x, x) list |> from_list
+let from_list_ list = List.map (fun x -> x, x, "") list |> from_list
+let from_list_rev_ list = List.rev_map (fun x -> x, x, "") list |> from_list
 
 let stdin ?sep () = 
   IO.lines_of stdin |> Enum.map (fun s ->
     match sep with
-    | None -> s, s
-    | Some c -> try String.split s ~by: c with _ -> s, s
+    | None -> s, s, ""
+    | Some c ->
+      try
+        let display, real = String.split s ~by:c in
+        display, real, ""
+      with _ -> s, s, ""
   ) |> List.of_enum |> from_list
       
 let binaries = 
@@ -160,6 +164,7 @@ let binaries =
   let lower_compare s1 s2 = String.(compare (lowercase s1) (lowercase s2)) in
   String.nsplit ~by:":" (getenv "PATH") |> List.map aux |> List.concat
   |> List.sort (fun (s1, _) (s2, _) -> lower_compare s1 s2)
+  |> List.map (fun (x, y) -> (x, y, ""))
   |> from_list
 
 let empty = S {
