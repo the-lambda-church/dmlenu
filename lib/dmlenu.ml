@@ -84,12 +84,18 @@ let draw_matches line x conf state =
 
 let one_match_per_line conf state =
   let m = state.compl.after_matches in
+  let offset, m =
+    let len = List.length m in
+    if len >= conf.lines then 0, m else
+    let offset = conf.lines - len in
+    offset, List.(rev @@ take offset state.compl.before_matches) @ m
+  in
   if m = [] then () else
   let size = min (List.length m) conf.lines in
   (* List.iter print_endline l; *)
   let _ = Draw.resize size in
   List.iteri (fun line s -> 
-    let hl = line = 0 in
+    let hl = line = offset in
     ignore (draw_match ~hl (line + 1) conf 5 s)
   ) m
 
