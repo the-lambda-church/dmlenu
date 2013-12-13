@@ -3,7 +3,7 @@ let get_workspace prompt =
   let compl =
     Completion.(
       make_state 
-        (Program ([Lazy.force Extra_sources.i3_workspaces], fun _ _ -> empty_program))
+        (Program (Lazy.force Extra_sources.i3_workspaces, fun _ _ -> empty_program))
     )
   in
   let app_state = {

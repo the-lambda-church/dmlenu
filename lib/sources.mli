@@ -9,9 +9,11 @@ val filename : string -> t
 (** A source that completes filenames in a given directory (or absolute filenames) *)
 
 val from_list : (string * string) list -> t
+val from_list_rev : (string * string) list -> t
 (** A source built from a list (display, real) *)
 
 val from_list_ : string list -> t
+val from_list_rev_ : string list -> t
 (** A source built from a list of candidates (display and real are the same) *)
 
 (*val kleene : string -> (t -> t)
@@ -51,8 +53,8 @@ val stdin : ?sep: string -> unit -> t
 
 (** {2 An interactive source} *)
 
-val add_subcommand : name:string -> t Lazy.t -> unit
-(** [add_subcommand ~name source] adds [source] under the name [name] in the
+val add_subcommand : name:string -> t list Lazy.t -> unit
+(** [add_subcommand ~name sources] adds [sources] under the name [name] in the
     list of subcommands used by [binaries_with_subcommands] *)
 
 val set_default_subcommand_hook : (string -> t) -> unit

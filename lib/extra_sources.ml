@@ -20,7 +20,7 @@ let chromium_bookmarks =
         mk_entry name url
       )
     in
-    Sources.from_list main
+    [ Sources.from_list main ]
   in
   Lazy.from_fun aux
 
@@ -35,7 +35,7 @@ let mpc_playlists =
     in
     let playlists = loop () in
     ignore (Unix.close_process_in ic) ;
-    Sources.from_list_ playlists
+    [ Sources.from_list_ playlists ]
   in
   Lazy.from_fun aux
 
@@ -44,7 +44,7 @@ let i3_workspaces =
     let ic = Unix.open_process_in "i3-msg -t get_workspaces" in
     let lst = J.from_channel ic in
     let workspaces = J.Util.(convert_each (to_string % member "name")) lst in
-    Sources.from_list_ workspaces
+    [ Sources.from_list_ workspaces ]
   in
   Lazy.from_fun aux
 

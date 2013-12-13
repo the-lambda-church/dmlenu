@@ -119,18 +119,22 @@ let filename root =
   in
   S { delay = false ; default = (root, []) ; compute }
 
+let from_list_aux (display, real) = {
+  display; real; completion = display;
+  matching_function = Matching.match_query ~candidate:display;
+}
+
+let from_list_rev list = 
+  let candidates = List.rev_map from_list_aux list in
+  S { delay = false; default = (); compute = (fun () _ -> (), candidates) }
+
 let from_list list = 
-  let candidates =
-    let aux (display, real) = {
-      display; real; completion = display;
-      matching_function = Matching.match_query ~candidate:display;
-    }
-    in
-    List.map aux list
-  in
+  let candidates = List.map from_list_aux list in
   S { delay = false; default = (); compute = (fun () _ -> (), candidates) }
 
 let from_list_ list = List.map (fun x -> x, x) list |> from_list
+let from_list_rev_ list = List.rev_map (fun x -> x, x) list |> from_list
+
 let stdin ?sep () = 
   IO.lines_of stdin |> Enum.map (fun s ->
     match sep with
@@ -186,7 +190,7 @@ let paths ~coupled_with =
     (fun _ -> true), coupled_with
   ]
 
-let subcommands : (string * t Lazy.t) list ref = ref []
+let subcommands : (string * t list Lazy.t) list ref = ref []
 let default_subcommand_hook : (string -> t) ref =
   ref (
     fun source_name ->
@@ -200,8 +204,8 @@ let default_subcommand_hook : (string -> t) ref =
 
 
 let set_default_subcommand_hook fn = default_subcommand_hook := fn
-let add_subcommand ~name lazy_source =
-  subcommands := (name, lazy_source) :: !subcommands
+let add_subcommand ~name lazy_sources =
+  subcommands := (name, lazy_sources) :: !subcommands
 
 let get_subcommand_by_name name =
   try Some (List.assoc name !subcommands)
@@ -210,11 +214,11 @@ let get_subcommand_by_name name =
 let binaries_with_subcommands =
   let initial = paths ~coupled_with:binaries in
   let rec get_new_source source_name =
-    let new_src =
+    let new_srcs =
       match get_subcommand_by_name source_name with
-      | None -> !default_subcommand_hook source_name
+      | None -> [ !default_subcommand_hook source_name ]
       | Some src -> Lazy.force src
     in
-    Program ([new_src], (fun _ x -> get_new_source (source_name ^ x)))
+    Program (new_srcs, (fun _ x -> get_new_source (source_name ^ x)))
   in
   Program ([initial], fun _ -> get_new_source)
