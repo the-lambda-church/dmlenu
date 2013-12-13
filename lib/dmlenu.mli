@@ -18,6 +18,10 @@ type conf = {
 
 val default_conf : conf
 
+val set_max_lines : int -> unit
+(** Update the configuration.
+    Changes the maximum size of the window. *)
+
 type app_state = {
   compl: Completion.state;
   prompt: string;

@@ -25,6 +25,8 @@ let default_conf = {
   window_background = "#000000" ;
 }
 
+let lines = ref 0
+let set_max_lines = (:=) lines
 
 let draw_match ?(hl = false) line conf x (candidate, list) =
   10 + Draw.draw_text candidate.display (x, line) list
@@ -86,12 +88,12 @@ let one_match_per_line conf state =
   let m = state.compl.after_matches in
   let offset, m =
     let len = List.length m in
-    if len >= conf.lines then 0, m else
-    let offset = conf.lines - len in
+    if len >= !lines then 0, m else
+    let offset = !lines - len in
     offset, List.(rev @@ take offset state.compl.before_matches) @ m
   in
   if m = [] then () else
-  let size = min (List.length m) conf.lines in
+  let size = min (List.length m) !lines in
   let _ = Draw.resize size in
   let () = Draw.clear "#000000" in
   List.iteri (fun line s -> 
@@ -102,7 +104,7 @@ let one_match_per_line conf state =
 let draw_window conf state =
   Draw.clear "#000000";
   let x = 
-    if conf.lines = 0 then
+    if !lines = 0 then
       let x = init_draw conf state in
       draw_matches 0 x conf state
     else (
@@ -116,7 +118,8 @@ let draw_window conf state =
 exception Finished of string
 
 let run_list { prompt ; compl } (conf : conf) =
-  Draw.setup (not conf.bottom) conf.window_background conf.lines; 
+  lines := conf.lines ;
+  Draw.setup (not conf.bottom) conf.window_background !lines; 
   ignore (Draw.grabkeys ()); 
   let rec loop state =
     let last_x = draw_window conf { prompt ; compl = state } in

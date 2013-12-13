@@ -35,12 +35,15 @@ let () =
 
 let run =
   let open Dmlenu in
-  let effect _ = Matching.(set_match_query_fun @@ fuzzy_match ~case:false) in
+  let effect source_name =
+    Matching.(set_match_query_fun @@ fuzzy_match ~case:false) ;
+    if String.starts_with source_name "series" then Dmlenu.set_max_lines 10
+  in
   let app_state = {
     prompt = "" ;
     compl = Completion.make_state (Sources.binaries_with_subcommands ~effect ()) ;
   }
   in
-  match run_list app_state { default_conf with lines = 5 } with
+  match run_list app_state default_conf with
   | [] -> ()
   | prog :: params as lst -> Unix.execv prog (Array.of_list lst)
