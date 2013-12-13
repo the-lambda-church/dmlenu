@@ -56,6 +56,7 @@ end
 
 let run prompt stdin bottom focus_foreground focus_background normal_foreground
       normal_background match_foreground window_background lines = 
+  let () = Matching.(set_match_query_fun @@ asmanur_match_query ~case:false) in
   let open Dmlenu in
   let conf = {
     lines; stdin; bottom; focus_foreground; focus_background; normal_foreground;

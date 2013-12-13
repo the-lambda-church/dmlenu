@@ -6,7 +6,7 @@ type candidate = {
   display: string;
   real: string;
   completion: string;
-  matching_function: (query: string -> Matching.result option);
+  matching_function: (string -> Matching.result option);
 }
 
 
@@ -33,7 +33,7 @@ let rec empty_program = Program ([], fun _ _ -> empty_program)
 
 let compute_matches before after sources = 
   let aux candidate =
-    match candidate.matching_function ~query: (before ^ after) with
+    match candidate.matching_function (before ^ after) with
     | None -> None
     | Some list -> Some (candidate, list)
   in

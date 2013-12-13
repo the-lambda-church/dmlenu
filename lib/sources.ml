@@ -61,20 +61,9 @@ let complete_in_word ?(drop_cont = false) separator f before after =
   let before, after = w.new_word (f w.before_inside w.after_inside) in
   before, if drop_cont then "" else after
 
-let match_in_word separator f ~query = 
+let match_in_word separator f query = 
   let { word ; _ } = get_word separator query "" in
   f word
-
-let match_strict candidate before after = 
-  let query = before ^ after in
-  try
-    let k = String.find candidate query in
-    Some [
-      (false, 0, k) ;
-      (true, k, k + String.length query) ;
-      (false, k + String.length query, String.length candidate) ;
-    ]
-  with _ -> None
 
 type t = ex_source
 
@@ -93,6 +82,7 @@ let basename s =
 let expand_tilde s = try
   Str.global_replace (Str.regexp "^~") (getenv "HOME") s
   with _ -> s
+
 let filename root =
   let root = root / "" in (* make it end by a slash *)
   let compute (old_dir, cache) query =
@@ -117,8 +107,7 @@ let filename root =
           in
           let matching_function =
             match_in_word "/" (fun query ->
-                Matching.match_query ~case: false ~query: (basename query) 
-                  ~candidate: display)
+              Matching.match_query ~candidate:display (basename query))
           in
           let completion = real in
           { display ; 
@@ -134,7 +123,7 @@ let from_list list =
   let candidates =
     let aux (display, real) = {
       display; real; completion = display;
-      matching_function = Matching.match_query ~case: true ~candidate: display;
+      matching_function = Matching.match_query ~candidate:display;
     }
     in
     List.map aux list
@@ -146,7 +135,8 @@ let stdin ?sep () =
   IO.lines_of stdin |> Enum.map (fun s ->
     match sep with
     | None -> s, s
-    | Some c -> try String.split s ~by: c with _ -> s, s) |> List.of_enum |> from_list
+    | Some c -> try String.split s ~by: c with _ -> s, s
+  ) |> List.of_enum |> from_list
       
 let binaries = 
   let aux s =
