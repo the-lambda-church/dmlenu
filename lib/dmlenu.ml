@@ -47,7 +47,8 @@ let displayable_matches x =
   in
   go x
 
-let draw_matches line conf state =
+let init_draw conf state =
+  let line = 0 in
   let x =
     if state.prompt = "" then 0 else
     Draw.(text ~line ~x:0 ~fg:conf.focus_foreground ~bg:conf.focus_background "%s" state.prompt)
@@ -55,12 +56,12 @@ let draw_matches line conf state =
   let x = List.fold_left Draw.(fun x (_, _, display) ->
     2+text ~line ~x ~fg: conf.focus_foreground ~bg:conf.focus_background "%s" display) x state.compl.entries
   in
-  let x =
-    5 + Draw.(
-      text ~line ~x ~fg:conf.normal_foreground ~bg:conf.normal_background "%s|%s"
-        state.compl.before_cursor state.compl.after_cursor
-    )
-  in
+  5 + Draw.(
+    text ~line ~x ~fg:conf.normal_foreground ~bg:conf.normal_background "%s|%s"
+      state.compl.before_cursor state.compl.after_cursor
+  )
+
+let draw_matches line x conf state =
   match state.compl.after_matches with
   | [] -> x
   | t :: q ->
@@ -81,9 +82,28 @@ let draw_matches line conf state =
     end ;
     x
 
+let one_match_per_line conf state =
+  let m = state.compl.after_matches in
+  if m = [] then () else
+  let size = min (List.length m) conf.lines in
+  (* List.iter print_endline l; *)
+  let _ = Draw.resize size in
+  List.iteri (fun line s -> 
+    let hl = line = 0 in
+    ignore (draw_match ~hl (line + 1) conf 5 s)
+  ) m
+
 let draw_window conf state =
   Draw.clear "#000000";
-  let x = draw_matches 0 conf state in
+  let x = 
+    if conf.lines = 0 then
+      let x = init_draw conf state in
+      draw_matches 0 x conf state
+    else (
+      one_match_per_line conf state ;
+      init_draw conf state
+    )
+  in
   Draw.mapdc ();
   x
 

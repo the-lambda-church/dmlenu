@@ -41,6 +41,6 @@ let run =
     compl = Completion.make_state (Sources.binaries_with_subcommands ~effect ()) ;
   }
   in
-  match run_list app_state default_conf with
+  match run_list app_state { default_conf with lines = 5 } with
   | [] -> ()
   | prog :: params as lst -> Unix.execv prog (Array.of_list lst)
