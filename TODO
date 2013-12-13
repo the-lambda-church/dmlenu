@@ -1,12 +1,6 @@
-- Allow use of arrows to browse through candidate.
-    (note: the way dmenu does that works well.)
-
-- Selection should return the current input, it shouldn't complete beforehand.
-
-- Add "loose" matching functions
-
-- Handle spaces in candidates names.
-  i.e. we should know that "~/my directory/" is a single element, not two
-  ("~/my" "directory/").
+- Improve candidate "browsing"
+  i.e. when using arrows, we always make the "first" candidate disappear,
+       instead we could go "to the end of the screen" before making anything
+       disappear.
 
 - Use Lwt: [Dmlenu.run] could return a [string option Lwt.t]
