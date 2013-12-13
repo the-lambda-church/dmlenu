@@ -49,6 +49,30 @@ let match_prefix ?(case=true) ~candidate query =
   let qlen = String.length query in
   Some [ (true, 0, qlen) ; (false, qlen, String.length candidate) ]
 
+let fuzzy_match ?(case=true) ~candidate query = 
+  let query, candidate = handle_case case query candidate in
+  let find_char (lst, offset, rest) c =
+    let skipped, rest = String.split rest ~by:(String.of_char c) in
+    let offset' = offset + String.length skipped in
+    let lst' =
+      (true, offset', offset' + 1) ::
+      (false, offset, offset') ::
+      lst
+    in
+    (lst', offset' + 1, rest)
+  in
+  try 
+    let (lst, offset, _) = String.fold_left find_char ([], 0, candidate) query in
+    Some (List.rev @@ (false, offset, String.length candidate) :: lst)
+  with Not_found ->
+    None
+
+let fuzzy_prefix ?(case=true) ~candidate query =
+  let query, candidate = handle_case case query candidate in
+  if query <> "" && candidate <> "" && candidate.[0] <> query.[0] then None else
+  fuzzy_match ~case ~candidate query
+
+(* ************************************************************************** *)
 let default_match_fun = ref (match_prefix ~case:true)
 
 let set_match_query_fun f = default_match_fun := f

@@ -25,3 +25,15 @@ val partial_match : ?case:bool -> candidate:string -> string -> result option
     substring of [candidate], [None] otherwise.. *)
 
 val match_prefix : ?case:bool -> candidate:string -> string -> result option
+
+val fuzzy_match : ?case:bool -> candidate:string -> string -> result option
+(** [fuzzy_match ?case ~candidate pattern] tries to find the letters of
+    [pattern] in [candidate] (in the right order).
+
+    For example:
+       - [pattern = "tuou"] and [candidate = "tremulous"] will match.
+       - [pattern = "touu"] and [candidate = "tremulous"] won't. *)
+
+val fuzzy_prefix : ?case:bool -> candidate:string -> string -> result option
+(** Same as [fuzzy_match] except that the first letter in [pattern] must be the
+    first letter of [candidate]. *)
