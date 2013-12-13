@@ -124,10 +124,16 @@ let run_list { prompt ; compl } (conf : conf) =
     | 0xff1b -> ret []
     | 0xff08 -> loop (remove state)
     | 0xff09 -> loop (complete state)
-    | 0xff51 -> loop (left state)
-    | 0xff53 -> loop (right state)
+
+    | 0xff51
+    | 0xff52 -> loop (left state)
+    | 0xff53
+    | 0xff54 -> loop (right state)
+
+      (* TODO: fix that [last_x] shit. *)
     | 0xff55 -> loop (pageup (displayable_matches last_x) state)
     | 0xff56 -> loop (pagedown (displayable_matches last_x) state)
+
     | 0xff0d ->
       let { after_matches ; before_cursor ; after_cursor ; _ } = state in
       let result =
