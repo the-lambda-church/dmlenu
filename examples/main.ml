@@ -68,7 +68,7 @@ let run prompt stdin bottom focus_foreground focus_background normal_foreground
     compl =
       let open Sources in
       let src = if conf.stdin then Program ([stdin ()], 
-                                            fun _ _ -> Completion.empty_program) else binaries_with_subcommands in
+                                            fun _ _ -> Completion.empty_program) else binaries_with_subcommands () in
       make_state src
       ;
   }

@@ -64,7 +64,10 @@ val set_default_subcommand_hook : (string -> t) -> unit
     file as a completion candidate; if the file doesn't exists it behaves as
     [paths ~coupled_with:binaries]. *)
 
-val binaries_with_subcommands : program
+val binaries_with_subcommands : ?effect:(string -> unit) -> unit -> program
 (** Behaves as [paths ~coupled_with:binaries] for the first completions, then
     looks in the subcommands list (see {!add_subcommand} and
-    {!set_default_subcommand_hook}) for the following completions. *)
+    {!set_default_subcommand_hook}) for the following completions.
+
+    [effect] can be set if one wishes to run some effectful computations during
+    a "transition" (e.g. changing the matching function, see {!Matching}) *)

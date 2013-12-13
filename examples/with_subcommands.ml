@@ -35,10 +35,10 @@ let () =
 
 let run =
   let open Dmlenu in
-  let () = Matching.(set_match_query_fun @@ fuzzy_prefix ~case:false) in
+  let effect _ = Matching.(set_match_query_fun @@ fuzzy_match ~case:false) in
   let app_state = {
     prompt = "" ;
-    compl = Completion.make_state (Sources.binaries_with_subcommands) ;
+    compl = Completion.make_state (Sources.binaries_with_subcommands ~effect ()) ;
   }
   in
   match run_list app_state default_conf with
