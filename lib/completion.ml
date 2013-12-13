@@ -89,7 +89,8 @@ let next_entry candidate state =
     program;
     sources = List.map (fun (S x) -> [], ST (x.default, x)) sources;
     entries = state.entries @ [state.program, candidate.real, candidate.display]
-  }  
+  }
+
 let complete state = 
   try
     let candidate = (fst (List.hd state.after_matches)) in

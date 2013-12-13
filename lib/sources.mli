@@ -5,7 +5,7 @@ type t = Completion.ex_source
 
 (** {3 Predefined sources and sources builder} *)
 
-val filename : string -> t
+val files : ?filter:(string -> bool) -> string -> t
 (** A source that completes filenames in a given directory (or absolute filenames) *)
 
 val from_list : (string * string) list -> t

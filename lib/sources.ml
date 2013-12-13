@@ -83,7 +83,7 @@ let expand_tilde s = try
   Str.global_replace (Str.regexp "^~") (getenv "HOME") s
   with _ -> s
 
-let filename root =
+let files ?(filter=fun x -> true) root =
   let root = root / "" in (* make it end by a slash *)
   let compute (old_dir, cache) query =
     let query = expand_tilde query in
@@ -98,21 +98,22 @@ let filename root =
       let files = try Sys.readdir directory with _ -> [||] in
       let candidates =
         Array.to_list files |>
-        List.map (fun file ->
-          let real = directory / file in
+        List.filter_map (fun file ->
+          let abs_path = directory / file in
+          if not (filter abs_path) then None else
           let real, display =
-            if Sys.file_exists real && Sys.is_directory real then 
-              real ^ "/", file ^ "/"
-            else real, file
+            if Sys.file_exists abs_path && Sys.is_directory abs_path then 
+              abs_path ^ "/", file ^ "/"
+            else
+              abs_path, file
           in
           let matching_function =
             match_in_word "/" (fun query ->
-              Matching.match_query ~candidate:display (basename query))
+              Matching.match_query ~candidate:display (basename query)
+            )
           in
           let completion = real in
-          { display ; 
-            completion;
-            real ; matching_function }
+          Some { display ; completion; real ; matching_function }
         )
       in
       (directory, candidates), candidates
@@ -184,9 +185,9 @@ let switch list =
 
 let paths ~coupled_with = 
   switch [
-    flip String.starts_with "./", filename (Sys.getcwd ());
-    flip String.starts_with "~/", filename (getenv "HOME");
-    flip String.starts_with "/", filename "/";
+    flip String.starts_with "./", files (Sys.getcwd ());
+    flip String.starts_with "~/", files (getenv "HOME");
+    flip String.starts_with "/", files "/";
     (fun _ -> true), coupled_with
   ]
 
