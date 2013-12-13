@@ -92,8 +92,8 @@ let one_match_per_line conf state =
   in
   if m = [] then () else
   let size = min (List.length m) conf.lines in
-  (* List.iter print_endline l; *)
   let _ = Draw.resize size in
+  let () = Draw.clear "#000000" in
   List.iteri (fun line s -> 
     let hl = line = offset in
     ignore (draw_match ~hl (line + 1) conf 5 s)
