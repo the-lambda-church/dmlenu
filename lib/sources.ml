@@ -207,10 +207,9 @@ let get_subcommand_by_name name =
   try Some (List.assoc name !subcommands)
   with Not_found -> None
 
-let binaries_with_subcommands ?(effect=ignore) () =
+let binaries_with_subcommands =
   let initial = paths ~coupled_with:binaries in
   let rec get_new_source source_name =
-    effect source_name ;
     let new_src =
       match get_subcommand_by_name source_name with
       | None -> !default_subcommand_hook source_name

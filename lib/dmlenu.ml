@@ -25,9 +25,6 @@ let default_conf = {
   window_background = "#000000" ;
 }
 
-let lines = ref 0
-let set_max_lines = (:=) lines
-
 let draw_match ?(hl = false) line conf x (candidate, list) =
   10 + Draw.draw_text candidate.display (x, line) list
     (conf.normal_foreground, conf.match_foreground, 
@@ -88,12 +85,12 @@ let one_match_per_line conf state =
   let m = state.compl.after_matches in
   let offset, m =
     let len = List.length m in
-    if len >= !lines then 0, m else
-    let offset = !lines - len in
-    offset, List.(rev @@ take offset state.compl.before_matches) @ m
+    if len >= conf.lines then 0, m else
+    let before = List.take (conf.lines - len) state.compl.before_matches in
+    List.length before, List.rev before @ m
   in
   if m = [] then () else
-  let size = min (List.length m) !lines in
+  let size = min (List.length m) conf.lines in
   let _ = Draw.resize size in
   let () = Draw.clear "#000000" in
   List.iteri (fun line s -> 
@@ -102,11 +99,13 @@ let one_match_per_line conf state =
   ) m
 
 let draw_window conf state =
-  Draw.clear "#000000";
   let x = 
-    if !lines = 0 then
+    if conf.lines = 0 then (
+      Draw.resize 0 ;
+      Draw.clear "#000000";
       let x = init_draw conf state in
       draw_matches 0 x conf state
+    )
     else (
       one_match_per_line conf state ;
       init_draw conf state
@@ -117,11 +116,12 @@ let draw_window conf state =
 
 exception Finished of string
 
-let run_list { prompt ; compl } (conf : conf) =
-  lines := conf.lines ;
-  Draw.setup (not conf.bottom) conf.window_background !lines; 
+let run_list 
+  ?(source_transition_hook=fun _ conf -> conf)
+  { prompt ; compl } (conf : conf) =
+  Draw.setup (not conf.bottom) conf.window_background conf.lines; 
   ignore (Draw.grabkeys ()); 
-  let rec loop state =
+  let rec loop conf state =
     let last_x = draw_window conf { prompt ; compl = state } in
     let (key, str) = Draw.next_event () in
     let ret k = 
@@ -131,17 +131,29 @@ let run_list { prompt ; compl } (conf : conf) =
     match key with
     (* beurk *)
     | 0xff1b -> ret []
-    | 0xff08 -> loop (remove state)
-    | 0xff09 -> loop (complete state)
+    | 0xff08 -> 
+      let state' = remove state in
+      let conf =
+        if state'.program == state.program then conf else
+        source_transition_hook state' conf
+      in
+      loop conf state'
+    | 0xff09 ->
+      let state' = complete state in
+      let conf =
+        if state'.program == state.program then conf else
+        source_transition_hook state' conf
+      in
+      loop conf state'
 
     | 0xff51
-    | 0xff52 -> loop (left state)
+    | 0xff52 -> loop conf (left state)
     | 0xff53
-    | 0xff54 -> loop (right state)
+    | 0xff54 -> loop conf (right state)
 
       (* TODO: fix that [last_x] shit. *)
-    | 0xff55 -> loop (pageup (displayable_matches last_x) state)
-    | 0xff56 -> loop (pagedown (displayable_matches last_x) state)
+    | 0xff55 -> loop conf (pageup (displayable_matches last_x) state)
+    | 0xff56 -> loop conf (pagedown (displayable_matches last_x) state)
 
     | 0xff0d ->
       let { after_matches ; before_cursor ; after_cursor ; _ } = state in
@@ -153,12 +165,18 @@ let run_list { prompt ; compl } (conf : conf) =
               with _ -> before_cursor ^ after_cursor]
       in
       ret result
-    | _ ->
-      loop (add_string str state)
-  in
-  loop compl
 
-let run a b =
-  match run_list a b with
+    | _ ->
+      let state' = add_string str state in
+      let conf =
+        if state'.program == state.program then conf else
+        source_transition_hook state' conf
+      in
+      loop conf state'
+  in
+  loop conf compl
+
+let run ?source_transition_hook a b =
+  match run_list ?source_transition_hook a b with
   | []  -> None
   | lst -> Some (String.concat " " lst)

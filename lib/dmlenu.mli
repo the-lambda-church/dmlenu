@@ -18,10 +18,6 @@ type conf = {
 
 val default_conf : conf
 
-val set_max_lines : int -> unit
-(** Update the configuration.
-    Changes the maximum size of the window. *)
-
 type app_state = {
   compl: Completion.state;
   prompt: string;
@@ -29,7 +25,7 @@ type app_state = {
 
 (** {3 Execution} *)
 
-val run : app_state -> conf -> string option
+val run : ?source_transition_hook:(Completion.state -> conf -> conf) -> app_state -> conf -> string option
 (** [run initial_state conf] creates the window and handles user inputs.
     Returns [Some user_input] when the user valid a completion (i.e. hits RET)
     or [None] when the user cancels (i.e. hits ESC)
@@ -37,5 +33,5 @@ val run : app_state -> conf -> string option
     N.B. this function is blocking. *)
 
 (* TODO: move before [run], more explicit documentation *)
-val run_list : app_state -> conf -> string list
+val run_list : ?source_transition_hook:(Completion.state -> conf -> conf) -> app_state -> conf -> string list
 (** Same as {!run} but returns the list of completed tokens *)
