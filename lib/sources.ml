@@ -178,7 +178,9 @@ let switch list =
     delay = false;
     default = None;
     compute = fun st query ->
-      let (S source) = snd (List.find (fun (f, b) -> f query) list) in
+      let (S source) =
+        Lazy.force @@ snd (List.find (fun (f, b) -> f query) list)
+      in
       match st with
       | Some (ST (state, source')) when Obj.magic source' == Obj.magic source ->
         let state, answer = source'.compute state query in
@@ -190,10 +192,10 @@ let switch list =
 
 let paths ~coupled_with = 
   switch [
-    flip String.starts_with "./", files (Sys.getcwd ());
-    flip String.starts_with "~/", files (getenv "HOME");
-    flip String.starts_with "/", files "/";
-    (fun _ -> true), coupled_with
+    flip String.starts_with "./", lazy (files (Sys.getcwd ()));
+    flip String.starts_with "~/", lazy (files (getenv "HOME"));
+    flip String.starts_with "/",  lazy (files "/");
+    (fun _ -> true), Lazy.from_val coupled_with
   ]
 
 let subcommands : (string * t list Lazy.t) list ref = ref []

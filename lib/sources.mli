@@ -27,13 +27,14 @@ val concat : string -> t -> t -> t*)
 val binaries : t
 (** A source that completes a binary of the system *)
 
-val switch : ((string -> bool) * t) list -> t
+val switch : ((string -> bool) * t Lazy.t) list -> t
 (** [switch guards] is a source that behaves like the sources in
     [guards]. To know what it source it behave like, it applies the
     predicate to the input and uses the first matching source. *)
 
 val empty : t
 (** The empty source. *)
+
 val paths : coupled_with:t -> t
 (** A source that complete like [coupled_with] except when what is before the
     cursor is (syntactically) a path, i.e. start with "/", "~/", or "./" *)
