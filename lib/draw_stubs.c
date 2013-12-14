@@ -146,7 +146,6 @@ caml_mapdc(value unit)
 caml_clear(value bg)
 {
     CAMLparam1(bg);
-    XClearWindow (dc->dpy, win) ;
     drawrect(dc, 0, 0, mw, mh, True, getcolor(dc, String_val (bg)));
     CAMLreturn(Val_unit);
 }
