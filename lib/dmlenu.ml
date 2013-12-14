@@ -113,7 +113,7 @@ let one_match_per_line conf state =
   List.iteri (fun line s -> 
     let hl = line = offset in
     ignore (draw_match ~hl (line + 1) conf 5 s)
-  ) m
+  ) (List.take size m)
 
 let draw_window conf state =
   let x = 
