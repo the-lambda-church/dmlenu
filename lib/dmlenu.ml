@@ -175,11 +175,10 @@ let run_list
     | 0xff0d ->
       let { after_matches ; before_cursor ; after_cursor ; _ } = state in
       let result =
-        List.map (fun (_, s, _) -> s) state.entries @
-          if before_cursor ^ after_cursor = "" then []
-          else
-            [try (fst (List.hd after_matches)).real
-              with _ -> before_cursor ^ after_cursor]
+        List.map (fun (_, s, _) -> s) state.entries @ [
+          try (fst (List.hd after_matches)).real
+          with _ -> before_cursor ^ after_cursor
+        ]
       in
       ret result
 
