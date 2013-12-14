@@ -46,13 +46,9 @@ The type of return of matching functions.  If it succeeded Some l,
 <br>
 NB: for the following function, the default value of <code class="code">case</code> is <code class="code">true</code>.<br>
 
-<pre><span id="VALasmanur_match_query"><span class="keyword">val</span> asmanur_match_query</span> : <code class="type">?case:bool -> candidate:string -> string -> <a href="Matching.html#TYPEresult">result</a> option</code></pre><div class="info ">
-<code class="code">asmanur_match_query ?case ~candidate query</code> returns the result of
-    matching <code class="code">candidate</code> against <code class="code">query</code>. If <code class="code">case</code> is true then the
-    matching is case sensitive.
-<p>
-
-    TODO(asmanur): rename + document the matching algorithm.<br>
+<pre><span id="VALsubset"><span class="keyword">val</span> subset</span> : <code class="type">?case:bool -> candidate:string -> string -> <a href="Matching.html#TYPEresult">result</a> option</code></pre><div class="info ">
+<code class="code">subset ?case ~candidate query</code> will match if query (interpreded as a set of
+    characters) is a subset of candidate (interpreted as a set of chars again).<br>
 </div>
 
 <pre><span id="VALpartial_match"><span class="keyword">val</span> partial_match</span> : <code class="type">?case:bool -> candidate:string -> string -> <a href="Matching.html#TYPEresult">result</a> option</code></pre><div class="info ">

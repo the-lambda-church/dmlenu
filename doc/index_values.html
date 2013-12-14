@@ -29,12 +29,6 @@ Computes the new state corresponding to the user pressing a character
     list of subcommands used by <code class="code">binaries_with_subcommands</code>
 </div>
 </td></tr>
-<tr><td><a href="Matching.html#VALasmanur_match_query">asmanur_match_query</a> [<a href="Matching.html">Matching</a>]</td>
-<td><div class="info">
-<code class="code">asmanur_match_query ?case ~candidate query</code> returns the result of
-    matching <code class="code">candidate</code> against <code class="code">query</code>.
-</div>
-</td></tr>
 <tr><td align="left"><br>B</td></tr>
 <tr><td><a href="Sources.html#VALbinaries">binaries</a> [<a href="Sources.html">Sources</a>]</td>
 <td><div class="info">
@@ -204,6 +198,12 @@ When <code class="code">binaries_with_subcommands</code> doesn't find a subcomma
 <tr><td><a href="Sources.html#VALstdin">stdin</a> [<a href="Sources.html">Sources</a>]</td>
 <td><div class="info">
 A source that reads its elements off stdin.
+</div>
+</td></tr>
+<tr><td><a href="Matching.html#VALsubset">subset</a> [<a href="Matching.html">Matching</a>]</td>
+<td><div class="info">
+<code class="code">subset ?case ~candidate query</code> will match if query (interpreded as a set of
+    characters) is a subset of candidate (interpreted as a set of chars again).
 </div>
 </td></tr>
 <tr><td><a href="Sources.html#VALswitch">switch</a> [<a href="Sources.html">Sources</a>]</td>
