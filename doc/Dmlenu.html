@@ -10,10 +10,12 @@
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
 <link title="Completion" rel="Chapter" href="Completion.html">
 <link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
 <link title="Sources" rel="Chapter" href="Sources.html">
-<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><link title="Execution" rel="Section" href="#3_Execution">
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><link title="Configuration" rel="Section" href="#2_Configuration">
+<link title="Execution" rel="Subsection" href="#3_Execution">
 <title>Dmlenu</title>
 </head>
 <body>
@@ -30,6 +32,8 @@ Main module of the library.
     Use it to build your own dmenu-like application.<br>
 </div>
 <hr width="100%">
+<br>
+<h2 id="2_Configuration">Configuration</h2><br>
 
 <pre><code><span id="TYPEconf"><span class="keyword">type</span> <code class="type"></code>conf</span> = {</code></pre><table class="typetable">
 <tr>
@@ -121,8 +125,16 @@ Main module of the library.
 <br>
 <h3 id="3_Execution">Execution</h3><br>
 
-<pre><span id="VALrun"><span class="keyword">val</span> run</span> : <code class="type"><a href="Dmlenu.html#TYPEapp_state">app_state</a> -> <a href="Dmlenu.html#TYPEconf">conf</a> -> string</code></pre><div class="info ">
+<pre><span id="VALrun"><span class="keyword">val</span> run</span> : <code class="type">?source_transition_hook:(<a href="Completion.html#TYPEstate">Completion.state</a> -> <a href="Dmlenu.html#TYPEconf">conf</a> -> <a href="Dmlenu.html#TYPEconf">conf</a>) -><br>       <a href="Dmlenu.html#TYPEapp_state">app_state</a> -> <a href="Dmlenu.html#TYPEconf">conf</a> -> string option</code></pre><div class="info ">
 <code class="code">run initial_state conf</code> creates the window and handles user inputs.
-      Returns the user selection when it finishes.<br>
+    Returns <code class="code">Some user_input</code> when the user valid a completion (i.e. hits RET)
+    or <code class="code">None</code> when the user cancels (i.e. hits ESC)
+<p>
+
+    N.B. this function is blocking.<br>
+</div>
+
+<pre><span id="VALrun_list"><span class="keyword">val</span> run_list</span> : <code class="type">?source_transition_hook:(<a href="Completion.html#TYPEstate">Completion.state</a> -> <a href="Dmlenu.html#TYPEconf">conf</a> -> <a href="Dmlenu.html#TYPEconf">conf</a>) -><br>       <a href="Dmlenu.html#TYPEapp_state">app_state</a> -> <a href="Dmlenu.html#TYPEconf">conf</a> -> string list</code></pre><div class="info ">
+Same as <a href="Dmlenu.html#VALrun"><code class="code">Dmlenu.run</code></a> but returns the list of completed tokens<br>
 </div>
 </body></html>

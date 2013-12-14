@@ -10,11 +10,11 @@
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
 <link title="Completion" rel="Chapter" href="Completion.html">
 <link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
 <link title="Sources" rel="Chapter" href="Sources.html">
 <link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><link title="An interactive source" rel="Section" href="#2_Aninteractivesource">
-<link title="Matching function & completion function" rel="Subsection" href="#3_Matchingfunctioncompletionfunction">
 <link title="Predefined sources and sources builder" rel="Subsection" href="#3_Predefinedsourcesandsourcesbuilder">
 <title>Sources</title>
 </head>
@@ -29,55 +29,40 @@
 Sources<br>
 </div>
 <hr width="100%">
-<br>
-<h3 id="3_Matchingfunctioncompletionfunction">Matching function &amp; completion function</h3><br>
-
-<pre><span id="VALmatch_strict"><span class="keyword">val</span> match_strict</span> : <code class="type">string -> string -> string -> <a href="Completion.html#TYPEmatch_result">Completion.match_result</a></code></pre><div class="info ">
-<code class="code">match_strict s</code> is a matching
-    function that matches only queries that
-    are substrings of <code class="code">s</code><br>
-</div>
-
-<pre><span id="VALmatch_in_word"><span class="keyword">val</span> match_in_word</span> : <code class="type">string -><br>       (string -> string -> <a href="Completion.html#TYPEmatch_result">Completion.match_result</a>) -><br>       string -> string -> <a href="Completion.html#TYPEmatch_result">Completion.match_result</a></code></pre><div class="info ">
-<code class="code">match_in_word separator f</code> matches a query if the current word
-    (according to <code class="code">separator</code>) matches f<br>
-</div>
-
-<pre><span id="VALcomplete_in_word"><span class="keyword">val</span> complete_in_word</span> : <code class="type">?drop_cont:bool -><br>       string -><br>       (string -> string -> string * string) -> string -> string -> string * string</code></pre><div class="info ">
-<code class="code">complete_in_word ?drop_cont separator f</code> completes only in the
-    current word (according to separator). If drop_cont is true (default
-    false), it will drop the words after the cursor.<br>
-</div>
 
 <pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = <code class="type"><a href="Completion.html#TYPEex_source">Completion.ex_source</a></code> </pre>
 
 <br>
 <h3 id="3_Predefinedsourcesandsourcesbuilder">Predefined sources and sources builder</h3><br>
 
-<pre><span id="VALfilename"><span class="keyword">val</span> filename</span> : <code class="type"><a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
-A source that completes to filename<br>
+<pre><span id="VALfiles"><span class="keyword">val</span> files</span> : <code class="type">?filter:(string -> bool) -> string -> <a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
+A source that completes filenames in a given directory (or absolute filenames)<br>
 </div>
 
-<pre><span id="VALfrom_list"><span class="keyword">val</span> from_list</span> : <code class="type">(string * string) list -> <a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
-A source built from a list (display, real)<br>
+<pre><span id="VALfrom_list"><span class="keyword">val</span> from_list</span> : <code class="type">(string * string * string) list -> <a href="Sources.html#TYPEt">t</a></code></pre>
+<pre><span id="VALfrom_list_rev"><span class="keyword">val</span> from_list_rev</span> : <code class="type">(string * string * string) list -> <a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
+A source built from a list (display, real, documentation).
+    See <a href="Completion.html#TYPEcandidate"><code class="code">Completion.candidate</code></a> for more information about these.<br>
 </div>
 
-<pre><span id="VALfrom_list_"><span class="keyword">val</span> from_list_</span> : <code class="type">string list -> <a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
-A source built from a list of candidates (display and real are the same)<br>
-</div>
-
-<pre><span id="VALkleene"><span class="keyword">val</span> kleene</span> : <code class="type">string -> <a href="Sources.html#TYPEt">t</a> -> <a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
-<code class="code">kleene sep s</code> builds a new source that completes
-    finite list of elements in <code class="code">s</code> separated by <code class="code">sep</code><br>
-</div>
-
-<pre><span id="VALconcat"><span class="keyword">val</span> concat</span> : <code class="type">string -> <a href="Sources.html#TYPEt">t</a> -> <a href="Sources.html#TYPEt">t</a> -> <a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
-<code class="code">concat sep s1 s2</code> builds a new source that completes an element
-    of <code class="code">s1</code> followed by an element of <code class="code">s2</code>, separated by <code class="code">sep</code><br>
+<pre><span id="VALfrom_list_"><span class="keyword">val</span> from_list_</span> : <code class="type">string list -> <a href="Sources.html#TYPEt">t</a></code></pre>
+<pre><span id="VALfrom_list_rev_"><span class="keyword">val</span> from_list_rev_</span> : <code class="type">string list -> <a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
+A source built from a list of candidates (display and real are the same, doc
+    is empty).<br>
 </div>
 
 <pre><span id="VALbinaries"><span class="keyword">val</span> binaries</span> : <code class="type"><a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
 A source that completes a binary of the system<br>
+</div>
+
+<pre><span id="VALswitch"><span class="keyword">val</span> switch</span> : <code class="type">((string -> bool) * <a href="Sources.html#TYPEt">t</a> Lazy.t) list -> <a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">switch guards</code> is a source that behaves like one of the sources in
+    <code class="code">guards</code>. To know what it source it behave like, it applies the
+    predicate to the input and uses the first matching source.<br>
+</div>
+
+<pre><span id="VALempty"><span class="keyword">val</span> empty</span> : <code class="type"><a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
+The empty source.<br>
 </div>
 
 <pre><span id="VALpaths"><span class="keyword">val</span> paths</span> : <code class="type">coupled_with:<a href="Sources.html#TYPEt">t</a> -> <a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
@@ -92,18 +77,11 @@ A source that reads its elements off stdin. If separator is not
     then lines are split wrt it and the first part is used as the
     display and the second part as the real<br>
 </div>
-
-<pre><span id="VALdependant_sum"><span class="keyword">val</span> dependant_sum</span> : <code class="type">string -> <a href="Sources.html#TYPEt">t</a> -> (string -> <a href="Sources.html#TYPEt">t</a>) -> <a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
-<code class="code">dependant_sum sep s f</code> builds the dependant sum of (s, f), ie. it
-    completes along <code class="code">s</code> first, and then it uses the candidate to determine
-    which source to use for the remaining part. The two parts are
-    separated by <code class="code">sep</code>.<br>
-</div>
 <br>
 <h2 id="2_Aninteractivesource">An interactive source</h2><br>
 
-<pre><span id="VALadd_subcommand"><span class="keyword">val</span> add_subcommand</span> : <code class="type">name:string -> <a href="Sources.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
-<code class="code">add_subcommand ~name source</code> adds <code class="code">source</code> under the name <code class="code">name</code> in the
+<pre><span id="VALadd_subcommand"><span class="keyword">val</span> add_subcommand</span> : <code class="type">name:string -> <a href="Sources.html#TYPEt">t</a> list Lazy.t -> unit</code></pre><div class="info ">
+<code class="code">add_subcommand ~name sources</code> adds <code class="code">sources</code> under the name <code class="code">name</code> in the
     list of subcommands used by <code class="code">binaries_with_subcommands</code><br>
 </div>
 
@@ -118,7 +96,7 @@ When <code class="code">binaries_with_subcommands</code> doesn't find a subcomma
     <code class="code">paths ~coupled_with:binaries</code>.<br>
 </div>
 
-<pre><span id="VALbinaries_with_subcommands"><span class="keyword">val</span> binaries_with_subcommands</span> : <code class="type"><a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
+<pre><span id="VALbinaries_with_subcommands"><span class="keyword">val</span> binaries_with_subcommands</span> : <code class="type"><a href="Completion.html#TYPEprogram">Completion.program</a></code></pre><div class="info ">
 Behaves as <code class="code">paths ~coupled_with:binaries</code> for the first completions, then
     looks in the subcommands list (see <a href="Sources.html#VALadd_subcommand"><code class="code">Sources.add_subcommand</code></a> and
     <a href="Sources.html#VALset_default_subcommand_hook"><code class="code">Sources.set_default_subcommand_hook</code></a>) for the following completions.<br>

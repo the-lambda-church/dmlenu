@@ -5,6 +5,7 @@
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
 <link title="Completion" rel="Chapter" href="Completion.html">
 <link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
 <link title="Sources" rel="Chapter" href="Sources.html">
@@ -12,7 +13,7 @@
 </head>
 <body>
 <code class="code"><span class="keyword">sig</span><br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;chromium_bookmarks&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Sources</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;mpc_playlists&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Sources</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;i3_workspaces&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Sources</span>.t<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;chromium_bookmarks&nbsp;:&nbsp;<span class="constructor">Sources</span>.t&nbsp;list&nbsp;<span class="constructor">Lazy</span>.t<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;mpc_playlists&nbsp;:&nbsp;<span class="constructor">Sources</span>.t&nbsp;list&nbsp;<span class="constructor">Lazy</span>.t<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;i3_workspaces&nbsp;:&nbsp;<span class="constructor">Sources</span>.t&nbsp;list&nbsp;<span class="constructor">Lazy</span>.t<br>
 <span class="keyword">end</span></code></body></html>

@@ -5,6 +5,7 @@
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
 <link title="Completion" rel="Chapter" href="Completion.html">
 <link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
 <link title="Sources" rel="Chapter" href="Sources.html">
@@ -12,31 +13,52 @@
 </head>
 <body>
 <code class="code"><span class="keyword">sig</span><br>
-&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;match_result&nbsp;=&nbsp;(bool&nbsp;*&nbsp;int&nbsp;*&nbsp;int)&nbsp;list&nbsp;option<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;candidate&nbsp;=&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;display&nbsp;:&nbsp;string;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;real&nbsp;:&nbsp;string;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;matching_function&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.match_result;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;completion_function&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;*&nbsp;string;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;doc&nbsp;:&nbsp;string;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;completion&nbsp;:&nbsp;string;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;matching_function&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Matching</span>.result&nbsp;option;<br>
 &nbsp;&nbsp;}<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;source&nbsp;=&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;delay&nbsp;:&nbsp;bool;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;:&nbsp;<span class="keywordsign">'</span>a;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;compute&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;*&nbsp;<span class="constructor">Completion</span>.candidate&nbsp;list;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;compute&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;*&nbsp;<span class="constructor">Completion</span>.candidate&nbsp;list;<br>
 &nbsp;&nbsp;}<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;ex_source&nbsp;=&nbsp;<span class="constructor">S</span>&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Completion</span>.source&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.ex_source<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;source_state&nbsp;=<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">ST</span>&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;*&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Completion</span>.source&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.source_state<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;program&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Program</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">Completion</span>.ex_source&nbsp;list&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.program)<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;state&nbsp;=&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;before_cursor&nbsp;:&nbsp;string;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;after_cursor&nbsp;:&nbsp;string;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;sources&nbsp;:&nbsp;(<span class="constructor">Completion</span>.candidate&nbsp;list&nbsp;*&nbsp;<span class="constructor">Completion</span>.source_state)&nbsp;list;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;matches&nbsp;:&nbsp;(<span class="constructor">Completion</span>.candidate&nbsp;*&nbsp;(bool&nbsp;*&nbsp;int&nbsp;*&nbsp;int)&nbsp;list)&nbsp;list;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;before_matches&nbsp;:&nbsp;(<span class="constructor">Completion</span>.candidate&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;after_matches&nbsp;:&nbsp;(<span class="constructor">Completion</span>.candidate&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entries&nbsp;:&nbsp;(<span class="constructor">Completion</span>.program&nbsp;*&nbsp;string&nbsp;*&nbsp;string)&nbsp;list;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;separator&nbsp;:&nbsp;string;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;program&nbsp;:&nbsp;<span class="constructor">Completion</span>.program;<br>
 &nbsp;&nbsp;}<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;make_state&nbsp;:&nbsp;<span class="constructor">Completion</span>.ex_source&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;make_state&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;?separator:string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.program&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;add_string&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;empty_program&nbsp;:&nbsp;<span class="constructor">Completion</span>.program<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;cursor_left&nbsp;:&nbsp;<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;cursor_right&nbsp;:&nbsp;<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;left&nbsp;:&nbsp;<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;right&nbsp;:&nbsp;<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;pageup&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;((<span class="constructor">Completion</span>.candidate&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Completion</span>.candidate&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Completion</span>.candidate&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;pagedown&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;((<span class="constructor">Completion</span>.candidate&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Completion</span>.candidate&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Completion</span>.candidate&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;remove&nbsp;:&nbsp;<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;complete&nbsp;:&nbsp;<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
 <span class="keyword">end</span></code></body></html>

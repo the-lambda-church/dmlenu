@@ -6,6 +6,7 @@
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
 <link title="Completion" rel="Chapter" href="Completion.html">
 <link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
 <link title="Sources" rel="Chapter" href="Sources.html">
@@ -22,7 +23,7 @@
 <tr><td align="left"><br>C</td></tr>
 <tr><td><a href="Completion.html#TYPEcandidate">candidate</a> [<a href="Completion.html">Completion</a>]</td>
 <td><div class="info">
-A candidate, as returned by sources
+This is the interface of the completion engine.
 </div>
 </td></tr>
 <tr><td><a href="Dmlenu.html#TYPEconf">conf</a> [<a href="Dmlenu.html">Dmlenu</a>]</td>
@@ -30,10 +31,16 @@ A candidate, as returned by sources
 <tr><td align="left"><br>E</td></tr>
 <tr><td><a href="Completion.html#TYPEex_source">ex_source</a> [<a href="Completion.html">Completion</a>]</td>
 <td></td></tr>
-<tr><td align="left"><br>M</td></tr>
-<tr><td><a href="Completion.html#TYPEmatch_result">match_result</a> [<a href="Completion.html">Completion</a>]</td>
+<tr><td align="left"><br>P</td></tr>
+<tr><td><a href="Completion.html#TYPEprogram">program</a> [<a href="Completion.html">Completion</a>]</td>
 <td><div class="info">
-This is the interface of the completion engine.
+State
+</div>
+</td></tr>
+<tr><td align="left"><br>R</td></tr>
+<tr><td><a href="Matching.html#TYPEresult">result</a> [<a href="Matching.html">Matching</a>]</td>
+<td><div class="info">
+The type of return of matching functions.
 </div>
 </td></tr>
 <tr><td align="left"><br>S</td></tr>
@@ -46,7 +53,7 @@ Sources
 <td></td></tr>
 <tr><td><a href="Completion.html#TYPEstate">state</a> [<a href="Completion.html">Completion</a>]</td>
 <td><div class="info">
-State
+The state of the completion engine
 </div>
 </td></tr>
 <tr><td align="left"><br>T</td></tr>

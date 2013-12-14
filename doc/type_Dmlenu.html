@@ -5,6 +5,7 @@
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
 <link title="Completion" rel="Chapter" href="Completion.html">
 <link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
 <link title="Sources" rel="Chapter" href="Sources.html">
@@ -25,5 +26,10 @@
 &nbsp;&nbsp;}<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;default_conf&nbsp;:&nbsp;<span class="constructor">Dmlenu</span>.conf<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;app_state&nbsp;=&nbsp;{&nbsp;compl&nbsp;:&nbsp;<span class="constructor">Completion</span>.state;&nbsp;prompt&nbsp;:&nbsp;string;&nbsp;}<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;run&nbsp;:&nbsp;<span class="constructor">Dmlenu</span>.app_state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.conf&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;run&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;?source_transition_hook:(<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.conf&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.conf)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Dmlenu</span>.app_state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.conf&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;option<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;run_list&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;?source_transition_hook:(<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.conf&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.conf)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Dmlenu</span>.app_state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.conf&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;list<br>
 <span class="keyword">end</span></code></body></html>
