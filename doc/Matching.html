@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="next" href="Completion.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
+<link title="Completion" rel="Chapter" href="Completion.html">
+<link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
+<link title="Sources" rel="Chapter" href="Sources.html">
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><link title="Predefined matching functions" rel="Section" href="#2_Predefinedmatchingfunctions">
+<title>Matching</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Completion.html" title="Completion">Next</a>
+</div>
+<h1>Module <a href="type_Matching.html">Matching</a></h1>
+
+<pre><span class="keyword">module</span> Matching: <code class="code">sig</code> <a href="Matching.html">..</a> <code class="code">end</code></pre><div class="info module top">
+The type of return of matching functions.  If it succeeded Some l,
+    a list of terms (match, start, stop) that denotes substring of the
+    candidates that are matched or not.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEresult"><span class="keyword">type</span> <code class="type"></code>result</span> = <code class="type">(bool * int * int) list</code> </pre>
+<div class="info ">
+The type of return of matching functions.  If it succeeded Some l,
+    a list of terms (match, start, stop) that denotes substring of the
+    candidates that are matched or not.<br>
+</div>
+
+
+<pre><span id="VALmatch_query"><span class="keyword">val</span> match_query</span> : <code class="type">candidate:string -> string -> <a href="Matching.html#TYPEresult">result</a> option</code></pre><div class="info ">
+<h3 id="3_Matchingfunction">Matching function</h3><br>
+</div>
+
+<pre><span id="VALset_match_query_fun"><span class="keyword">val</span> set_match_query_fun</span> : <code class="type">(candidate:string -> string -> <a href="Matching.html#TYPEresult">result</a> option) -> unit</code></pre><br>
+<h2 id="2_Predefinedmatchingfunctions">Predefined matching functions</h2><br>
+<br>
+NB: for the following function, the default value of <code class="code">case</code> is <code class="code">true</code>.<br>
+
+<pre><span id="VALasmanur_match_query"><span class="keyword">val</span> asmanur_match_query</span> : <code class="type">?case:bool -> candidate:string -> string -> <a href="Matching.html#TYPEresult">result</a> option</code></pre><div class="info ">
+<code class="code">asmanur_match_query ?case ~candidate query</code> returns the result of
+    matching <code class="code">candidate</code> against <code class="code">query</code>. If <code class="code">case</code> is true then the
+    matching is case sensitive.
+<p>
+
+    TODO(asmanur): rename + document the matching algorithm.<br>
+</div>
+
+<pre><span id="VALpartial_match"><span class="keyword">val</span> partial_match</span> : <code class="type">?case:bool -> candidate:string -> string -> <a href="Matching.html#TYPEresult">result</a> option</code></pre><div class="info ">
+<code class="code">partial_match ?case ~candidate sub</code> will return <code class="code">Some _</code> if <code class="code">sub</code> is a
+    substring of <code class="code">candidate</code>, <code class="code">None</code> otherwise..<br>
+</div>
+
+<pre><span id="VALmatch_prefix"><span class="keyword">val</span> match_prefix</span> : <code class="type">?case:bool -> candidate:string -> string -> <a href="Matching.html#TYPEresult">result</a> option</code></pre>
+<pre><span id="VALfuzzy_match"><span class="keyword">val</span> fuzzy_match</span> : <code class="type">?case:bool -> candidate:string -> string -> <a href="Matching.html#TYPEresult">result</a> option</code></pre><div class="info ">
+<code class="code">fuzzy_match ?case ~candidate pattern</code> tries to find the letters of
+    <code class="code">pattern</code> in <code class="code">candidate</code> (in the right order).
+<p>
+
+    For example:<ul>
+<li><code class="code">pattern = "tuou"</code> and <code class="code">candidate = "tremulous"</code> will match.</li>
+<li><code class="code">pattern = "touu"</code> and <code class="code">candidate = "tremulous"</code> won't.</li>
+</ul>
+<br>
+</div>
+
+<pre><span id="VALfuzzy_prefix"><span class="keyword">val</span> fuzzy_prefix</span> : <code class="type">?case:bool -> candidate:string -> string -> <a href="Matching.html#TYPEresult">result</a> option</code></pre><div class="info ">
+Same as <code class="code">fuzzy_match</code> except that the first letter in <code class="code">pattern</code> must be the
+    first letter of <code class="code">candidate</code>.<br>
+</div>
+</body></html>
