@@ -5,8 +5,8 @@ Dependencies
 
 - Oasis
 - Batteries
-- Cmdliner (optionnal)
 - Yojson (optionnal)
+- Cmdliner (optionnal, needed only to build the examples)
 
 Building and installing
 -----------------------
@@ -20,4 +20,4 @@ Documentation
 -------------
 
 Once `oasis setup` has run, just call `make doc`.  
-Or just go to : http://asmanur.github.io/dmlenu/
+Or just go to : http://the-lambda-church.github.io/dmlenu/
