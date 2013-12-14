@@ -108,6 +108,14 @@ let draw_matches line x conf state =
   end ;
   border
 
+let resize =
+  let current = ref 0 in
+  fun size ->
+    if !current <> size then (
+      current := size ;
+      Draw.resize size
+    )
+
 let one_match_per_line conf state =
   let m = state.compl.after_matches in
   let offset, m =
@@ -118,7 +126,7 @@ let one_match_per_line conf state =
   in
   if m = [] then () else
   let size = min (List.length m) conf.lines in
-  let _ = Draw.resize size in
+  let _ = resize size in
   let () = Draw.clear "#000000" in
   List.iteri (fun line s -> 
     let hl = line = offset in
@@ -128,7 +136,7 @@ let one_match_per_line conf state =
 let draw_window conf state =
   let x = 
     if conf.lines = 0 then (
-      Draw.resize 0 ;
+      resize 0 ;
       Draw.clear "#000000";
       let x = init_draw conf state in
       draw_matches 0 x conf state
