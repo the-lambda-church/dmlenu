@@ -10,25 +10,19 @@ val files : ?filter:(string -> bool) -> string -> t
 
 val from_list : (string * string * string) list -> t
 val from_list_rev : (string * string * string) list -> t
-(** A source built from a list (display, real) *)
+(** A source built from a list (display, real, documentation).
+    See {!Completion.candidate} for more information about these. *)
 
 val from_list_ : string list -> t
 val from_list_rev_ : string list -> t
-(** A source built from a list of candidates (display and real are the same) *)
-
-(*val kleene : string -> (t -> t)
-(** [kleene sep s] builds a new source that completes
-    finite list of elements in [s] separated by [sep] *)
-
-val concat : string -> t -> t -> t*)
-(** [concat sep s1 s2] builds a new source that completes an element
-    of [s1] followed by an element of [s2], separated by [sep] *)
+(** A source built from a list of candidates (display and real are the same, doc
+    is empty). *)
 
 val binaries : t
 (** A source that completes a binary of the system *)
 
 val switch : ((string -> bool) * t Lazy.t) list -> t
-(** [switch guards] is a source that behaves like the sources in
+(** [switch guards] is a source that behaves like one of the sources in
     [guards]. To know what it source it behave like, it applies the
     predicate to the input and uses the first matching source. *)
 
@@ -45,12 +39,6 @@ val stdin : ?sep: string -> unit -> t
     display fields of the candidate is the same.  If it is supplied,
     then lines are split wrt it and the first part is used as the
     display and the second part as the real *)
-
-(*val dependant_sum : string -> t -> (string -> t) -> t*)
-(** [dependant_sum sep s f] builds the dependant sum of (s, f), ie. it
-    completes along [s] first, and then it uses the candidate to determine
-    which source to use for the remaining part. The two parts are
-    separated by [sep]. *)
 
 (** {2 An interactive source} *)
 
