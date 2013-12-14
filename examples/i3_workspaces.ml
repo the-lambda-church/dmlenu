@@ -1,4 +1,5 @@
 let get_workspace prompt =
+  Matching.(set_match_query_fun @@ fuzzy_match ~case:false) ;
   let open Dmlenu in
   let compl =
     Completion.(
