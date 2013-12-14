@@ -31,7 +31,7 @@ let draw_match ?(hl = false) line conf x (candidate, list) =
      if hl then conf.focus_background else conf.normal_background)
   in
   let x = Draw.draw_text candidate.display (x, line) list tuple in
-  if line <> 0 then (
+  if line <> 0 && candidate.doc <> "" then (
     let str =
       let rec shorten s =
         if Draw.size (candidate.display ^ s) <= Draw.width () - 10 then s else
