@@ -4,3 +4,9 @@
        disappear.
 
 - Use Lwt: [Dmlenu.run] could return a [string option Lwt.t]
+
+- Prioritize complete matches in candidate list (i.e. they should come first).
+  Indeed when using fuzzy matching, "foo.ml" matches ".foo.ml.swp", "foo.ml" and
+  "foobar.ml".
+  In this example ".foo.ml.swp" will come first (because '.' < 'f'), it would
+  probably be better if "foo.ml" was the first suggestion.
