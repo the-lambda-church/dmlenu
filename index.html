@@ -1,42 +1,96 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<link rel="stylesheet" href="style.css" type="text/css">
-<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
-<link rel="Start" href="index.html">
-<link title="Index of types" rel=Appendix href="index_types.html">
-<link title="Index of values" rel=Appendix href="index_values.html">
-<link title="Index of modules" rel=Appendix href="index_modules.html">
-<link title="Completion" rel="Chapter" href="Completion.html">
-<link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
-<link title="Sources" rel="Chapter" href="Sources.html">
-<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title></title>
+<meta charset="utf-8">
+<title>Dmlenu, an OCaml library to create dmenu-like applications</title>
+<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-<h1></h1>
-<ul class="indexlist">
-<li><a href="index_types.html">Index of types</a></li>
-<li><a href="index_values.html">Index of values</a></li>
-<li><a href="index_modules.html">Index of modules</a></li>
-</ul>
-<br/><br>
-<table class="indextable">
-<tr><td class="module"><a href="Completion.html">Completion</a></td><td><div class="info">
-Completion engine
+<div id="banner"></div>
+<div id="main">
+    <div id="header">
+        <ul>
+            <li><span class="page-title">Dmlenu</span></li>
+            <li><a href="#">λ<sup>†</sup></a></li>
+            <li><a href="doc/index.html">Documentation</a></li>
+            <li><a href="http://github.com/the-lambda-church/dmlenu">Sources</a></li>
+        </ul>
+    </div>
+
+    <div class="article">
+        <h1><span class="title">Rational</span></h1>
+        <span>By <a href="http://github.com/the-lambda-church">The Lambda Church</a><span>
+        <span style="float: right">December 14, 2013</span>
+        <hr>
+        <p>We are all users of dmenu, but we find that some of its features were
+        underexploited, or completely missing :
+        <ul>
+            <li>dmenu_run is a fine (shell) script, but since dmenu completes
+            only in the list of candidates it took from stdin you can never have
+            completion on program arguments.</li>
+            <li>when you configure te window to span on several lines,
+            candidates are now displayed one per line, nothing more. (to be
+            fair, what else could there be?)</li>
+        </ul>
+        Dmlenu improves on these two points in several ways :
+        <ol>
+            <li>A completion candidate is now a tuple instead of just a string.<br>
+            The tuple consists of 3 string, a "display" which is what will be
+            shown to the user, a "real" which is what your application will
+            retrieve once the completion is done, and a "doc" field (more on
+            that later).
+            An example for the interest display/real is the case of files: the
+            display is the filename, the real is its absolute path.
+            </li>
+            <li>The candidate are not (only) coming from stdin anymore. Dmlenu
+            is library, as such you can specify arbitrarly many sources, and
+            transitions between them.
+            You can also specify sources which run some kind of analysis on the
+            current input to provide better candidates.</li>
+            <li>As long as the user hasn't hit enter, the completion continues.
+            So once the user has "completed" an item (i.e. hit tab, or space
+            after a complete name) the "transition" function which we talked
+            about earlier will be called and provide a new source.<br>
+            You can for example decide that if the input is "chrome" the new
+            candidates will be your browsers bookmarks (display = bookmark name,
+            real = url!)</li>
+            <li>When the window spans on several lines, we also show a candidate
+            (its display) per line, but also show the "doc" field.
+            That's not much of an improvement, but we have some ideas for future
+            development.</li>
+        </ol></p>
+
+        <p>Oh and did I mention that dmlenu is a library?<br>
+        You can in just a few line of codes design the application that better
+        fits <em>your</em> needs : you can dynamically change the number of
+        lines depending on the source, you can change the matching function
+        (string, fuzzy, you name it), etc.</p>
+
+        <p>It is developped in OCaml and available on Github (link in the
+        header).<br></p>
+    </div>
+
+    <div class="article">
+        <h1>
+            <span class="title">Screencast: dmlenu in action</span>
+        </h1>
+        <span>By <a href="http://github.com/trefis">trefis</a></span>
+        <span style="float: right">December 14, 2013</span>
+        <hr>
+        <p>
+        Just a quick screencast to show you the features of dmlenu (and how its
+        usage differs from dmenu) :
+        <center>
+            <video width="800" height="608" controls>
+                <source src="http://xmpp.scengine.org/~trefis/dmlenu.ogv" type="video/ogg">
+                Your browser does not support the video tag.
+            </video>
+        </center>
+        </p>
+        <p>
+        The source for this particular application can be found <a
+            href="http://xmpp.scengine.org/~trefis/pastes/main.ml.html">here</a>.
+        </p>
+    </div>
 </div>
-</td></tr>
-<tr><td class="module"><a href="Dmlenu.html">Dmlenu</a></td><td><div class="info">
-Main module of the library.
-</div>
-</td></tr>
-<tr><td class="module"><a href="Sources.html">Sources</a></td><td><div class="info">
-Sources
-</div>
-</td></tr>
-<tr><td class="module"><a href="Extra_sources.html">Extra_sources</a></td><td><div class="info">
-More specific sources.
-</div>
-</td></tr>
-</table>
 </body>
 </html>
