@@ -78,25 +78,35 @@ let init_draw conf state =
   )
 
 let draw_matches line x conf state =
-  match state.compl.after_matches with
-  | [] -> x
-  | t :: q ->
-    let tuple =
-      conf.normal_foreground, conf.match_foreground, conf.normal_background
-    in
-    let x =
-      match state.compl.before_matches with
-      | [] -> x
-      | _ -> Draw.draw_text "<" (x, line) [(false, 0, 1)] tuple
-    in
-    let x' = draw_match ~hl: true line conf x t in
-    let displayable, rest = displayable_matches x' q in
-    let border = List.fold_left (draw_match line conf) x' displayable in
-    begin match rest with
-    | [] -> ()
-    | _ -> ignore (Draw.draw_text ">" (border, line) [(false, 0, 1)] tuple)
-    end ;
-    x
+  let tuple =
+    conf.normal_foreground, conf.match_foreground, conf.normal_background
+  in
+  let x_offset = x + Draw.size "<" in
+  let displayable, rest = displayable_matches x_offset state.compl.after_matches in
+  let offset, displayable, befores =
+    match rest with
+    | _ :: _ -> 0, displayable, state.compl.before_matches
+    | [] ->
+      let len_after = List.length displayable in
+      let lst = List.rev displayable @ state.compl.before_matches in
+      let displayable, befores = displayable_matches x_offset lst in
+      List.length displayable - len_after, List.rev displayable, befores
+  in
+  let _, border =
+    List.fold_left (fun (i, x) m ->
+      let hl = i = offset in
+      i + 1, draw_match ~hl line conf x m
+    ) (0, x_offset) displayable
+  in
+  begin match befores with
+  | [] -> ()
+  | _  -> ignore (Draw.draw_text "<" (x, line) [(false, 0, 1)] tuple)
+  end ;
+  begin match rest with
+  | [] -> ()
+  | _ -> ignore (Draw.draw_text ">" (border, line) [(false, 0, 1)] tuple)
+  end ;
+  border
 
 let one_match_per_line conf state =
   let m = state.compl.after_matches in
