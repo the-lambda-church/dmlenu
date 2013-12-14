@@ -13,12 +13,10 @@ val set_match_query_fun : (candidate:string -> string -> result option) -> unit
 
 (** NB: for the following function, the default value of [case] is [true]. *)
 
-val asmanur_match_query : ?case:bool -> candidate:string -> string -> result option
-(** [asmanur_match_query ?case ~candidate query] returns the result of
-    matching [candidate] against [query]. If [case] is true then the
-    matching is case sensitive.
-
-    TODO(asmanur): rename + document the matching algorithm. *)
+val subset : ?case:bool -> candidate:string -> string -> result option
+(** [subset ?case ~candidate query] will match if query (interpreded as a set of
+    characters) is a subset of candidate (interpreted as a set of chars again).
+*)
 
 val partial_match : ?case:bool -> candidate:string -> string -> result option
 (** [partial_match ?case ~candidate sub] will return [Some _] if [sub] is a

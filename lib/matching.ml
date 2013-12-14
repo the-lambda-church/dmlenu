@@ -19,7 +19,7 @@ let make_list candidate list =
     (List.rev ((false, old, String.length candidate) :: list)) in
   list
 
-let asmanur_match_query ?(case=true) ~candidate query =
+let subset ?(case=true) ~candidate query =
   let query, candidate = handle_case case query candidate in
   try
     let words = List.filter ((<>) "") (String.nsplit query " ") in
