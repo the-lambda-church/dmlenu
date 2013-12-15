@@ -14,8 +14,7 @@
 <link title="Completion" rel="Chapter" href="Completion.html">
 <link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
 <link title="Sources" rel="Chapter" href="Sources.html">
-<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><link title="An interactive source" rel="Section" href="#2_Aninteractivesource">
-<link title="Predefined sources and sources builder" rel="Subsection" href="#3_Predefinedsourcesandsourcesbuilder">
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><link title="Predefined sources and sources builder" rel="Section" href="#3_Predefinedsourcesandsourcesbuilder">
 <title>Sources</title>
 </head>
 <body>
@@ -76,29 +75,5 @@ A source that reads its elements off stdin. If separator is not
     display fields of the candidate is the same.  If it is supplied,
     then lines are split wrt it and the first part is used as the
     display and the second part as the real<br>
-</div>
-<br>
-<h2 id="2_Aninteractivesource">An interactive source</h2><br>
-
-<pre><span id="VALadd_subcommand"><span class="keyword">val</span> add_subcommand</span> : <code class="type">name:string -> <a href="Sources.html#TYPEt">t</a> list Lazy.t -> unit</code></pre><div class="info ">
-<code class="code">add_subcommand ~name sources</code> adds <code class="code">sources</code> under the name <code class="code">name</code> in the
-    list of subcommands used by <code class="code">binaries_with_subcommands</code><br>
-</div>
-
-<pre><span id="VALset_default_subcommand_hook"><span class="keyword">val</span> set_default_subcommand_hook</span> : <code class="type">(string -> <a href="Sources.html#TYPEt">t</a>) -> unit</code></pre><div class="info ">
-When <code class="code">binaries_with_subcommands</code> doesn't find a subcommand of a given name
-    <code class="code">n</code> it will call the default subcommand hook with the string <code class="code">n</code>.
-<p>
-
-    The default behavior of this hook (i.e. if this function is never called) is
-    to look for a file <code class="code">"$HOME/.config/dmlenu/n"</code> and treat each line of this
-    file as a completion candidate; if the file doesn't exists it behaves as
-    <code class="code">paths ~coupled_with:binaries</code>.<br>
-</div>
-
-<pre><span id="VALbinaries_with_subcommands"><span class="keyword">val</span> binaries_with_subcommands</span> : <code class="type"><a href="Completion.html#TYPEprogram">Completion.program</a></code></pre><div class="info ">
-Behaves as <code class="code">paths ~coupled_with:binaries</code> for the first completions, then
-    looks in the subcommands list (see <a href="Sources.html#VALadd_subcommand"><code class="code">Sources.add_subcommand</code></a> and
-    <a href="Sources.html#VALset_default_subcommand_hook"><code class="code">Sources.set_default_subcommand_hook</code></a>) for the following completions.<br>
 </div>
 </body></html>

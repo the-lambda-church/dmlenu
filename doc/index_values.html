@@ -23,23 +23,10 @@
 Computes the new state corresponding to the user pressing a character
 </div>
 </td></tr>
-<tr><td><a href="Sources.html#VALadd_subcommand">add_subcommand</a> [<a href="Sources.html">Sources</a>]</td>
-<td><div class="info">
-<code class="code">add_subcommand ~name sources</code> adds <code class="code">sources</code> under the name <code class="code">name</code> in the
-    list of subcommands used by <code class="code">binaries_with_subcommands</code>
-</div>
-</td></tr>
 <tr><td align="left"><br>B</td></tr>
 <tr><td><a href="Sources.html#VALbinaries">binaries</a> [<a href="Sources.html">Sources</a>]</td>
 <td><div class="info">
 A source that completes a binary of the system
-</div>
-</td></tr>
-<tr><td><a href="Sources.html#VALbinaries_with_subcommands">binaries_with_subcommands</a> [<a href="Sources.html">Sources</a>]</td>
-<td><div class="info">
-Behaves as <code class="code">paths ~coupled_with:binaries</code> for the first completions, then
-    looks in the subcommands list (see <a href="Sources.html#VALadd_subcommand"><code class="code">Sources.add_subcommand</code></a> and
-    <a href="Sources.html#VALset_default_subcommand_hook"><code class="code">Sources.set_default_subcommand_hook</code></a>) for the following completions.
 </div>
 </td></tr>
 <tr><td align="left"><br>C</td></tr>
@@ -66,21 +53,27 @@ Computes the new state corresponding to the user going right
 <tr><td align="left"><br>D</td></tr>
 <tr><td><a href="Dmlenu.html#VALdefault_conf">default_conf</a> [<a href="Dmlenu.html">Dmlenu</a>]</td>
 <td></td></tr>
+<tr><td><a href="Completion.html#VALdummy_machine">dummy_machine</a> [<a href="Completion.html">Completion</a>]</td>
+<td><div class="info">
+The state machine that does not offer any completion
+</div>
+</td></tr>
 <tr><td align="left"><br>E</td></tr>
 <tr><td><a href="Sources.html#VALempty">empty</a> [<a href="Sources.html">Sources</a>]</td>
 <td><div class="info">
 The empty source.
 </div>
 </td></tr>
-<tr><td><a href="Completion.html#VALempty_program">empty_program</a> [<a href="Completion.html">Completion</a>]</td>
-<td><div class="info">
-The program that does not offer any completion
-</div>
-</td></tr>
 <tr><td align="left"><br>F</td></tr>
 <tr><td><a href="Sources.html#VALfiles">files</a> [<a href="Sources.html">Sources</a>]</td>
 <td><div class="info">
 A source that completes filenames in a given directory (or absolute filenames)
+</div>
+</td></tr>
+<tr><td><a href="Extra_sources.html#VALfrom_file">from_file</a> [<a href="Extra_sources.html">Extra_sources</a>]</td>
+<td><div class="info">
+<code class="code">from_file filename</code> creates a source from the lines in <code class="code">filename</code> (each
+    line in this file is a candidate)
 </div>
 </td></tr>
 <tr><td><a href="Sources.html#VALfrom_list">from_list</a> [<a href="Sources.html">Sources</a>]</td>
@@ -116,6 +109,11 @@ Same as <code class="code">fuzzy_match</code> except that the first letter in <c
 List of existing i3 workspaces.
 </div>
 </td></tr>
+<tr><td><a href="Completion.html#VALiterate">iterate</a> [<a href="Completion.html">Completion</a>]</td>
+<td><div class="info">
+<code class="code">iterate sources</code> offers completions from sources, indefinitely.
+</div>
+</td></tr>
 <tr><td align="left"><br>L</td></tr>
 <tr><td><a href="Completion.html#VALleft">left</a> [<a href="Completion.html">Completion</a>]</td>
 <td><div class="info">
@@ -125,7 +123,7 @@ Computes the new state corresponding to the user selecting the candidate on the 
 <tr><td align="left"><br>M</td></tr>
 <tr><td><a href="Completion.html#VALmake_state">make_state</a> [<a href="Completion.html">Completion</a>]</td>
 <td><div class="info">
-Creates an initial state out of a program
+Creates an initial state out of a state machine
 </div>
 </td></tr>
 <tr><td><a href="Matching.html#VALmatch_prefix">match_prefix</a> [<a href="Matching.html">Matching</a>]</td>
@@ -187,17 +185,17 @@ Same as <a href="Dmlenu.html#VALrun"><code class="code">Dmlenu.run</code></a> bu
 </div>
 </td></tr>
 <tr><td align="left"><br>S</td></tr>
-<tr><td><a href="Sources.html#VALset_default_subcommand_hook">set_default_subcommand_hook</a> [<a href="Sources.html">Sources</a>]</td>
-<td><div class="info">
-When <code class="code">binaries_with_subcommands</code> doesn't find a subcommand of a given name
-    <code class="code">n</code> it will call the default subcommand hook with the string <code class="code">n</code>.
-</div>
-</td></tr>
 <tr><td><a href="Matching.html#VALset_match_query_fun">set_match_query_fun</a> [<a href="Matching.html">Matching</a>]</td>
 <td></td></tr>
 <tr><td><a href="Sources.html#VALstdin">stdin</a> [<a href="Sources.html">Sources</a>]</td>
 <td><div class="info">
 A source that reads its elements off stdin.
+</div>
+</td></tr>
+<tr><td><a href="Extra_sources.html#VALstm_from_file">stm_from_file</a> [<a href="Extra_sources.html">Extra_sources</a>]</td>
+<td><div class="info">
+<code class="code">stm_from_file f</code> starts by offering candidates from file <code class="code">f</code>, once a
+    candidate <code class="code">x</code> has been selected, it will behave as <code class="code">stm_from_file (f ^ x)</code>.
 </div>
 </td></tr>
 <tr><td><a href="Matching.html#VALsubset">subset</a> [<a href="Matching.html">Matching</a>]</td>

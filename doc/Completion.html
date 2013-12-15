@@ -129,18 +129,26 @@ A candidate, as returned by sources<br>
 
 
 
-<pre><code><span id="TYPEprogram"><span class="keyword">type</span> <code class="type"></code>program</span> = </code></pre><table class="typetable">
+<pre><code><span id="TYPEstate_machine"><span class="keyword">type</span> <code class="type"></code>state_machine</span> = {</code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
-<code><span class="keyword">|</span></code></td>
+<code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTprogram.Program"><span class="constructor">Program</span></span> <span class="keyword">of</span> <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a> list * (string -> string -> <a href="Completion.html#TYPEprogram">program</a>)</code></code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >A completion program: a list of current source and a way to get
-    the next sources depending on the current input (real, display)</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+<code><span id="TYPEELTstate_machine.ex_sources">ex_sources</span>&nbsp;: <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a> Lazy.t list</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstate_machine.transition">transition</span>&nbsp;: <code class="type">display:string -> real:string -> <a href="Completion.html#TYPEstate_machine">state_machine</a></code>;</code></td>
+
 </tr></table>
+}
 
 <div class="info ">
-<h2 id="2_State">State</h2><br>
+A completion state machine: a list of current source and a way to get
+    the next sources depending on the current input.<br>
 </div>
 
 
@@ -184,7 +192,7 @@ A candidate, as returned by sources<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTstate.entries">entries</span>&nbsp;: <code class="type">(<a href="Completion.html#TYPEprogram">program</a> * string * string) list</code>;</code></td>
+<code><span id="TYPEELTstate.entries">entries</span>&nbsp;: <code class="type">(<a href="Completion.html#TYPEstate_machine">state_machine</a> * string * string) list</code>;</code></td>
 
 </tr>
 <tr>
@@ -198,26 +206,32 @@ A candidate, as returned by sources<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTstate.program">program</span>&nbsp;: <code class="type"><a href="Completion.html#TYPEprogram">program</a></code>;</code></td>
+<code><span id="TYPEELTstate.program">program</span>&nbsp;: <code class="type"><a href="Completion.html#TYPEstate_machine">state_machine</a></code>;</code></td>
 
 </tr></table>
 }
 
 <div class="info ">
+<h2 id="2_State">State</h2>
+<p>
 The state of the completion engine<br>
 </div>
 
 
-<pre><span id="VALmake_state"><span class="keyword">val</span> make_state</span> : <code class="type">?separator:string -> <a href="Completion.html#TYPEprogram">program</a> -> <a href="Completion.html#TYPEstate">state</a></code></pre><div class="info ">
-Creates an initial state out of a program<br>
+<pre><span id="VALmake_state"><span class="keyword">val</span> make_state</span> : <code class="type">?separator:string -> <a href="Completion.html#TYPEstate_machine">state_machine</a> -> <a href="Completion.html#TYPEstate">state</a></code></pre><div class="info ">
+Creates an initial state out of a state machine<br>
 </div>
 
 <pre><span id="VALadd_string"><span class="keyword">val</span> add_string</span> : <code class="type">string -> <a href="Completion.html#TYPEstate">state</a> -> <a href="Completion.html#TYPEstate">state</a></code></pre><div class="info ">
 Computes the new state corresponding to the user pressing a character<br>
 </div>
 
-<pre><span id="VALempty_program"><span class="keyword">val</span> empty_program</span> : <code class="type"><a href="Completion.html#TYPEprogram">program</a></code></pre><div class="info ">
-The program that does not offer any completion<br>
+<pre><span id="VALdummy_machine"><span class="keyword">val</span> dummy_machine</span> : <code class="type"><a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
+The state machine that does not offer any completion<br>
+</div>
+
+<pre><span id="VALiterate"><span class="keyword">val</span> iterate</span> : <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a> Lazy.t list -> <a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
+<code class="code">iterate sources</code> offers completions from sources, indefinitely.<br>
 </div>
 
 <pre><span id="VALcursor_left"><span class="keyword">val</span> cursor_left</span> : <code class="type"><a href="Completion.html#TYPEstate">state</a> -> <a href="Completion.html#TYPEstate">state</a></code></pre><div class="info ">

@@ -28,23 +28,25 @@
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;ex_source&nbsp;=&nbsp;<span class="constructor">S</span>&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Completion</span>.source&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.ex_source<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;source_state&nbsp;=<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">ST</span>&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;*&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Completion</span>.source&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.source_state<br>
-&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;program&nbsp;=<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Program</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">Completion</span>.ex_source&nbsp;list&nbsp;*<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.program)<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;state_machine&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ex_sources&nbsp;:&nbsp;<span class="constructor">Completion</span>.ex_source&nbsp;<span class="constructor">Lazy</span>.t&nbsp;list;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;transition&nbsp;:&nbsp;display:string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;real:string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine;<br>
+&nbsp;&nbsp;}<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;state&nbsp;=&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;before_cursor&nbsp;:&nbsp;string;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;after_cursor&nbsp;:&nbsp;string;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;sources&nbsp;:&nbsp;(<span class="constructor">Completion</span>.candidate&nbsp;list&nbsp;*&nbsp;<span class="constructor">Completion</span>.source_state)&nbsp;list;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;before_matches&nbsp;:&nbsp;(<span class="constructor">Completion</span>.candidate&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;after_matches&nbsp;:&nbsp;(<span class="constructor">Completion</span>.candidate&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;entries&nbsp;:&nbsp;(<span class="constructor">Completion</span>.program&nbsp;*&nbsp;string&nbsp;*&nbsp;string)&nbsp;list;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entries&nbsp;:&nbsp;(<span class="constructor">Completion</span>.state_machine&nbsp;*&nbsp;string&nbsp;*&nbsp;string)&nbsp;list;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;separator&nbsp;:&nbsp;string;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;program&nbsp;:&nbsp;<span class="constructor">Completion</span>.program;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;program&nbsp;:&nbsp;<span class="constructor">Completion</span>.state_machine;<br>
 &nbsp;&nbsp;}<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;make_state&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;?separator:string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.program&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
+&nbsp;&nbsp;&nbsp;&nbsp;?separator:string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;add_string&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;empty_program&nbsp;:&nbsp;<span class="constructor">Completion</span>.program<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;dummy_machine&nbsp;:&nbsp;<span class="constructor">Completion</span>.state_machine<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;iterate&nbsp;:&nbsp;<span class="constructor">Completion</span>.ex_source&nbsp;<span class="constructor">Lazy</span>.t&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;cursor_left&nbsp;:&nbsp;<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;cursor_right&nbsp;:&nbsp;<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;left&nbsp;:&nbsp;<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>

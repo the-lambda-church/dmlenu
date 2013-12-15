@@ -30,16 +30,26 @@ More specific sources.
 </div>
 <hr width="100%">
 
-<pre><span id="VALchromium_bookmarks"><span class="keyword">val</span> chromium_bookmarks</span> : <code class="type"><a href="Sources.html#TYPEt">Sources.t</a> list Lazy.t</code></pre><div class="info ">
+<pre><span id="VALchromium_bookmarks"><span class="keyword">val</span> chromium_bookmarks</span> : <code class="type"><a href="Sources.html#TYPEt">Sources.t</a> Lazy.t</code></pre><div class="info ">
 Offers completion on bookmarks names, and returns the bookmark url.<br>
 </div>
 
-<pre><span id="VALmpc_playlists"><span class="keyword">val</span> mpc_playlists</span> : <code class="type"><a href="Sources.html#TYPEt">Sources.t</a> list Lazy.t</code></pre><div class="info ">
+<pre><span id="VALmpc_playlists"><span class="keyword">val</span> mpc_playlists</span> : <code class="type"><a href="Sources.html#TYPEt">Sources.t</a> Lazy.t</code></pre><div class="info ">
 List of mpc playlists. Completion can then be used with commands like
     <code class="code">mpc load</code>.<br>
 </div>
 
-<pre><span id="VALi3_workspaces"><span class="keyword">val</span> i3_workspaces</span> : <code class="type"><a href="Sources.html#TYPEt">Sources.t</a> list Lazy.t</code></pre><div class="info ">
+<pre><span id="VALi3_workspaces"><span class="keyword">val</span> i3_workspaces</span> : <code class="type"><a href="Sources.html#TYPEt">Sources.t</a> Lazy.t</code></pre><div class="info ">
 List of existing i3 workspaces.<br>
+</div>
+
+<pre><span id="VALfrom_file"><span class="keyword">val</span> from_file</span> : <code class="type">string -> <a href="Sources.html#TYPEt">Sources.t</a></code></pre><div class="info ">
+<code class="code">from_file filename</code> creates a source from the lines in <code class="code">filename</code> (each
+    line in this file is a candidate)<br>
+</div>
+
+<pre><span id="VALstm_from_file"><span class="keyword">val</span> stm_from_file</span> : <code class="type">string -> <a href="Completion.html#TYPEstate_machine">Completion.state_machine</a></code></pre><div class="info ">
+<code class="code">stm_from_file f</code> starts by offering candidates from file <code class="code">f</code>, once a
+    candidate <code class="code">x</code> has been selected, it will behave as <code class="code">stm_from_file (f ^ x)</code>.<br>
 </div>
 </body></html>
