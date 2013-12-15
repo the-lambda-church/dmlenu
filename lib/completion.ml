@@ -88,7 +88,7 @@ let remove state =
       on_modify { state with 
         before_cursor = ""; after_cursor = ""; program;
         sources = List.map (fun (S x) -> [], ST (x.default, x)) @@ !!ex_sources;
-        entries = rest
+        entries = List.rev rest
       }
   else
   on_modify { state with before_cursor = String.rchop state.before_cursor }
