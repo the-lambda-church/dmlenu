@@ -109,7 +109,7 @@ let add_string s state =
   let state' = on_modify { state with before_cursor = state.before_cursor ^ s } in
   try 
     if 
-      s = state.separator &&
+      s = state.separator && state.after_cursor = "" &&
       state.before_cursor ^ state.after_cursor = (fst (List.hd state.after_matches)).display
     then
       complete state
