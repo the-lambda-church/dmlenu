@@ -1,6 +1,19 @@
-let () =
-  Sources.add_subcommand ~name:"mpcload" Extra_sources.mpc_playlists ;
-  Sources.add_subcommand ~name:"chromium" Extra_sources.chromium_bookmarks
+let stm = 
+  let open Completion in {
+    ex_sources = [ Lazy.from_val Sources.binaries ] ;
+    transition =
+      fun ~display:cmd ~real:_ ->
+        if cmd = "chromium" then
+          iterate [ Extra_sources.chromium_bookmarks ]
+        else {
+          ex_sources = [ Lazy.from_val (Extra_sources.from_file cmd) ] ;
+          transition = fun ~display ~real:_ ->
+            if cmd = "mpc" && display = "load" then
+              iterate [ Extra_sources.mpc_playlists ]
+            else
+              Extra_sources.stm_from_file (cmd ^ display)
+        }
+  }
 
 let run =
   let open Dmlenu in
@@ -20,7 +33,7 @@ let run =
   in
   let app_state = {
     prompt = "" ;
-    compl = Completion.make_state (Sources.binaries_with_subcommands) ;
+    compl = Completion.make_state stm ;
   }
   in
   match run_list ~source_transition_hook app_state default_conf with

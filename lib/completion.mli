@@ -36,9 +36,13 @@ type ex_source = S : 'a source -> ex_source
 
 type source_state = ST : 'a * 'a source -> source_state
 
-type program = Program of ex_source list * (string -> string -> program)
-(** A completion program: a list of current source and a way to get
-    the next sources depending on the current input (real, display) *)
+type state_machine = {
+  ex_sources : ex_source Lazy.t list ;
+  transition : display:string -> real:string -> state_machine
+}
+(** A completion state machine: a list of current source and a way to get
+    the next sources depending on the current input. *)
+
 (** {2 State} *)
 type state = {
   before_cursor: string;
@@ -46,20 +50,23 @@ type state = {
   sources: (candidate list * source_state) list;
   before_matches: (candidate * Matching.result) list;
   after_matches: (candidate * Matching.result) list;
-  entries: (program * string * string) list;
+  entries: (state_machine * string * string) list;
   separator : string;
-  program: program;
+  program: state_machine;
 }
 (** The state of the completion engine *)
 
-val make_state: ?separator:string -> program -> state
-(** Creates an initial state out of a program *)
+val make_state: ?separator:string -> state_machine -> state
+(** Creates an initial state out of a state machine *)
 
 val add_string : string -> state -> state
 (** Computes the new state corresponding to the user pressing a character *)
 
-val empty_program : program
-(** The program that does not offer any completion *)
+val dummy_machine : state_machine
+(** The state machine that does not offer any completion *)
+
+val iterate : ex_source Lazy.t list -> state_machine
+(** [iterate sources] offers completions from sources, indefinitely. *)
 
 (** {3 Edition commands} *)
 val cursor_left : state -> state

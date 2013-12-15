@@ -19,19 +19,33 @@ type 'a source = {
 }
 type source_state = ST : 'a * 'a source -> source_state
 type ex_source = S : 'a source -> ex_source
-type program = Program of ex_source list * (string -> string -> program)
+
+type state_machine = {
+  ex_sources : ex_source Lazy.t list ;
+  transition : display:string -> real:string -> state_machine
+}
+let (!!) = List.map Lazy.force
+
 type state = {
   before_cursor: string;
   after_cursor: string;
   sources: (candidate list * source_state) list;
   before_matches: (candidate * Matching.result) list;
   after_matches: (candidate * Matching.result) list;
-  entries: (program * string * string) list;
+  entries: (state_machine * string * string) list;
   separator : string ;
-  program: program;
+  program: state_machine;
 }
 
-let rec empty_program = Program ([], fun _ _ -> empty_program)
+let rec dummy_machine = {
+  ex_sources = [] ;
+  transition = (fun ~display:_ ~real:_ -> dummy_machine)
+}
+
+let rec iterate ex_sources = {
+  ex_sources ;
+  transition = fun ~display:_ ~real:_ -> iterate ex_sources ;
+}
 
 let compute_matches before after sources = 
   let aux candidate =
@@ -53,11 +67,11 @@ let on_modify st =
   let after_matches = compute_matches st.before_cursor st.after_cursor sources in
   { st with before_matches = []; after_matches ; sources }
 
-let make_state ?(separator=" ") (Program (sources, _) as program) = 
+let make_state ?(separator=" ") ({ ex_sources ; _ } as program) = 
   on_modify {
     before_cursor = "";
     after_cursor = "";
-    sources = List.map (fun (S s) -> [], ST (s.default, s)) sources;
+    sources = !!ex_sources |> List.map (fun (S s) -> [], ST (s.default, s)) ;
     separator;
     program;
     after_matches = []; before_matches = [];
@@ -70,25 +84,25 @@ let remove state =
   if state.before_cursor = "" then 
     match List.rev state.entries with
     | [] -> state
-    | (Program (sources, _) as program, _, _) :: rest ->
+    | ({ ex_sources ; _ } as program, _, _) :: rest ->
       on_modify { state with 
         before_cursor = ""; after_cursor = ""; program;
-        sources = List.map (fun (S x) -> [], ST (x.default, x)) sources;
+        sources = List.map (fun (S x) -> [], ST (x.default, x)) @@ !!ex_sources;
         entries = rest
       }
   else
   on_modify { state with before_cursor = String.rchop state.before_cursor }
 
-let next_entry candidate state = 
-  let (Program (_, f)) = state.program in
-  let (Program (sources, _) as program) = f candidate.real candidate.display in
+let next_entry ({ real ; display } as candidate) state = 
+  let f = state.program.transition in
+  let ({ ex_sources ; _ } as program) = f ~real ~display in
   on_modify {
     before_cursor = "";
     after_cursor = "";
     after_matches = []; before_matches = [];
     separator = state.separator;
     program;
-    sources = List.map (fun (S x) -> [], ST (x.default, x)) sources;
+    sources = List.map (fun (S x) -> [], ST (x.default, x)) @@ !!ex_sources;
     entries = state.entries @ [state.program, candidate.real, candidate.display]
   }
 

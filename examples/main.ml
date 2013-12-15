@@ -67,9 +67,16 @@ let run prompt stdin bottom focus_foreground focus_background normal_foreground
     prompt ;
     compl =
       let open Sources in
-      let src = if conf.stdin then Program ([stdin ()], 
-                                            fun _ _ -> Completion.empty_program) else binaries_with_subcommands in
-      make_state src
+      let stm =
+        if conf.stdin then 
+          { dummy_machine with ex_sources = [ Lazy.from_fun @@ stdin ] }
+        else {
+          ex_sources = [ Lazy.from_val binaries ] ;
+          transition =
+            fun ~display ~real:_ -> Extra_sources.stm_from_file display ;
+        }
+      in
+      make_state stm
       ;
   }
   in

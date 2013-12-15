@@ -54,7 +54,7 @@ Executable "dmlenu"
   Install:              true
   Path:                 examples
   MainIs:               main.ml
-  BuildDepends:         batteries,cmdliner,dmlenu
+  BuildDepends:         batteries,cmdliner,dmlenu,dmlenu.extra
   CompiledObject:       best
 
 Executable "dmlenu_subcommands"

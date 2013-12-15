@@ -197,36 +197,3 @@ let paths ~coupled_with =
     flip String.starts_with "/",  lazy (files "/");
     (fun _ -> true), Lazy.from_val coupled_with
   ]
-
-let subcommands : (string * t list Lazy.t) list ref = ref []
-let default_subcommand_hook : (string -> t) ref =
-  ref (
-    fun source_name ->
-      let prefix = Sys.getenv "HOME" / ".config/dmlenu" in
-      let file = prefix / source_name  in
-      if Sys.file_exists file then
-        from_list_ (File.lines_of file |> List.of_enum)
-      else
-        paths ~coupled_with:empty
-  )
-
-
-let set_default_subcommand_hook fn = default_subcommand_hook := fn
-let add_subcommand ~name lazy_sources =
-  subcommands := (name, lazy_sources) :: !subcommands
-
-let get_subcommand_by_name name =
-  try Some (List.assoc name !subcommands)
-  with Not_found -> None
-
-let binaries_with_subcommands =
-  let initial = paths ~coupled_with:binaries in
-  let rec get_new_source source_name =
-    let new_srcs =
-      match get_subcommand_by_name source_name with
-      | None -> [ !default_subcommand_hook source_name ]
-      | Some src -> Lazy.force src
-    in
-    Program (new_srcs, (fun _ x -> get_new_source (source_name ^ x)))
-  in
-  Program ([initial], fun _ -> get_new_source)
