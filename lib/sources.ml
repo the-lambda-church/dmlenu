@@ -207,7 +207,7 @@ let default_subcommand_hook : (string -> t) ref =
       if Sys.file_exists file then
         from_list_ (File.lines_of file |> List.of_enum)
       else
-        paths ~coupled_with:binaries
+        paths ~coupled_with:empty
   )
 
 

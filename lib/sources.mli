@@ -53,7 +53,7 @@ val set_default_subcommand_hook : (string -> t) -> unit
     The default behavior of this hook (i.e. if this function is never called) is
     to look for a file ["$HOME/.config/dmlenu/n"] and treat each line of this
     file as a completion candidate; if the file doesn't exists it behaves as
-    [paths ~coupled_with:binaries]. *)
+    [paths ~coupled_with:empty]. *)
 
 val binaries_with_subcommands : program
 (** Behaves as [paths ~coupled_with:binaries] for the first completions, then
