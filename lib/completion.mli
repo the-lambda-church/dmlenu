@@ -3,7 +3,7 @@
 (** This is the interface of the completion engine.
 
     The completion engine works with {!source}s that returns {!candidate}s. *)
-type candidate = {
+type candidate = <
   display: string;
   (** The string that should be displayed for the candidate *)
   real: string;
@@ -15,10 +15,17 @@ type candidate = {
   (** The string to use when this candidate is completed *)
   matching_function: (string -> Matching.result option);
   (** How to tell if the candidate is matching the current input. *)
-}
+>
 (** A candidate, as returned by sources *)
 
 
+val mk_candidate :
+  display:string ->
+  real:string ->
+  completion:string ->
+  doc:string ->
+  matching_function:(string -> Matching.result option) ->
+  candidate
 
 (** {3 Sources} *)
 type 'a source = {
@@ -38,7 +45,7 @@ type source_state = ST : 'a * 'a source -> source_state
 
 type state_machine = {
   ex_sources : ex_source Lazy.t list ;
-  transition : display:string -> real:string -> state_machine
+  transition : < display:string ; real:string > -> state_machine
 }
 (** A completion state machine: a list of current source and a way to get
     the next sources depending on the current input. *)

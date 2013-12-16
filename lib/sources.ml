@@ -2,7 +2,7 @@ open Completion
 open Batteries
 
 (* My Std *)
-let ( / ) = Filename.concat
+let (/) = Filename.concat
 
 let getenv var =
   try Sys.getenv var
@@ -112,18 +112,19 @@ let files ?(filter=fun x -> true) root =
               Matching.match_query ~candidate:display (basename query)
             )
           in
-          let completion = real in
-          Some { display ; completion; real ; doc=abs_path ; matching_function }
+          Some Completion.(
+            mk_candidate ~display ~completion:real ~real ~doc:abs_path
+              ~matching_function
+          )
         )
       in
       (directory, candidates), candidates
   in
   S { delay = false ; default = (root, []) ; compute }
 
-let from_list_aux (display, real, doc) = {
-  display; real; completion = display; doc ;
-  matching_function = Matching.match_query ~candidate:display;
-}
+let from_list_aux (display, real, doc) =
+  Completion.mk_candidate ~display ~real ~completion:display ~doc
+    ~matching_function:(Matching.match_query ~candidate:display)
 
 let from_list_rev list = 
   let candidates = List.rev_map from_list_aux list in

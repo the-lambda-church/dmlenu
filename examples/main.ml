@@ -72,12 +72,10 @@ let run prompt stdin bottom focus_foreground focus_background normal_foreground
           { dummy_machine with ex_sources = [ Lazy.from_fun @@ stdin ] }
         else {
           ex_sources = [ Lazy.from_val binaries ] ;
-          transition =
-            fun ~display ~real:_ -> Extra_sources.stm_from_file display ;
+          transition = fun o -> Extra_sources.stm_from_file o#display ;
         }
       in
       make_state stm
-      ;
   }
   in
   match run init_state conf with

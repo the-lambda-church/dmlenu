@@ -2,28 +2,36 @@
    sources into a graphical representation *)
 open Batteries
 
-type candidate = {
+type candidate = <
   display: string;
   real: string;
   doc : string;
   completion: string;
   matching_function: (string -> Matching.result option);
-}
+>
 
-
+let mk_candidate ~display ~real ~completion ~doc ~matching_function = object 
+  method display = display
+  method real = real
+  method completion = completion
+  method doc = doc
+  method matching_function = matching_function
+end
 
 type 'a source = {
   delay: bool;
   default: 'a;
   compute: 'a -> string -> 'a * candidate list;
 }
+
 type source_state = ST : 'a * 'a source -> source_state
 type ex_source = S : 'a source -> ex_source
 
 type state_machine = {
   ex_sources : ex_source Lazy.t list ;
-  transition : display:string -> real:string -> state_machine
+  transition : < display:string ; real:string > -> state_machine
 }
+
 let (!!) = List.map Lazy.force
 
 type state = {
@@ -39,17 +47,17 @@ type state = {
 
 let rec dummy_machine = {
   ex_sources = [] ;
-  transition = (fun ~display:_ ~real:_ -> dummy_machine)
+  transition = (fun _ -> dummy_machine)
 }
 
 let rec iterate ex_sources = {
   ex_sources ;
-  transition = fun ~display:_ ~real:_ -> iterate ex_sources ;
+  transition = fun _ -> iterate ex_sources ;
 }
 
 let compute_matches before after sources = 
   let aux candidate =
-    match candidate.matching_function (before ^ after) with
+    match candidate#matching_function (before ^ after) with
     | None -> None
     | Some list -> Some (candidate, list)
   in
@@ -93,9 +101,11 @@ let remove state =
   else
   on_modify { state with before_cursor = String.rchop state.before_cursor }
 
-let next_entry ({ real ; display } as candidate) state = 
+let next_entry (candidate : candidate) state = 
   let f = state.program.transition in
-  let ({ ex_sources ; _ } as program) = f ~real ~display in
+  let ({ ex_sources ; _ } as program) =
+    f (candidate :> < display : string ; real : string >)
+  in
   on_modify {
     before_cursor = "";
     after_cursor = "";
@@ -103,15 +113,15 @@ let next_entry ({ real ; display } as candidate) state =
     separator = state.separator;
     program;
     sources = List.map (fun (S x) -> [], ST (x.default, x)) @@ !!ex_sources;
-    entries = state.entries @ [state.program, candidate.real, candidate.display]
+    entries = state.entries @ [state.program, candidate#real, candidate#display]
   }
 
 let complete state = 
   try
     let candidate = (fst (List.hd state.after_matches)) in
-    let state' = on_modify { state with before_cursor = candidate.completion; after_cursor = "" } in
+    let state' = on_modify { state with before_cursor = candidate#completion; after_cursor = "" } in
     if
-      List.exists (fun (x, _) -> x.real = candidate.real) state'.after_matches
+      List.exists (fun (x, _) -> x#real = candidate#real) state'.after_matches
     then
       next_entry candidate state
     else
@@ -124,7 +134,7 @@ let add_string s state =
   try 
     if 
       s = state.separator && state.after_cursor = "" &&
-      state.before_cursor ^ state.after_cursor = (fst (List.hd state.after_matches)).display
+      state.before_cursor ^ state.after_cursor = (fst (List.hd state.after_matches))#display
     then
       complete state
     else

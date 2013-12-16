@@ -2,16 +2,16 @@ let stm =
   let open Completion in {
     ex_sources = [ Lazy.from_val Sources.binaries ] ;
     transition =
-      fun ~display:cmd ~real:_ ->
-        if cmd = "chromium" then
+      fun cmd ->
+        if cmd#display = "chromium" then
           iterate [ Extra_sources.chromium_bookmarks ]
         else {
-          ex_sources = [ Lazy.from_val (Extra_sources.from_file cmd) ] ;
-          transition = fun ~display ~real:_ ->
-            if cmd = "mpc" && display = "load" then
+          ex_sources = [ Lazy.from_val (Extra_sources.from_file cmd#display) ] ;
+          transition = fun arg ->
+            if cmd#display = "mpc" && arg#display = "load" then
               iterate [ Extra_sources.Mpc.playlists ]
             else
-              Extra_sources.stm_from_file (cmd ^ display)
+              Extra_sources.stm_from_file (cmd#display ^ arg#display)
         }
   }
 

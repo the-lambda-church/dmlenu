@@ -87,5 +87,5 @@ let from_file source_name =
 let rec stm_from_file init = {
   Completion.
   ex_sources = [ Lazy.from_val (from_file init) ] ;
-  transition = fun ~display ~real:_ -> stm_from_file (init ^ display) ;
+  transition = fun o -> stm_from_file (init ^ o#display) ;
 }

@@ -30,17 +30,17 @@ let draw_match ?(hl = false) line conf x (candidate, list) =
     (conf.normal_foreground, conf.match_foreground, 
      if hl then conf.focus_background else conf.normal_background)
   in
-  let x = Draw.draw_text candidate.display (x, line) list tuple in
-  if line <> 0 && candidate.doc <> "" then (
+  let x = Draw.draw_text candidate#display (x, line) list tuple in
+  if line <> 0 && candidate#doc <> "" then (
     let str =
       let rec shorten s =
-        if Draw.size (candidate.display ^ s) <= Draw.width () - 10 then s else
+        if Draw.size (candidate#display ^ s) <= Draw.width () - 10 then s else
         let s =
           try "..." ^ String.sub s 10 (String.length s - 10) with _ -> ""
         in
         shorten s
       in
-      shorten candidate.doc
+      shorten candidate#doc
     in
     let x = Draw.width () - (Draw.size str) - 10 in
     ignore (Draw.draw_text str (x, line) [(false, 0, String.length str)] tuple)
@@ -55,8 +55,8 @@ type app_state = {
 let displayable_matches x = 
   let rec go index = function
     | [] -> [], []
-    | ({display} as candidate, rest) :: q as l-> 
-      let size = Draw.size (display) + 10 in
+    | (candidate, rest) :: q as l-> 
+      let size = Draw.size (candidate#display) + 10 in
       if (index + size) > Draw.width () - 5 then [], l else
       let a, b = go (index+size) q in
       (candidate, rest) :: a, b
@@ -194,10 +194,10 @@ let run_list
       let { after_matches ; before_cursor ; after_cursor ; _ } = state in
       let result =
         List.map (fun (_, s, _) -> s) state.entries @
-          if before_cursor ^ after_cursor = "" then []
-          else
-            [try (fst (List.hd after_matches)).real
-              with _ -> before_cursor ^ after_cursor]
+        if before_cursor ^ after_cursor = "" then [] else [
+          try (fst (List.hd after_matches))#real
+          with _ -> before_cursor ^ after_cursor
+        ]
       in
       ret result
 
