@@ -10,17 +10,28 @@ let chromium_bookmarks =
       let name = prefix (if name = "" then url else name) in
       (name, url, url)
     in
+    let convert_entry entry =
+      let name = J.Util.(member "name" entry |> to_string) in
+      let url  = J.Util.(member "url"  entry |> to_string) in
+      mk_entry name url
+    in
+    let rec convert_folder entry =
+      match J.Util.member "type" entry with
+      | `String "folder" ->
+        let folder_name = J.Util.(member "name" entry |> to_string) in
+        J.Util.(convert_each convert_folder @@ member "children" entry)
+        |> List.concat
+        |> List.map (fun (name, x, y) -> (folder_name / name, x, y))
+      | _ -> [ convert_entry entry ]
+    in
     let file = Sys.getenv "HOME" / ".config/chromium/Default/Bookmarks" in
     let data = J.from_file file |> J.Util.member "roots" in
     let main =
       J.Util.(member "bookmark_bar" data |> member "children") |>
-      J.Util.convert_each (fun entry ->
-        let name = J.Util.(member "name" entry |> to_string) in
-        let url  = J.Util.(member "url"  entry |> to_string) in
-        mk_entry name url
-      )
+      J.Util.convert_each convert_folder |> List.concat
     in
-    Sources.from_list main
+    let others = J.Util.member "other" data |> convert_folder in
+    Sources.from_list @@ main @ others
   in
   Lazy.from_fun aux
 
