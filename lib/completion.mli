@@ -57,6 +57,12 @@ type state_machine = {
 (** A completion state machine: a list of current source and a way to get
     the next sources depending on the current input. *)
 
+val dummy_machine : state_machine
+(** The state machine that does not offer any completion *)
+
+val iterate : ex_source Lazy.t list -> state_machine
+(** [iterate sources] offers completions from sources, indefinitely. *)
+
 (** {2 State} *)
 
 type state = {
@@ -81,13 +87,8 @@ val make_state: ?sep:string -> state_machine -> state
 val add_string : string -> state -> state
 (** Computes the new state corresponding to the user pressing a character *)
 
-val dummy_machine : state_machine
-(** The state machine that does not offer any completion *)
-
-val iterate : ex_source Lazy.t list -> state_machine
-(** [iterate sources] offers completions from sources, indefinitely. *)
-
 (** {3 Edition commands} *)
+
 val cursor_left : state -> state
 (** Computes the new state corresponding to the user going left *)
 
