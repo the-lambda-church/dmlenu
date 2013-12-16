@@ -6,9 +6,14 @@
 val chromium_bookmarks : Sources.t Lazy.t
 (** Offers completion on bookmarks names, and returns the bookmark url. *)
 
-val mpc_playlists : Sources.t Lazy.t
-(** List of mpc playlists. Completion can then be used with commands like
-    [mpc load]. *)
+module Mpc : sig
+  val current_playlist : Sources.t Lazy.t
+  (** List songs currently in the playlist. *)
+
+  val playlists : Sources.t Lazy.t
+  (** List of mpc playlists. Completion can then be used with commands like
+      [mpc load]. *)
+end
 
 val i3_workspaces : Sources.t Lazy.t
 (** List of existing i3 workspaces. *)

@@ -24,20 +24,37 @@ let chromium_bookmarks =
   in
   Lazy.from_fun aux
 
-let mpc_playlists =
-  let aux () =
-    let ic = Unix.open_process_in "mpc lsplaylists" in
-    let rec loop () =
-      try 
-        let playlist = input_line ic in
-        playlist :: loop ()
-      with End_of_file -> []
+module Mpc = struct
+  let current_playlist =
+    let aux () =
+      let ic = Unix.open_process_in "mpc playlist" in
+      let rec loop i =
+        try 
+          let song = input_line ic in
+          (song, string_of_int i, "") :: loop (i + 1)
+        with End_of_file -> []
+      in
+      let songs = loop 1 in
+      ignore (Unix.close_process_in ic) ;
+      Sources.from_list songs
     in
-    let playlists = loop () in
-    ignore (Unix.close_process_in ic) ;
-    Sources.from_list_ playlists
-  in
-  Lazy.from_fun aux
+    Lazy.from_fun aux
+
+  let playlists =
+    let aux () =
+      let ic = Unix.open_process_in "mpc lsplaylists" in
+      let rec loop () =
+        try 
+          let playlist = input_line ic in
+          playlist :: loop ()
+        with End_of_file -> []
+      in
+      let playlists = loop () in
+      ignore (Unix.close_process_in ic) ;
+      Sources.from_list_ playlists
+    in
+    Lazy.from_fun aux
+end
 
 let i3_workspaces =
   let aux () =

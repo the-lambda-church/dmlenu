@@ -9,7 +9,7 @@ let stm =
           ex_sources = [ Lazy.from_val (Extra_sources.from_file cmd) ] ;
           transition = fun ~display ~real:_ ->
             if cmd = "mpc" && display = "load" then
-              iterate [ Extra_sources.mpc_playlists ]
+              iterate [ Extra_sources.Mpc.playlists ]
             else
               Extra_sources.stm_from_file (cmd ^ display)
         }
