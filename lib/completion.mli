@@ -2,7 +2,10 @@
 
 (** This is the interface of the completion engine.
 
-    The completion engine works with {!source}s that returns {!candidate}s. *)
+    The completion engine works with {!source}s that returns {!candidate}s.
+    See {!state_machine} *)
+
+
 type candidate = <
   display: string;
   (** The string that should be displayed for the candidate *)
@@ -26,8 +29,10 @@ val mk_candidate :
   doc:string ->
   matching_function:(string -> Matching.result option) ->
   candidate
+(** A constructor *)
 
 (** {3 Sources} *)
+
 type 'a source = {
   delay: bool;
   (** Should we wait for a delay before computing candidates ? *)
@@ -42,6 +47,8 @@ type ex_source = S : 'a source -> ex_source
 (** Existential closure of {!source} *)
 
 type source_state = ST : 'a * 'a source -> source_state
+
+(** {3 Engine} *)
 
 type state_machine = {
   ex_sources : ex_source Lazy.t list ;
