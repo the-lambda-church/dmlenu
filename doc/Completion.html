@@ -38,7 +38,45 @@ This is the interface of the completion engine.
     The completion engine works with <a href="Completion.html#TYPEsource"><code class="code">Completion.source</code></a>s that returns <a href="Completion.html#TYPEcandidate"><code class="code">Completion.candidate</code></a>s.
     See <a href="Completion.html#TYPEstate_machine"><code class="code">Completion.state_machine</code></a><br>
 
-<pre><span id="TYPEcandidate"><span class="keyword">type</span> <code class="type"></code>candidate</span> = <code class="type">< completion : string; display : string; doc : string;<br>         matching_function : string -> <a href="Matching.html#TYPEresult">Matching.result</a> option; real : string ></code> </pre>
+<pre><span id="TYPEcandidate"><span class="keyword">type</span> <code class="type"></code>candidate</span> = <</pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTcandidate.completion">completion</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The string to use when this candidate is completed</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTcandidate.display">display</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The string that should be displayed for the candidate</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTcandidate.doc">doc</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >A "documentation" string that will be printed on the right of the
+      candidate if the window takes more than 1 line.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTcandidate.matching_function">matching_function</span>&nbsp;: <code class="type">string -> <a href="Matching.html#TYPEresult">Matching.result</a> option</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >How to tell if the candidate is matching the current input.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTcandidate.real">real</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The string that will be printed out if this candidate is picked</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+>
+
 <div class="info ">
 A candidate, as returned by sources<br>
 </div>
