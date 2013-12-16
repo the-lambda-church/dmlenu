@@ -17,6 +17,7 @@
 <link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><link title="State" rel="Section" href="#2_State">
 <link title="Sources" rel="Subsection" href="#3_Sources">
 <link title="Engine" rel="Subsection" href="#3_Engine">
+<link title="Edition commands" rel="Subsection" href="#3_Editioncommands">
 <title>Completion</title>
 </head>
 <body>
@@ -122,6 +123,14 @@ A completion state machine: a list of current source and a way to get
     the next sources depending on the current input.<br>
 </div>
 
+
+<pre><span id="VALdummy_machine"><span class="keyword">val</span> dummy_machine</span> : <code class="type"><a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
+The state machine that does not offer any completion<br>
+</div>
+
+<pre><span id="VALiterate"><span class="keyword">val</span> iterate</span> : <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a> Lazy.t list -> <a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
+<code class="code">iterate sources</code> offers completions from sources, indefinitely.<br>
+</div>
 <br>
 <h2 id="2_State">State</h2><br>
 
@@ -201,18 +210,10 @@ The state of the completion engine<br>
 <pre><span id="VALadd_string"><span class="keyword">val</span> add_string</span> : <code class="type">string -> <a href="Completion.html#TYPEstate">state</a> -> <a href="Completion.html#TYPEstate">state</a></code></pre><div class="info ">
 Computes the new state corresponding to the user pressing a character<br>
 </div>
-
-<pre><span id="VALdummy_machine"><span class="keyword">val</span> dummy_machine</span> : <code class="type"><a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
-The state machine that does not offer any completion<br>
-</div>
-
-<pre><span id="VALiterate"><span class="keyword">val</span> iterate</span> : <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a> Lazy.t list -> <a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
-<code class="code">iterate sources</code> offers completions from sources, indefinitely.<br>
-</div>
+<br>
+<h3 id="3_Editioncommands">Edition commands</h3><br>
 
 <pre><span id="VALcursor_left"><span class="keyword">val</span> cursor_left</span> : <code class="type"><a href="Completion.html#TYPEstate">state</a> -> <a href="Completion.html#TYPEstate">state</a></code></pre><div class="info ">
-<h3 id="3_Editioncommands">Edition commands</h3>
-<p>
 Computes the new state corresponding to the user going left<br>
 </div>
 
