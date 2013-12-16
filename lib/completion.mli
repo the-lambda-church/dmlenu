@@ -58,6 +58,7 @@ type state_machine = {
     the next sources depending on the current input. *)
 
 (** {2 State} *)
+
 type state = {
   before_cursor: string;
   after_cursor: string;

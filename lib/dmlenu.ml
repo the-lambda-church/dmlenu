@@ -163,6 +163,12 @@ let run_list
       Draw.quit ();
       k
     in
+    let take i lst =
+      if List.length lst > i then List.split_at conf.lines lst else
+      match List.rev lst with
+      | [] -> [], []
+      | x :: xs -> List.rev xs, [ x ]
+    in
     match key with
     (* beurk *)
     | 0xff1b -> ret []
@@ -187,8 +193,16 @@ let run_list
     | 0xff54 -> loop conf (right state)
 
       (* TODO: fix that [last_x] shit. *)
-    | 0xff55 -> loop conf (pageup (displayable_matches last_x) state)
-    | 0xff56 -> loop conf (pagedown (displayable_matches last_x) state)
+    | 0xff55 ->
+      let skip =
+        if conf.lines = 0 then displayable_matches last_x else take conf.lines
+      in
+      loop conf (pageup skip state)
+    | 0xff56 ->
+      let skip =
+        if conf.lines = 0 then displayable_matches last_x else take conf.lines
+      in
+      loop conf (pagedown skip state)
 
     | 0xff0d ->
       let { after_matches ; before_cursor ; after_cursor ; _ } = state in
