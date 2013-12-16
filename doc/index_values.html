@@ -40,6 +40,11 @@ Offers completion on bookmarks names, and returns the bookmark url.
 Computes the new state corresponding to the user completing the entry
 </div>
 </td></tr>
+<tr><td><a href="Extra_sources.Mpc.html#VALcurrent_playlist">current_playlist</a> [<a href="Extra_sources.Mpc.html">Extra_sources.Mpc</a>]</td>
+<td><div class="info">
+List songs currently in the playlist.
+</div>
+</td></tr>
 <tr><td><a href="Completion.html#VALcursor_left">cursor_left</a> [<a href="Completion.html">Completion</a>]</td>
 <td><div class="info">
 Edition commands
@@ -123,7 +128,8 @@ Computes the new state corresponding to the user selecting the candidate on the 
 <tr><td align="left"><br>M</td></tr>
 <tr><td><a href="Completion.html#VALmake_state">make_state</a> [<a href="Completion.html">Completion</a>]</td>
 <td><div class="info">
-Creates an initial state out of a state machine
+<code class="code">make_state ?sep machine</code> initialize the machine; <code class="code">sep</code> will be used to mark
+    the end of a selection and the transition to the next sources (i.e.
 </div>
 </td></tr>
 <tr><td><a href="Matching.html#VALmatch_prefix">match_prefix</a> [<a href="Matching.html">Matching</a>]</td>
@@ -133,9 +139,9 @@ Creates an initial state out of a state machine
 Matching function
 </div>
 </td></tr>
-<tr><td><a href="Extra_sources.html#VALmpc_playlists">mpc_playlists</a> [<a href="Extra_sources.html">Extra_sources</a>]</td>
+<tr><td><a href="Completion.html#VALmk_candidate">mk_candidate</a> [<a href="Completion.html">Completion</a>]</td>
 <td><div class="info">
-List of mpc playlists.
+A constructor
 </div>
 </td></tr>
 <tr><td align="left"><br>P</td></tr>
@@ -160,6 +166,11 @@ Computes the new state corresponding to the user selecting the
 <td><div class="info">
 A source that complete like <code class="code">coupled_with</code> except when what is before the
     cursor is (syntactically) a path, i.e.
+</div>
+</td></tr>
+<tr><td><a href="Extra_sources.Mpc.html#VALplaylists">playlists</a> [<a href="Extra_sources.Mpc.html">Extra_sources.Mpc</a>]</td>
+<td><div class="info">
+List of mpc playlists.
 </div>
 </td></tr>
 <tr><td align="left"><br>R</td></tr>

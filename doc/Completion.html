@@ -14,7 +14,9 @@
 <link title="Completion" rel="Chapter" href="Completion.html">
 <link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
 <link title="Sources" rel="Chapter" href="Sources.html">
-<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>Completion</title>
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><link title="Sources" rel="Section" href="#3_Sources">
+<link title="Engine" rel="Section" href="#3_Engine">
+<title>Completion</title>
 </head>
 <body>
 <div class="navbar"><a class="pre" href="Matching.html" title="Matching">Previous</a>
@@ -27,55 +29,24 @@
 Completion engine<br>
 </div>
 <hr width="100%">
-
-<pre><code><span id="TYPEcandidate"><span class="keyword">type</span> <code class="type"></code>candidate</span> = {</code></pre><table class="typetable">
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTcandidate.display">display</span>&nbsp;: <code class="type">string</code>;</code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The string that should be displayed for the candidate</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTcandidate.real">real</span>&nbsp;: <code class="type">string</code>;</code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The string that will be printed out if this candidate is picked</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTcandidate.doc">doc</span>&nbsp;: <code class="type">string</code>;</code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >A "documentation" string that will be printed on the right of the
-      candidate if the window takes more than 1 line.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTcandidate.completion">completion</span>&nbsp;: <code class="type">string</code>;</code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The string to use when this candidate is completed</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTcandidate.matching_function">matching_function</span>&nbsp;: <code class="type">string -> <a href="Matching.html#TYPEresult">Matching.result</a> option</code>;</code></td>
-<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >How to tell if the candidate is matching the current input.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
-</tr></table>
-}
-
-<div class="info ">
+<br>
 This is the interface of the completion engine.
 <p>
 
     The completion engine works with <a href="Completion.html#TYPEsource"><code class="code">Completion.source</code></a>s that returns <a href="Completion.html#TYPEcandidate"><code class="code">Completion.candidate</code></a>s.
-<p>
+    See <a href="Completion.html#TYPEstate_machine"><code class="code">Completion.state_machine</code></a><br>
+
+<pre><span id="TYPEcandidate"><span class="keyword">type</span> <code class="type"></code>candidate</span> = <code class="type">< completion : string; display : string; doc : string;<br>         matching_function : string -> <a href="Matching.html#TYPEresult">Matching.result</a> option; real : string ></code> </pre>
+<div class="info ">
 A candidate, as returned by sources<br>
 </div>
 
+
+<pre><span id="VALmk_candidate"><span class="keyword">val</span> mk_candidate</span> : <code class="type">display:string -><br>       real:string -><br>       completion:string -><br>       doc:string -><br>       matching_function:(string -> <a href="Matching.html#TYPEresult">Matching.result</a> option) -> <a href="Completion.html#TYPEcandidate">candidate</a></code></pre><div class="info ">
+A constructor<br>
+</div>
+<br>
+<h3 id="3_Sources">Sources</h3><br>
 
 <pre><code><span id="TYPEsource"><span class="keyword">type</span> <code class="type">'a</code> source</span> = {</code></pre><table class="typetable">
 <tr>
@@ -102,9 +73,6 @@ A candidate, as returned by sources<br>
 </tr></table>
 }
 
-<div class="info ">
-<h3 id="3_Sources">Sources</h3><br>
-</div>
 
 
 <pre><code><span id="TYPEex_source"><span class="keyword">type</span> <code class="type"></code>ex_source</span> = </code></pre><table class="typetable">
@@ -128,6 +96,8 @@ A candidate, as returned by sources<br>
 </tr></table>
 
 
+<br>
+<h3 id="3_Engine">Engine</h3><br>
 
 <pre><code><span id="TYPEstate_machine"><span class="keyword">type</span> <code class="type"></code>state_machine</span> = {</code></pre><table class="typetable">
 <tr>
@@ -141,7 +111,7 @@ A candidate, as returned by sources<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTstate_machine.transition">transition</span>&nbsp;: <code class="type">display:string -> real:string -> <a href="Completion.html#TYPEstate_machine">state_machine</a></code>;</code></td>
+<code><span id="TYPEELTstate_machine.transition">transition</span>&nbsp;: <code class="type">< display : string; real : string > -> <a href="Completion.html#TYPEstate_machine">state_machine</a></code>;</code></td>
 
 </tr></table>
 }
@@ -218,8 +188,13 @@ The state of the completion engine<br>
 </div>
 
 
-<pre><span id="VALmake_state"><span class="keyword">val</span> make_state</span> : <code class="type">?separator:string -> <a href="Completion.html#TYPEstate_machine">state_machine</a> -> <a href="Completion.html#TYPEstate">state</a></code></pre><div class="info ">
-Creates an initial state out of a state machine<br>
+<pre><span id="VALmake_state"><span class="keyword">val</span> make_state</span> : <code class="type">?sep:string -> <a href="Completion.html#TYPEstate_machine">state_machine</a> -> <a href="Completion.html#TYPEstate">state</a></code></pre><div class="info ">
+<code class="code">make_state ?sep machine</code> initialize the machine; <code class="code">sep</code> will be used to mark
+    the end of a selection and the transition to the next sources (i.e. next
+    state of the automata).
+<p>
+
+    The default value of <code class="code">sep</code> is a space.<br>
 </div>
 
 <pre><span id="VALadd_string"><span class="keyword">val</span> add_string</span> : <code class="type">string -> <a href="Completion.html#TYPEstate">state</a> -> <a href="Completion.html#TYPEstate">state</a></code></pre><div class="info ">

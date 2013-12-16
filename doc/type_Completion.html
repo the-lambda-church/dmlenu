@@ -13,13 +13,17 @@
 </head>
 <body>
 <code class="code"><span class="keyword">sig</span><br>
-&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;candidate&nbsp;=&nbsp;{<br>
-&nbsp;&nbsp;&nbsp;&nbsp;display&nbsp;:&nbsp;string;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;real&nbsp;:&nbsp;string;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;doc&nbsp;:&nbsp;string;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;completion&nbsp;:&nbsp;string;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;matching_function&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Matching</span>.result&nbsp;option;<br>
-&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;candidate&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&nbsp;completion&nbsp;:&nbsp;string;&nbsp;display&nbsp;:&nbsp;string;&nbsp;doc&nbsp;:&nbsp;string;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matching_function&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Matching</span>.result&nbsp;option;&nbsp;real&nbsp;:&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;&gt;<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;mk_candidate&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;display:string&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;real:string&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;completion:string&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;doc:string&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;matching_function:(string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Matching</span>.result&nbsp;option)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Completion</span>.candidate<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;source&nbsp;=&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;delay&nbsp;:&nbsp;bool;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;:&nbsp;<span class="keywordsign">'</span>a;<br>
@@ -30,7 +34,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">ST</span>&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;*&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Completion</span>.source&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.source_state<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;state_machine&nbsp;=&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;ex_sources&nbsp;:&nbsp;<span class="constructor">Completion</span>.ex_source&nbsp;<span class="constructor">Lazy</span>.t&nbsp;list;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;transition&nbsp;:&nbsp;display:string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;real:string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;transition&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&nbsp;display&nbsp;:&nbsp;string;&nbsp;real&nbsp;:&nbsp;string&nbsp;&gt;&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine;<br>
 &nbsp;&nbsp;}<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;state&nbsp;=&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;before_cursor&nbsp;:&nbsp;string;<br>
@@ -43,7 +48,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;program&nbsp;:&nbsp;<span class="constructor">Completion</span>.state_machine;<br>
 &nbsp;&nbsp;}<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;make_state&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;?separator:string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
+&nbsp;&nbsp;&nbsp;&nbsp;?sep:string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;add_string&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;dummy_machine&nbsp;:&nbsp;<span class="constructor">Completion</span>.state_machine<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;iterate&nbsp;:&nbsp;<span class="constructor">Completion</span>.ex_source&nbsp;<span class="constructor">Lazy</span>.t&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine<br>
