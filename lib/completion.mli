@@ -56,8 +56,12 @@ type state = {
 }
 (** The state of the completion engine *)
 
-val make_state: ?separator:string -> state_machine -> state
-(** Creates an initial state out of a state machine *)
+val make_state: ?sep:string -> state_machine -> state
+(** [make_state ?sep machine] initialize the machine; [sep] will be used to mark
+    the end of a selection and the transition to the next sources (i.e. next
+    state of the automata).
+
+    The default value of [sep] is a space. *)
 
 val add_string : string -> state -> state
 (** Computes the new state corresponding to the user pressing a character *)

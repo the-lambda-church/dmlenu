@@ -67,12 +67,12 @@ let on_modify st =
   let after_matches = compute_matches st.before_cursor st.after_cursor sources in
   { st with before_matches = []; after_matches ; sources }
 
-let make_state ?(separator=" ") ({ ex_sources ; _ } as program) = 
+let make_state ?(sep=" ") ({ ex_sources ; _ } as program) = 
   on_modify {
     before_cursor = "";
     after_cursor = "";
     sources = !!ex_sources |> List.map (fun (S s) -> [], ST (s.default, s)) ;
-    separator;
+    separator = sep;
     program;
     after_matches = []; before_matches = [];
     entries = []
