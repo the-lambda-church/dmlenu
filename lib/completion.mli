@@ -60,6 +60,19 @@ type state_machine = {
 val dummy_machine : state_machine
 (** The state machine that does not offer any completion *)
 
+val empty : state_machine
+(** Same as {!dummy_machine} *)
+
+val concat : state_machine -> state_machine -> state_machine
+(** Concatenates two machines. The first one is considered done when
+    it returns []. *)
+
+val sum : ex_source -> (<display: string; real: string> -> state_machine) -> state_machine
+(** Dependant sum. *)
+
+val singleton : ex_source -> state_machine
+(** Offers the argument for completion once and then do not provide any completion *)
+
 val iterate : ex_source Lazy.t list -> state_machine
 (** [iterate sources] offers completions from sources, indefinitely. *)
 

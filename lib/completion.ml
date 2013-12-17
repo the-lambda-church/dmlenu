@@ -54,6 +54,21 @@ let rec iterate ex_sources = {
   ex_sources ;
   transition = fun _ -> iterate ex_sources ;
 }
+let empty = dummy_machine
+let singleton s = {
+  ex_sources = [lazy s];
+  transition = fun _ -> empty
+}
+
+let rec concat a b =
+  if a.ex_sources = [] then
+    b
+  else
+    { a with transition = fun o -> concat (a.transition o) b }
+
+let sum source f =
+  { ex_sources = [lazy source];
+    transition = fun o -> f o }
 
 let compute_matches before after sources = 
   let aux candidate =

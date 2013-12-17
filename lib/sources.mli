@@ -18,6 +18,9 @@ val from_list_rev_ : string list -> t
 (** A source built from a list of candidates (display and real are the same, doc
     is empty). *)
 
+val csum : (string * state_machine Lazy.t) list -> state_machine
+(** Simple case of dependant sum *)
+
 val binaries : t
 (** A source that completes a binary of the system *)
 

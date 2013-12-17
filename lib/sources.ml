@@ -198,3 +198,6 @@ let paths ~coupled_with =
     flip String.starts_with "/",  lazy (files "/");
     (fun _ -> true), Lazy.from_val coupled_with
   ]
+
+let csum l =
+  Completion.sum (from_list_ (List.map fst l)) (fun o -> Lazy.force (List.assoc o#display l))
