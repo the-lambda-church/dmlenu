@@ -34,9 +34,9 @@ val run : ?source_transition_hook:(Completion.state -> conf -> conf) -> app_stat
 
     The [source_transition_hook] parameter is to be used when you want to
     perform side effects, or update the configuration when a transition happens.
-    The reason why you would want use this hook insteal of directly performing
-    your computation in the transition function of the state machine (see
-    {!Completion}) is:
+    The reason why you would want to use this hook instead of directly
+    performing your computation in the transition function of the state machine
+    (see {!Completion}) is:
     - You cannot modify the configuration in the machine transition function
       (although we could allow it).
     - This function will be called when the user completes something, but also
@@ -47,4 +47,4 @@ val run : ?source_transition_hook:(Completion.state -> conf -> conf) -> app_stat
 
 (* TODO: move before [run], more explicit documentation *)
 val run_list : ?source_transition_hook:(Completion.state -> conf -> conf) -> app_state -> conf -> string list
-(** Same as {!run} but returns the list of completed tokens *)
+(** Same as {!run} but returns the list of completed tokens. *)

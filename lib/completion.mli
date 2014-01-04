@@ -33,6 +33,10 @@ val mk_candidate :
 
 (** {3 Sources} *)
 
+(** The underlying representations of sources.
+    
+    See {!Sources} for some predefined sources and sources builders. *)
+
 type 'a source = {
   delay: bool;
   (** Should we wait for a delay before computing candidates ? *)
@@ -64,8 +68,8 @@ val empty : state_machine
 (** Same as {!dummy_machine} *)
 
 val concat : state_machine -> state_machine -> state_machine
-(** Concatenates two machines. The first one is considered done when
-    it returns []. *)
+(** Concatenates two machines. The first one is considered done when it returns
+    []. *)
 
 val sum : ex_source -> (<display: string; real: string> -> state_machine) -> state_machine
 (** Dependant sum. *)

@@ -6,7 +6,7 @@ type t = Completion.ex_source
 (** {3 Predefined sources and sources builder} *)
 
 val files : ?filter:(string -> bool) -> string -> t
-(** A source that completes filenames in a given directory (or absolute filenames) *)
+(** A source that completes filenames in a given directory (or absolute filenames). *)
 
 val from_list : (string * string * string) list -> t
 val from_list_rev : (string * string * string) list -> t
@@ -22,7 +22,7 @@ val csum : (string * state_machine Lazy.t) list -> state_machine
 (** Simple case of dependant sum *)
 
 val binaries : t
-(** A source that completes a binary of the system *)
+(** A source that list all the binaries in your PATH. *)
 
 val switch : ((string -> bool) * t Lazy.t) list -> t
 (** [switch guards] is a source that behaves like one of the sources in
