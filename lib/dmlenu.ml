@@ -127,7 +127,7 @@ let one_match_per_line conf state =
   if m = [] then () else
   let size = min (List.length m) conf.lines in
   let _ = resize size in
-  let () = Draw.clear "#000000" in
+  let () = Draw.clear conf.window_background in
   List.iteri (fun line s -> 
     let hl = line = offset in
     ignore (draw_match ~hl (line + 1) conf 5 s)
@@ -137,7 +137,7 @@ let draw_window conf state =
   let x = 
     if conf.lines = 0 then (
       resize 0 ;
-      Draw.clear "#000000";
+      Draw.clear conf.window_background ;
       let x = init_draw conf state in
       draw_matches 0 x conf state
     )
