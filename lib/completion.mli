@@ -61,11 +61,15 @@ type state_machine = {
 (** A completion state machine: a list of current source and a way to get
     the next sources depending on the current input. *)
 
-val dummy_machine : state_machine
+val empty : state_machine
 (** The state machine that does not offer any completion *)
 
-val empty : state_machine
-(** Same as {!dummy_machine} *)
+val singleton  : ex_source Lazy.t -> state_machine
+val singleton' : ex_source -> state_machine
+(** Offers the argument for completion once and then do not provide any completion *)
+
+val iterate : ex_source Lazy.t list -> state_machine
+(** [iterate sources] offers completions from sources, indefinitely. *)
 
 val concat : state_machine -> state_machine -> state_machine
 (** Concatenates two machines. The first one is considered done when it returns
@@ -74,11 +78,6 @@ val concat : state_machine -> state_machine -> state_machine
 val sum : ex_source -> (<display: string; real: string> -> state_machine) -> state_machine
 (** Dependant sum. *)
 
-val singleton : ex_source -> state_machine
-(** Offers the argument for completion once and then do not provide any completion *)
-
-val iterate : ex_source Lazy.t list -> state_machine
-(** [iterate sources] offers completions from sources, indefinitely. *)
 
 (** {2 State} *)
 

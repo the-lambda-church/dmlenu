@@ -45,20 +45,18 @@ type state = {
   program: state_machine;
 }
 
-let rec dummy_machine = {
+let rec empty = {
   ex_sources = [] ;
-  transition = (fun _ -> dummy_machine)
+  transition = (fun _ -> empty)
 }
 
 let rec iterate ex_sources = {
   ex_sources ;
   transition = fun _ -> iterate ex_sources ;
 }
-let empty = dummy_machine
-let singleton s = {
-  ex_sources = [lazy s];
-  transition = fun _ -> empty
-}
+
+let singleton lazy_source = { empty with ex_sources = [ lazy_source ] }
+let singleton' source = singleton (lazy source)
 
 let rec concat a b =
   if a.ex_sources = [] then

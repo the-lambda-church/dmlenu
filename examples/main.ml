@@ -68,9 +68,7 @@ let run prompt stdin bottom focus_foreground focus_background normal_foreground
     compl =
       let open Sources in
       let stm =
-        if conf.stdin then 
-          { dummy_machine with ex_sources = [ Lazy.from_fun @@ stdin ] }
-        else {
+        if conf.stdin then singleton (Lazy.from_fun @@ stdin) else {
           ex_sources = [ Lazy.from_val binaries ] ;
           transition = fun o -> Extra_sources.stm_from_file o#display ;
         }
