@@ -40,12 +40,13 @@ List of existing i3 workspaces.<br>
 </div>
 
 <pre><span id="VALfrom_file"><span class="keyword">val</span> from_file</span> : <code class="type">string -> <a href="Sources.html#TYPEt">Sources.t</a></code></pre><div class="info ">
-<code class="code">from_file filename</code> creates a source from the lines in <code class="code">filename</code> (each
-    line in this file is a candidate)<br>
+<code class="code">from_file filename</code> creates a source from the lines in
+    <code class="code">$HOME/.config/dmlenu/filename</code> (each line in this file is a candidate)<br>
 </div>
 
 <pre><span id="VALstm_from_file"><span class="keyword">val</span> stm_from_file</span> : <code class="type">string -> <a href="Completion.html#TYPEstate_machine">Completion.state_machine</a></code></pre><div class="info ">
-<code class="code">stm_from_file f</code> starts by offering candidates from file <code class="code">f</code>, once a
-    candidate <code class="code">x</code> has been selected, it will behave as <code class="code">stm_from_file (f ^ x)</code>.<br>
+<code class="code">stm_from_file f</code> starts by offering candidates returned by <code class="code">from_file f</code>,
+    once a candidate <code class="code">x</code> has been selected, it will behave as
+    <code class="code">stm_from_file (f ^ x)</code>.<br>
 </div>
 </body></html>

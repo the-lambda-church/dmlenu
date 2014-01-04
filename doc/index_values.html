@@ -26,7 +26,7 @@ Computes the new state corresponding to the user pressing a character
 <tr><td align="left"><br>B</td></tr>
 <tr><td><a href="Sources.html#VALbinaries">binaries</a> [<a href="Sources.html">Sources</a>]</td>
 <td><div class="info">
-A source that completes a binary of the system
+A source that list all the binaries in your PATH.
 </div>
 </td></tr>
 <tr><td align="left"><br>C</td></tr>
@@ -38,6 +38,16 @@ Offers completion on bookmarks names, and returns the bookmark url.
 <tr><td><a href="Completion.html#VALcomplete">complete</a> [<a href="Completion.html">Completion</a>]</td>
 <td><div class="info">
 Computes the new state corresponding to the user completing the entry
+</div>
+</td></tr>
+<tr><td><a href="Completion.html#VALconcat">concat</a> [<a href="Completion.html">Completion</a>]</td>
+<td><div class="info">
+Concatenates two machines.
+</div>
+</td></tr>
+<tr><td><a href="Sources.html#VALcsum">csum</a> [<a href="Sources.html">Sources</a>]</td>
+<td><div class="info">
+Simple case of dependant sum
 </div>
 </td></tr>
 <tr><td><a href="Extra_sources.Mpc.html#VALcurrent_playlist">current_playlist</a> [<a href="Extra_sources.Mpc.html">Extra_sources.Mpc</a>]</td>
@@ -69,16 +79,21 @@ The state machine that does not offer any completion
 The empty source.
 </div>
 </td></tr>
+<tr><td><a href="Completion.html#VALempty">empty</a> [<a href="Completion.html">Completion</a>]</td>
+<td><div class="info">
+Same as <a href="Completion.html#VALdummy_machine"><code class="code">Completion.dummy_machine</code></a>
+</div>
+</td></tr>
 <tr><td align="left"><br>F</td></tr>
 <tr><td><a href="Sources.html#VALfiles">files</a> [<a href="Sources.html">Sources</a>]</td>
 <td><div class="info">
-A source that completes filenames in a given directory (or absolute filenames)
+A source that completes filenames in a given directory (or absolute filenames).
 </div>
 </td></tr>
 <tr><td><a href="Extra_sources.html#VALfrom_file">from_file</a> [<a href="Extra_sources.html">Extra_sources</a>]</td>
 <td><div class="info">
-<code class="code">from_file filename</code> creates a source from the lines in <code class="code">filename</code> (each
-    line in this file is a candidate)
+<code class="code">from_file filename</code> creates a source from the lines in
+    <code class="code">$HOME/.config/dmlenu/filename</code> (each line in this file is a candidate)
 </div>
 </td></tr>
 <tr><td><a href="Sources.html#VALfrom_list">from_list</a> [<a href="Sources.html">Sources</a>]</td>
@@ -135,10 +150,7 @@ Computes the new state corresponding to the user selecting the candidate on the 
 <tr><td><a href="Matching.html#VALmatch_prefix">match_prefix</a> [<a href="Matching.html">Matching</a>]</td>
 <td></td></tr>
 <tr><td><a href="Matching.html#VALmatch_query">match_query</a> [<a href="Matching.html">Matching</a>]</td>
-<td><div class="info">
-Matching function
-</div>
-</td></tr>
+<td></td></tr>
 <tr><td><a href="Completion.html#VALmk_candidate">mk_candidate</a> [<a href="Completion.html">Completion</a>]</td>
 <td><div class="info">
 A constructor
@@ -192,12 +204,17 @@ Computes the new state corresponding to the user selecting the candidate on the 
 </td></tr>
 <tr><td><a href="Dmlenu.html#VALrun_list">run_list</a> [<a href="Dmlenu.html">Dmlenu</a>]</td>
 <td><div class="info">
-Same as <a href="Dmlenu.html#VALrun"><code class="code">Dmlenu.run</code></a> but returns the list of completed tokens
+Same as <a href="Dmlenu.html#VALrun"><code class="code">Dmlenu.run</code></a> but returns the list of completed tokens.
 </div>
 </td></tr>
 <tr><td align="left"><br>S</td></tr>
 <tr><td><a href="Matching.html#VALset_match_query_fun">set_match_query_fun</a> [<a href="Matching.html">Matching</a>]</td>
 <td></td></tr>
+<tr><td><a href="Completion.html#VALsingleton">singleton</a> [<a href="Completion.html">Completion</a>]</td>
+<td><div class="info">
+Offers the argument for completion once and then do not provide any completion
+</div>
+</td></tr>
 <tr><td><a href="Sources.html#VALstdin">stdin</a> [<a href="Sources.html">Sources</a>]</td>
 <td><div class="info">
 A source that reads its elements off stdin.
@@ -205,14 +222,20 @@ A source that reads its elements off stdin.
 </td></tr>
 <tr><td><a href="Extra_sources.html#VALstm_from_file">stm_from_file</a> [<a href="Extra_sources.html">Extra_sources</a>]</td>
 <td><div class="info">
-<code class="code">stm_from_file f</code> starts by offering candidates from file <code class="code">f</code>, once a
-    candidate <code class="code">x</code> has been selected, it will behave as <code class="code">stm_from_file (f ^ x)</code>.
+<code class="code">stm_from_file f</code> starts by offering candidates returned by <code class="code">from_file f</code>,
+    once a candidate <code class="code">x</code> has been selected, it will behave as
+    <code class="code">stm_from_file (f ^ x)</code>.
 </div>
 </td></tr>
 <tr><td><a href="Matching.html#VALsubset">subset</a> [<a href="Matching.html">Matching</a>]</td>
 <td><div class="info">
 <code class="code">subset ?case ~candidate query</code> will match if query (interpreded as a set of
     characters) is a subset of candidate (interpreted as a set of chars again).
+</div>
+</td></tr>
+<tr><td><a href="Completion.html#VALsum">sum</a> [<a href="Completion.html">Completion</a>]</td>
+<td><div class="info">
+Dependant sum.
 </div>
 </td></tr>
 <tr><td><a href="Sources.html#VALswitch">switch</a> [<a href="Sources.html">Sources</a>]</td>

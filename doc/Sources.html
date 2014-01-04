@@ -35,7 +35,7 @@ Sources<br>
 <h3 id="3_Predefinedsourcesandsourcesbuilder">Predefined sources and sources builder</h3><br>
 
 <pre><span id="VALfiles"><span class="keyword">val</span> files</span> : <code class="type">?filter:(string -> bool) -> string -> <a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
-A source that completes filenames in a given directory (or absolute filenames)<br>
+A source that completes filenames in a given directory (or absolute filenames).<br>
 </div>
 
 <pre><span id="VALfrom_list"><span class="keyword">val</span> from_list</span> : <code class="type">(string * string * string) list -> <a href="Sources.html#TYPEt">t</a></code></pre>
@@ -50,8 +50,12 @@ A source built from a list of candidates (display and real are the same, doc
     is empty).<br>
 </div>
 
+<pre><span id="VALcsum"><span class="keyword">val</span> csum</span> : <code class="type">(string * <a href="Completion.html#TYPEstate_machine">Completion.state_machine</a> Lazy.t) list -> <a href="Completion.html#TYPEstate_machine">Completion.state_machine</a></code></pre><div class="info ">
+Simple case of dependant sum<br>
+</div>
+
 <pre><span id="VALbinaries"><span class="keyword">val</span> binaries</span> : <code class="type"><a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">
-A source that completes a binary of the system<br>
+A source that list all the binaries in your PATH.<br>
 </div>
 
 <pre><span id="VALswitch"><span class="keyword">val</span> switch</span> : <code class="type">((string -> bool) * <a href="Sources.html#TYPEt">t</a> Lazy.t) list -> <a href="Sources.html#TYPEt">t</a></code></pre><div class="info ">

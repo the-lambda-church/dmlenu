@@ -87,6 +87,11 @@ A constructor<br>
 </div>
 <br>
 <h3 id="3_Sources">Sources</h3><br>
+<br>
+The underlying representations of sources.
+<p>
+
+    See <a href="Sources.html"><code class="code">Sources</code></a> for some predefined sources and sources builders.<br>
 
 <pre><code><span id="TYPEsource"><span class="keyword">type</span> <code class="type">'a</code> source</span> = {</code></pre><table class="typetable">
 <tr>
@@ -164,6 +169,23 @@ A completion state machine: a list of current source and a way to get
 
 <pre><span id="VALdummy_machine"><span class="keyword">val</span> dummy_machine</span> : <code class="type"><a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
 The state machine that does not offer any completion<br>
+</div>
+
+<pre><span id="VALempty"><span class="keyword">val</span> empty</span> : <code class="type"><a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
+Same as <a href="Completion.html#VALdummy_machine"><code class="code">Completion.dummy_machine</code></a><br>
+</div>
+
+<pre><span id="VALconcat"><span class="keyword">val</span> concat</span> : <code class="type"><a href="Completion.html#TYPEstate_machine">state_machine</a> -><br>       <a href="Completion.html#TYPEstate_machine">state_machine</a> -> <a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
+Concatenates two machines. The first one is considered done when it returns
+    [].<br>
+</div>
+
+<pre><span id="VALsum"><span class="keyword">val</span> sum</span> : <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a> -><br>       (< display : string; real : string > -> <a href="Completion.html#TYPEstate_machine">state_machine</a>) -><br>       <a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
+Dependant sum.<br>
+</div>
+
+<pre><span id="VALsingleton"><span class="keyword">val</span> singleton</span> : <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a> -> <a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
+Offers the argument for completion once and then do not provide any completion<br>
 </div>
 
 <pre><span id="VALiterate"><span class="keyword">val</span> iterate</span> : <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a> Lazy.t list -> <a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">

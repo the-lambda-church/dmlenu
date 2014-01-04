@@ -136,9 +136,9 @@ Main module of the library.
 
     The <code class="code">source_transition_hook</code> parameter is to be used when you want to
     perform side effects, or update the configuration when a transition happens.
-    The reason why you would want use this hook insteal of directly performing
-    your computation in the transition function of the state machine (see
-    <a href="Completion.html"><code class="code">Completion</code></a>) is:<ul>
+    The reason why you would want to use this hook instead of directly
+    performing your computation in the transition function of the state machine
+    (see <a href="Completion.html"><code class="code">Completion</code></a>) is:<ul>
 <li>You cannot modify the configuration in the machine transition function
       (although we could allow it).</li>
 <li>This function will be called when the user completes something, but also
@@ -150,6 +150,6 @@ Main module of the library.
 </div>
 
 <pre><span id="VALrun_list"><span class="keyword">val</span> run_list</span> : <code class="type">?source_transition_hook:(<a href="Completion.html#TYPEstate">Completion.state</a> -> <a href="Dmlenu.html#TYPEconf">conf</a> -> <a href="Dmlenu.html#TYPEconf">conf</a>) -><br>       <a href="Dmlenu.html#TYPEapp_state">app_state</a> -> <a href="Dmlenu.html#TYPEconf">conf</a> -> string list</code></pre><div class="info ">
-Same as <a href="Dmlenu.html#VALrun"><code class="code">Dmlenu.run</code></a> but returns the list of completed tokens<br>
+Same as <a href="Dmlenu.html#VALrun"><code class="code">Dmlenu.run</code></a> but returns the list of completed tokens.<br>
 </div>
 </body></html>

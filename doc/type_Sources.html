@@ -19,6 +19,9 @@
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;from_list_rev&nbsp;:&nbsp;(string&nbsp;*&nbsp;string&nbsp;*&nbsp;string)&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Sources</span>.t<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;from_list_&nbsp;:&nbsp;string&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Sources</span>.t<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;from_list_rev_&nbsp;:&nbsp;string&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Sources</span>.t<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;csum&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(string&nbsp;*&nbsp;<span class="constructor">Completion</span>.state_machine&nbsp;<span class="constructor">Lazy</span>.t)&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Completion</span>.state_machine<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;binaries&nbsp;:&nbsp;<span class="constructor">Sources</span>.t<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;switch&nbsp;:&nbsp;((string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool)&nbsp;*&nbsp;<span class="constructor">Sources</span>.t&nbsp;<span class="constructor">Lazy</span>.t)&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Sources</span>.t<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;empty&nbsp;:&nbsp;<span class="constructor">Sources</span>.t<br>
