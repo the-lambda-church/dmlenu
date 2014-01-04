@@ -167,12 +167,17 @@ A completion state machine: a list of current source and a way to get
 </div>
 
 
-<pre><span id="VALdummy_machine"><span class="keyword">val</span> dummy_machine</span> : <code class="type"><a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
+<pre><span id="VALempty"><span class="keyword">val</span> empty</span> : <code class="type"><a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
 The state machine that does not offer any completion<br>
 </div>
 
-<pre><span id="VALempty"><span class="keyword">val</span> empty</span> : <code class="type"><a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
-Same as <a href="Completion.html#VALdummy_machine"><code class="code">Completion.dummy_machine</code></a><br>
+<pre><span id="VALsingleton"><span class="keyword">val</span> singleton</span> : <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a> Lazy.t -> <a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre>
+<pre><span id="VALsingleton'"><span class="keyword">val</span> singleton'</span> : <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a> -> <a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
+Offers the argument for completion once and then do not provide any completion<br>
+</div>
+
+<pre><span id="VALiterate"><span class="keyword">val</span> iterate</span> : <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a> Lazy.t list -> <a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
+<code class="code">iterate sources</code> offers completions from sources, indefinitely.<br>
 </div>
 
 <pre><span id="VALconcat"><span class="keyword">val</span> concat</span> : <code class="type"><a href="Completion.html#TYPEstate_machine">state_machine</a> -><br>       <a href="Completion.html#TYPEstate_machine">state_machine</a> -> <a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
@@ -182,14 +187,6 @@ Concatenates two machines. The first one is considered done when it returns
 
 <pre><span id="VALsum"><span class="keyword">val</span> sum</span> : <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a> -><br>       (< display : string; real : string > -> <a href="Completion.html#TYPEstate_machine">state_machine</a>) -><br>       <a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
 Dependant sum.<br>
-</div>
-
-<pre><span id="VALsingleton"><span class="keyword">val</span> singleton</span> : <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a> -> <a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
-Offers the argument for completion once and then do not provide any completion<br>
-</div>
-
-<pre><span id="VALiterate"><span class="keyword">val</span> iterate</span> : <code class="type"><a href="Completion.html#TYPEex_source">ex_source</a> Lazy.t list -> <a href="Completion.html#TYPEstate_machine">state_machine</a></code></pre><div class="info ">
-<code class="code">iterate sources</code> offers completions from sources, indefinitely.<br>
 </div>
 <br>
 <h2 id="2_State">State</h2><br>

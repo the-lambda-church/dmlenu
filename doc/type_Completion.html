@@ -37,8 +37,10 @@
 &nbsp;&nbsp;&nbsp;&nbsp;transition&nbsp;:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&nbsp;display&nbsp;:&nbsp;string;&nbsp;real&nbsp;:&nbsp;string&nbsp;&gt;&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine;<br>
 &nbsp;&nbsp;}<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;dummy_machine&nbsp;:&nbsp;<span class="constructor">Completion</span>.state_machine<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;empty&nbsp;:&nbsp;<span class="constructor">Completion</span>.state_machine<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;singleton&nbsp;:&nbsp;<span class="constructor">Completion</span>.ex_source&nbsp;<span class="constructor">Lazy</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;singleton'&nbsp;:&nbsp;<span class="constructor">Completion</span>.ex_source&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;iterate&nbsp;:&nbsp;<span class="constructor">Completion</span>.ex_source&nbsp;<span class="constructor">Lazy</span>.t&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;concat&nbsp;:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Completion</span>.state_machine&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Completion</span>.state_machine&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine<br>
@@ -46,8 +48,6 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Completion</span>.ex_source&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;(&lt;&nbsp;display&nbsp;:&nbsp;string;&nbsp;real&nbsp;:&nbsp;string&nbsp;&gt;&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine)&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Completion</span>.state_machine<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;singleton&nbsp;:&nbsp;<span class="constructor">Completion</span>.ex_source&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;iterate&nbsp;:&nbsp;<span class="constructor">Completion</span>.ex_source&nbsp;<span class="constructor">Lazy</span>.t&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Completion</span>.state_machine<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;state&nbsp;=&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;before_cursor&nbsp;:&nbsp;string;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;after_cursor&nbsp;:&nbsp;string;<br>
