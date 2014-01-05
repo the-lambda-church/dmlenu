@@ -84,5 +84,5 @@ Document "dmlenu-api"
 
 SourceRepository head
   Type:         git
-  Location:     https://github.com/asmanur/dmlenu.git
-  Browser:      https://github.com/asmanur/dmlenu
+  Location:     https://github.com/the-lambda-church/dmlenu.git
+  Browser:      https://github.com/the-lambda-church/dmlenu
