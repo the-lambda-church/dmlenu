@@ -10,7 +10,7 @@ type candidate = <
   matching_function: (string -> Matching.result option);
 >
 
-let mk_candidate ~display ~real ~completion ~doc ~matching_function = object 
+let mk_candidate ~display ~real ~completion ~doc ~matching_function = object
   method display = display
   method real = real
   method completion = completion
@@ -68,7 +68,7 @@ let sum source f =
   { ex_sources = [lazy source];
     transition = fun o -> f o }
 
-let compute_matches before after sources = 
+let compute_matches before after sources =
   let aux candidate =
     match candidate#matching_function (before ^ after) with
     | None -> None
@@ -76,7 +76,7 @@ let compute_matches before after sources =
   in
   List.filter_map aux (List.concat (List.map fst sources))
 
-let on_modify st = 
+let on_modify st =
   let sources =
     List.map (fun (candidates, ST (sstate, source)) ->
         let new_state, candidates =
@@ -85,10 +85,10 @@ let on_modify st =
         candidates, ST (new_state, source)
       ) st.sources
   in
-  let after_matches = compute_matches st.before_cursor st.after_cursor sources in
+  let after_matches= compute_matches st.before_cursor st.after_cursor sources in
   { st with before_matches = []; after_matches ; sources }
 
-let make_state ?(sep=" ") ({ ex_sources ; _ } as program) = 
+let make_state ?(sep=" ") ({ ex_sources ; _ } as program) =
   on_modify {
     before_cursor = "";
     after_cursor = "";
@@ -99,14 +99,13 @@ let make_state ?(sep=" ") ({ ex_sources ; _ } as program) =
     entries = []
   }
 
-  
 
-let remove state = 
-  if state.before_cursor = "" then 
+let remove state =
+  if state.before_cursor = "" then
     match List.rev state.entries with
     | [] -> state
     | ({ ex_sources ; _ } as program, _, _) :: rest ->
-      on_modify { state with 
+      on_modify { state with
         before_cursor = ""; after_cursor = ""; program;
         sources = List.map (fun (S x) -> [], ST (x.default, x)) @@ !!ex_sources;
         entries = List.rev rest
@@ -114,7 +113,7 @@ let remove state =
   else
   on_modify { state with before_cursor = String.rchop state.before_cursor }
 
-let next_entry (candidate : candidate) state = 
+let next_entry (candidate : candidate) state =
   let f = state.program.transition in
   let ({ ex_sources ; _ } as program) =
     f (candidate :> < display : string ; real : string >)
@@ -129,10 +128,12 @@ let next_entry (candidate : candidate) state =
     entries = state.entries @ [state.program, candidate#real, candidate#display]
   }
 
-let complete state = 
+let complete state =
   try
     let candidate = (fst (List.hd state.after_matches)) in
-    let state' = on_modify { state with before_cursor = candidate#completion; after_cursor = "" } in
+    let state' = on_modify {
+      state with before_cursor = candidate#completion; after_cursor = ""
+    } in
     if
       List.exists (fun (x, _) -> x#real = candidate#real) state'.after_matches
     then
@@ -142,28 +143,29 @@ let complete state =
   with Failure "hd" ->
     state
 
-let add_string s state = 
-  let state' = on_modify { state with before_cursor = state.before_cursor ^ s } in
-  try 
-    if 
-      s = state.separator && state.after_cursor = "" &&
-      state.before_cursor ^ state.after_cursor = (fst (List.hd state.after_matches))#display
+let add_string s st =
+  let state' = on_modify { st with before_cursor = st.before_cursor ^ s } in
+  try
+    let first = fst @@ List.hd st.after_matches in
+    if
+      s = st.separator && st.after_cursor = "" &&
+      st.before_cursor ^ st.after_cursor = first#display
     then
-      complete state
+      complete st
     else
       state'
   with _ ->
     state'
 
-let cursor_left state = 
+let cursor_left state =
   if state.before_cursor = "" then state else
   let c = state.before_cursor.[String.length state.before_cursor - 1] in
   on_modify { state with
     before_cursor = String.rchop state.before_cursor;
     after_cursor  = String.of_char c ^ state.after_cursor;
   }
-  
-let cursor_right state = 
+
+let cursor_right state =
   if state.after_cursor = "" then state else
   let c = state.after_cursor.[0] in
   on_modify { state with
@@ -171,33 +173,32 @@ let cursor_right state =
     after_cursor  = String.lchop state.after_cursor;
   }
 
-let left state = 
+let left state =
   match state.before_matches with
   | [] -> cursor_left state
-  | t :: before_matches -> 
+  | t :: before_matches ->
     { state with before_matches; after_matches = t :: state.after_matches }
 
-let right state = 
+let right state =
   if state.after_cursor <> "" then
     cursor_right state
   else
     match state.after_matches with
-    | [] | [ _ ]-> 
+    | [] | [ _ ]->
       state
-    | t :: after_matches -> 
+    | t :: after_matches ->
       { state with after_matches; before_matches = t :: state.before_matches }
 
-let pageup f state = 
+let pageup f state =
   let visible, invisible = f state.before_matches in
-  { state with 
+  { state with
     before_matches = invisible;
     after_matches = List.rev visible @ state.after_matches
   }
 
-let pagedown f state = 
+let pagedown f state =
   let visible, invisible = f state.after_matches in
-  { state with 
+  { state with
     after_matches = invisible;
     before_matches = List.rev visible @ state.before_matches
   }
-    

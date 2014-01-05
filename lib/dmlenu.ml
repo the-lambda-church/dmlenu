@@ -27,7 +27,7 @@ let default_conf = {
 
 let draw_match ?(hl = false) line conf x (candidate, list) =
   let tuple =
-    (conf.normal_foreground, conf.match_foreground, 
+    (conf.normal_foreground, conf.match_foreground,
      if hl then conf.focus_background else conf.normal_background)
   in
   let x = Draw.draw_text candidate#display (x, line) list tuple in
@@ -46,16 +46,16 @@ let draw_match ?(hl = false) line conf x (candidate, list) =
     ignore (Draw.draw_text str (x, line) [(false, 0, String.length str)] tuple)
   ) ;
   10 + x
-  
+ 
 type app_state = {
   compl: state;
   prompt: string;
 }
 
-let displayable_matches x = 
+let displayable_matches x =
   let rec go index = function
     | [] -> [], []
-    | (candidate, rest) :: q as l-> 
+    | (candidate, rest) :: q as l->
       let size = Draw.size (candidate#display) + 10 in
       if (index + size) > Draw.width () - 5 then [], l else
       let a, b = go (index+size) q in
@@ -66,11 +66,16 @@ let displayable_matches x =
 let init_draw conf state =
   let line = 0 in
   let x =
-    if state.prompt = "" then 0 else
-    Draw.(text ~line ~x:0 ~fg:conf.focus_foreground ~bg:conf.focus_background "%s" state.prompt)
+    if state.prompt = "" then 0 else Draw.(
+      text ~line ~x:0 ~fg:conf.focus_foreground ~bg:conf.focus_background "%s"
+        state.prompt
+    )
   in
-  let x = List.fold_left Draw.(fun x (_, _, display) ->
-    2+text ~line ~x ~fg: conf.focus_foreground ~bg:conf.focus_background "%s" display) x state.compl.entries
+  let x =
+    List.fold_left Draw.(fun x (_, _, display) ->
+      2 + text ~line ~x ~fg: conf.focus_foreground ~bg:conf.focus_background
+            "%s" display
+    ) x state.compl.entries
   in
   5 + Draw.(
     text ~line ~x ~fg:conf.normal_foreground ~bg:conf.normal_background "%s|%s"
@@ -81,22 +86,22 @@ let draw_matches line x conf state =
   let tuple =
     conf.normal_foreground, conf.match_foreground, conf.normal_background
   in
-  let x_offset = x + Draw.size "<" in
-  let displayable, rest = displayable_matches x_offset state.compl.after_matches in
+  let x_off = x + Draw.size "<" in
+  let displayable, rest = displayable_matches x_off state.compl.after_matches in
   let offset, displayable, befores =
     match rest with
     | _ :: _ -> 0, displayable, state.compl.before_matches
     | [] ->
       let len_after = List.length displayable in
       let lst = List.rev displayable @ state.compl.before_matches in
-      let displayable, befores = displayable_matches x_offset lst in
+      let displayable, befores = displayable_matches x_off lst in
       List.length displayable - len_after, List.rev displayable, befores
   in
   let _, border =
     List.fold_left (fun (i, x) m ->
       let hl = i = offset in
       i + 1, draw_match ~hl line conf x m
-    ) (0, x_offset) displayable
+    ) (0, x_off) displayable
   in
   begin match befores with
   | [] -> ()
@@ -128,13 +133,13 @@ let one_match_per_line conf state =
   let size = min (List.length m) conf.lines in
   let _ = resize size in
   let () = Draw.clear conf.window_background in
-  List.iteri (fun line s -> 
+  List.iteri (fun line s ->
     let hl = line = offset in
     ignore (draw_match ~hl (line + 1) conf 5 s)
   ) (List.take size m)
 
 let draw_window conf state =
-  let x = 
+  let x =
     if conf.lines = 0 then (
       resize 0 ;
       Draw.clear conf.window_background ;
@@ -151,15 +156,15 @@ let draw_window conf state =
 
 exception Finished of string
 
-let run_list 
+let run_list
   ?(source_transition_hook=fun _ conf -> conf)
   { prompt ; compl } (conf : conf) =
-  Draw.setup (not conf.bottom) conf.window_background conf.lines; 
-  ignore (Draw.grabkeys ()); 
+  Draw.setup (not conf.bottom) conf.window_background conf.lines;
+  ignore (Draw.grabkeys ());
   let rec loop conf state =
     let last_x = draw_window conf { prompt ; compl = state } in
     let (key, str) = Draw.next_event () in
-    let ret k = 
+    let ret k =
       Draw.quit ();
       k
     in
@@ -172,7 +177,7 @@ let run_list
     match key with
     (* beurk *)
     | 0xff1b -> ret []
-    | 0xff08 -> 
+    | 0xff08 ->
       let state' = remove state in
       let conf =
         if state'.program == state.program then conf else

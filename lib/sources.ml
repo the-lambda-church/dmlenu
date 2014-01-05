@@ -1,4 +1,4 @@
-open Completion 
+open Completion
 open Batteries
 
 (* My Std *)
@@ -11,11 +11,11 @@ let getenv var =
 (* Word manipulation *)
 let rec compute_word_index ?(acc = 0) words position = match words with
   | [] -> acc, 0, "", ""
-  | t :: q -> 
+  | t :: q ->
     if position <= String.length t then (
       acc, position, String.sub t 0 position,
       String.sub t position (String.length t - position)
-    ) else 
+    ) else
       compute_word_index ~acc:(acc + 1) q (position - String.length t - 1)
 
 type word_result = {
@@ -29,18 +29,18 @@ type word_result = {
   new_word : string * string -> string * string;
 }
 
-let get_word ?(once = false) sep before after = 
+let get_word ?(once = false) sep before after =
   let total = before ^ after in
   if total = "" then {
     word = ""; before = []; after = []; index = 0; index_inside = 0;
     before_inside = ""; after_inside = ""; new_word = (fun (a, b) -> a, b)
   } else
-    let words = 
+    let words =
       if not once then String.nsplit ~by:sep total else
       let (a, b) = try String.split ~by:sep total with _ -> total, "" in
       [a; b]
     in
-    let word_index, index_inside, before_inside, after_inside = 
+    let word_index, index_inside, before_inside, after_inside =
       compute_word_index words (String.length before)
     in
     let word = List.nth words word_index in
@@ -56,25 +56,25 @@ let get_word ?(once = false) sep before after =
     }
 
 
-let complete_in_word ?(drop_cont = false) separator f before after = 
+let complete_in_word ?(drop_cont = false) separator f before after =
   let w = get_word separator before after in
   let before, after = w.new_word (f w.before_inside w.after_inside) in
   before, if drop_cont then "" else after
 
-let match_in_word separator f query = 
+let match_in_word separator f query =
   let { word ; _ } = get_word separator query "" in
   f word
 
 type t = ex_source
 
-let dirname s = 
+let dirname s =
   if s = "" then ""
   else if s.[String.length s -1] = '/' then s
   else match Filename.dirname s with
   | "." -> ""
   | s -> s
 
-let basename s = 
+let basename s =
   if s = "" then ""
   else if s.[String.length s -1] = '/' then ""
   else Filename.basename s
@@ -90,7 +90,7 @@ let files ?(filter=fun x -> true) root =
     let directory = if query <> "" && query.[0] = '/' then
         dirname query
       else
-        root / dirname query 
+        root / dirname query
     in
     if old_dir = directory && cache <> [] then
       (directory, cache), cache
@@ -102,7 +102,7 @@ let files ?(filter=fun x -> true) root =
           let abs_path = directory / file in
           if not (filter abs_path) then None else
           let real, display =
-            if Sys.file_exists abs_path && Sys.is_directory abs_path then 
+            if Sys.file_exists abs_path && Sys.is_directory abs_path then
               abs_path ^ "/", file ^ "/"
             else
               abs_path, file
@@ -126,18 +126,18 @@ let from_list_aux (display, real, doc) =
   Completion.mk_candidate ~display ~real ~completion:display ~doc
     ~matching_function:(Matching.match_query ~candidate:display)
 
-let from_list_rev list = 
+let from_list_rev list =
   let candidates = List.rev_map from_list_aux list in
   S { delay = false; default = (); compute = (fun () _ -> (), candidates) }
 
-let from_list list = 
+let from_list list =
   let candidates = List.map from_list_aux list in
   S { delay = false; default = (); compute = (fun () _ -> (), candidates) }
 
 let from_list_ list = List.map (fun x -> x, x, "") list |> from_list
 let from_list_rev_ list = List.rev_map (fun x -> x, x, "") list |> from_list
 
-let stdin ?sep () = 
+let stdin ?sep () =
   IO.lines_of stdin |> Enum.map (fun s ->
     match sep with
     | None -> s, s, ""
@@ -147,8 +147,8 @@ let stdin ?sep () =
         display, real, ""
       with _ -> s, s, ""
   ) |> List.of_enum |> from_list
-      
-let binaries = 
+     
+let binaries =
   let aux s =
     let helper s' =
       let full_path = s / s' in
@@ -174,7 +174,7 @@ let empty = S {
   compute = fun _ _ -> (), []
 }
 
-let switch list = 
+let switch list =
   S {
     delay = false;
     default = None;
@@ -186,12 +186,12 @@ let switch list =
       | Some (ST (state, source')) when Obj.magic source' == Obj.magic source ->
         let state, answer = source'.compute state query in
         Some (ST (state, source')), answer
-      | _ -> 
+      | _ ->
         let state, answer = source.compute source.default query in
         Some (ST (state, source)), answer
   }
 
-let paths ~coupled_with = 
+let paths ~coupled_with =
   switch [
     flip String.starts_with "./", lazy (files (Sys.getcwd ()));
     flip String.starts_with "~/", lazy (files (getenv "HOME"));
@@ -200,4 +200,5 @@ let paths ~coupled_with =
   ]
 
 let csum l =
-  Completion.sum (from_list_ (List.map fst l)) (fun o -> Lazy.force (List.assoc o#display l))
+  let src = from_list_ @@ List.map fst l in
+  Completion.sum src (fun o -> Lazy.force (List.assoc o#display l))

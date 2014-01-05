@@ -40,7 +40,7 @@ module Mpc = struct
     let aux () =
       let ic = Unix.open_process_in "mpc playlist" in
       let rec loop i =
-        try 
+        try
           let song = input_line ic in
           (song, string_of_int i, "") :: loop (i + 1)
         with End_of_file -> []
@@ -55,7 +55,7 @@ module Mpc = struct
     let aux () =
       let ic = Unix.open_process_in "mpc lsplaylists" in
       let rec loop () =
-        try 
+        try
           let playlist = input_line ic in
           playlist :: loop ()
         with End_of_file -> []
