@@ -31,58 +31,58 @@ Flag all
 Library "dmlenu"
   Build:                true
   Install:              true
-  Path:                 lib
+  Path:                 lib2
   CCLib:                -lX11
-  InternalModules:      Draw
-  Modules:              Matching, Completion, Dmlenu, Sources
+  InternalModules:      X
+  Modules:              Candidate, Matching, Pagination, Source
   CSources:             draw_funs.h, draw_funs.c, draw_stubs.c
-  BuildDepends:         batteries
+  BuildDepends:         batteries,lwt
   XMetaDescription:     An OCaml library to easily create dmenu-like examples
 
-Library "dmlenu-extra"
-  FindlibName:          extra
-  FindlibParent:        dmlenu
-  Build$:               flag(extra) || flag(all)
-  Install:              true
-  Path:                 lib
-  Modules:              Extra_sources
-  BuildDepends:         dmlenu, yojson
-  XMetaDescription:     Extra sources for the dmlenu library.
-
-Executable "dmlenu"
-  Build$:               flag(examples) || flag(all)
-  Install:              true
-  Path:                 examples
-  MainIs:               main.ml
-  BuildDepends:         batteries,cmdliner,dmlenu,dmlenu.extra
-  CompiledObject:       best
-
-Executable "dmlenu_subcommands"
-  Build$:               flag(all)
-  Install:              true
-  Path:                 examples
-  MainIs:               with_subcommands.ml
-  BuildDepends:         dmlenu,dmlenu.extra
-  CompiledObject:       best
-
-Executable "dmlenu_workspaces"
-  Build$:               flag(all)
-  Install:              true
-  Path:                 examples
-  MainIs:               i3_workspaces.ml
-  BuildDepends:         dmlenu,dmlenu.extra
-  CompiledObject:       best
-
-Document "dmlenu-api"
-  Title:                API reference for Dmlenu
-  Build:                true
-  Install:              true
-  InstallDir:           $htmldir/dmlenu
-  Type:                 ocamlbuild (0.3)
-  XOCamlbuildPath:      ./
-  XOCamlbuildLibraries: dmlenu, dmlenu.extra
-
-SourceRepository head
-  Type:         git
-  Location:     https://github.com/the-lambda-church/dmlenu.git
-  Browser:      https://github.com/the-lambda-church/dmlenu
+# Library "dmlenu-extra"
+#   FindlibName:          extra
+#   FindlibParent:        dmlenu
+#   Build$:               flag(extra) || flag(all)
+#   Install:              true
+#   Path:                 lib
+#   Modules:              Extra_sources
+#   BuildDepends:         dmlenu, yojson
+#   XMetaDescription:     Extra sources for the dmlenu library.
+# 
+# Executable "dmlenu"
+#   Build$:               flag(examples) || flag(all)
+#   Install:              true
+#   Path:                 examples
+#   MainIs:               main.ml
+#   BuildDepends:         batteries,cmdliner,dmlenu,dmlenu.extra
+#   CompiledObject:       best
+# 
+# Executable "dmlenu_subcommands"
+#   Build$:               flag(all)
+#   Install:              true
+#   Path:                 examples
+#   MainIs:               with_subcommands.ml
+#   BuildDepends:         dmlenu,dmlenu.extra
+#   CompiledObject:       best
+# 
+# Executable "dmlenu_workspaces"
+#   Build$:               flag(all)
+#   Install:              true
+#   Path:                 examples
+#   MainIs:               i3_workspaces.ml
+#   BuildDepends:         dmlenu,dmlenu.extra
+#   CompiledObject:       best
+# 
+# Document "dmlenu-api"
+#   Title:                API reference for Dmlenu
+#   Build:                true
+#   Install:              true
+#   InstallDir:           $htmldir/dmlenu
+#   Type:                 ocamlbuild (0.3)
+#   XOCamlbuildPath:      ./
+#   XOCamlbuildLibraries: dmlenu, dmlenu.extra
+# 
+# SourceRepository head
+#   Type:         git
+#   Location:     https://github.com/the-lambda-church/dmlenu.git
+#   Browser:      https://github.com/the-lambda-church/dmlenu

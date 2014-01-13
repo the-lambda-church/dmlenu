@@ -1,5 +1,5 @@
-S lib
-B _build/lib
+S lib2
+B _build/lib2
 
 S examples
 B _build/examples

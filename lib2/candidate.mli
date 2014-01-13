@@ -1,4 +1,4 @@
-
+(** Type of candidates *)
 
 type t = <
   display: string;
@@ -21,3 +21,10 @@ type t = <
     should be matched, displayed to the user. *)
 
     
+val make: ?real: string -> ?doc: string -> ?matching_function: (string -> Matching.result option) -> ?completion: string -> string -> t
+(** [make ~real ~doc ~matching_function ~completion display]
+    creates a new candidate. The default values are:
+    - real, completion: display
+    - doc: empty
+    - matching_function: Matching.match_query ~candidate
+*)

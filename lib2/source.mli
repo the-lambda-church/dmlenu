@@ -4,7 +4,7 @@ type 'a t_open = {
       compute the candidates ? *)
   default_state: 'a;
   (** The state the source should start in. *)
-  compute: 'a -> string -> ('a * candidate list) Lwt.t;
+  compute: 'a -> string -> ('a * Candidate.t list) Lwt.t;
   (** computes the list of candidates and the new state out of the
       current state and the current user input. *)
 }
@@ -12,6 +12,9 @@ type 'a t_open = {
 
 type t = S : 'a t_open  -> t
 (** Existential closure of {!t_open} *)
+
+type state = ST : 'a * 'a t_open -> state
+(** A source and a state bundled together *)
 
 (** {2 Examples of sources} *)
 
@@ -62,4 +65,3 @@ val stdin : ?sep:string -> unit -> t
     display fields of the candidate is the same.  If it is supplied,
     then lines are split wrt it and the first part is used as the
     display and the second part as the real. *)
-
