@@ -26,6 +26,8 @@ val setup : topbar: bool -> colors: Colors.t -> lines: int -> state option
    It returns None if the setting up failed.
 *)
 
+val quit : state: state -> unit
+(* Destroy the window and release the keyboard *)
 val resize : state: state -> lines: int -> unit
 (** Resize the given X state *)
 
@@ -59,6 +61,12 @@ module Draw : sig
     val text_hl: state: state -> result: Matching.result -> focus: bool -> 
       string -> unit
     (** Draw a text by highlighting some parts of it according to [result] *)
+
+    val clear : state: state -> unit
+    (** Clear the screen with the background *)
+
+    val map : state: state -> unit
+    (** Map the window on the screen *)
 end
 (** Low-level interface *)
 module Low_level : sig

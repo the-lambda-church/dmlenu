@@ -1,9 +1,8 @@
 open Batteries
-open Lwt
 type 'a t_open = {
   delay: bool;
   default_state: 'a;
-  compute: 'a -> string -> ('a * Candidate.t list) Lwt.t;
+  compute: 'a -> string -> ('a * Candidate.t list);
 }
 
 type t = S : 'a t_open  -> t
@@ -99,7 +98,7 @@ let files ?(filter=fun x -> true) root =
         root / dirname query
     in
     if old_dir = directory && cache <> [] then
-      Lwt.return ((directory, cache), cache)
+      ((directory, cache), cache)
     else
       let files = try Sys.readdir directory with _ -> [||] in
       let candidates =
@@ -124,7 +123,7 @@ let files ?(filter=fun x -> true) root =
           )
         )
       in
-      Lwt.return ((directory, candidates), candidates)
+      ((directory, candidates), candidates)
   in
   S { delay = false ; default_state = (root, []) ; compute }
 
@@ -134,12 +133,12 @@ let from_list_aux (display, real, doc) =
 let from_list_rev list =
   let candidates = List.rev_map from_list_aux list in
   S { delay = false; default_state = (); 
-      compute = (fun () _ -> Lwt.return ((), candidates)) }
+      compute = (fun () _ -> ((), candidates)) }
 
 let from_list list =
   let candidates = List.map from_list_aux list in
   S { delay = false; default_state = (); 
-      compute = (fun () _ -> Lwt.return ((), candidates)) }
+      compute = (fun () _ -> ((), candidates)) }
 
 let from_list_ list = List.map (fun x -> x, x, "") list |> from_list
 let from_list_rev_ list = List.rev_map (fun x -> x, x, "") list |> from_list
@@ -179,7 +178,7 @@ let binaries =
 let empty = S {
   delay = false;
   default_state = ();
-  compute = fun _ _ -> Lwt.return ((), [])
+  compute = fun _ _ -> ((), [])
 }
 
 
@@ -194,10 +193,10 @@ let switch list =
       in
       match st with
       | Some (ST (state, source')) when Obj.magic source' == Obj.magic source ->
-        source'.compute state query >|= fun (state, answer) ->
+        let (state, answer) = source'.compute state query in
         Some (ST (state, source')), answer
       | _ ->
-        source.compute source.default_state query >|= fun (state, answer) ->
+        let (state, answer) = source.compute source.default_state query in
         Some (ST (state, source)), answer
   }
 

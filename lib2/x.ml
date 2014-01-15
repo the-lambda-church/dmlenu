@@ -36,7 +36,7 @@ type state = {
   mutable x: int;
   mutable line: int;
 }
-
+let quit ~state = Low_level.quit ()
 let setup ~topbar ~colors ~lines = 
   Low_level.setup topbar colors.Colors.window_background lines;
   if Low_level.grabkeys () then
@@ -71,6 +71,9 @@ module Draw = struct
     let text ~state ~focus fmt = 
       fmt |> Printf.kprintf (fun s ->
         text_hl ~result: [false, 0, String.length s] ~state  ~focus s)
+
+    let clear ~state = Low_level.clear state.colors.Colors.window_background
+    let map ~state = Low_level.mapdc ()
 end
 
 module Events = struct

@@ -4,7 +4,7 @@ type 'a t_open = {
       compute the candidates ? *)
   default_state: 'a;
   (** The state the source should start in. *)
-  compute: 'a -> string -> ('a * Candidate.t list) Lwt.t;
+  compute: 'a -> string -> ('a * Candidate.t list) ;
   (** computes the list of candidates and the new state out of the
       current state and the current user input. *)
 }
