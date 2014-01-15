@@ -60,7 +60,7 @@ module Draw = struct
 
     let text_hl ~state ~result ~focus s = 
       let open Colors in
-      let x' = Low_level.draw_text s (state.line, state.x) result
+      let x' = Low_level.draw_text s (state.x, state.line) result
         ((if focus then state.colors.focus_foreground
           else          state.colors.normal_foreground),
          state.colors.match_foreground,
@@ -72,7 +72,10 @@ module Draw = struct
       fmt |> Printf.kprintf (fun s ->
         text_hl ~result: [false, 0, String.length s] ~state  ~focus s)
 
-    let clear ~state = Low_level.clear state.colors.Colors.window_background
+    let clear ~state = 
+      state.x <- 0;
+      state.line <- 0;
+      Low_level.clear state.colors.Colors.window_background
     let map ~state = Low_level.mapdc ()
 end
 

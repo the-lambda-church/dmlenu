@@ -43,7 +43,8 @@ let page_right f p =
 
 let left f p = 
   if p.selected = 0 then
-    page_left f p
+    let p' = page_left f p in
+    { p' with selected = List.length p'.visible - 1 }
   else
     { p with selected = p.selected - 1 }
 
