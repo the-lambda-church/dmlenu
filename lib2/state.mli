@@ -27,7 +27,7 @@ val on_modify : t -> t
 val add_char : string -> t -> t
 (** Add a char to the current input. *)
 
-val complete : t -> t
+val complete : t -> t * bool
 (** Tries to complete the current selected candidate. *)
 
 val left : t -> t
@@ -35,3 +35,14 @@ val left : t -> t
 
 val right : t -> t
 (** Moves right *)
+
+val up : t -> t
+(** Moves up *)
+val down : t -> t
+(** Moves down *)
+
+val remove : t -> t * bool
+(** Simulate a backspace. The boolean tells you whether the current token has changed *)
+
+val get_list : t -> string list
+(** Returns the value of all tokens currently accumulated *)

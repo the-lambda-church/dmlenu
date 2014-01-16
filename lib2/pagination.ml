@@ -5,52 +5,56 @@ type 'a t = {
   visible: 'a list;
   selected: int;
   unvisible_right: 'a list;
+  split: 'a list -> 'a list * 'a list
 }
 
 
 let empty = {
   unvisible_left = []; visible = []; selected = 0;
-  unvisible_right = []
+  unvisible_right = []; split = (fun l -> l, [])
 }
+let all l = List.rev l.unvisible_left @ l.visible @ l.unvisible_right
 let from_list split = function
-  | [] -> empty
+  | [] -> { empty with split }
   | t :: q -> 
     let visible, unvisible = split (t :: q) in
     { empty with 
-      selected = 0;
+      selected = 0; split;
       visible; unvisible_right = unvisible;
     }
 
 
-let page_left f p = 
-  let visible, unvisible = f p.unvisible_left in
+let page_left p = 
+  let visible, unvisible = p.split p.unvisible_left in
   match visible with
   | [] -> p
   | t :: q -> 
-    { unvisible_left = unvisible; 
+    { p with 
+      unvisible_left = unvisible; 
       unvisible_right = p.visible @ p.unvisible_right;
       visible = List.rev visible; selected = 0; }
 
-let page_right f p = 
-  let visible, unvisible = f p.unvisible_right in
+let page_right p = 
+  let visible, unvisible = p.split p.unvisible_right in
   match visible with
   | [] -> p
   | t :: q -> 
-    { unvisible_right = unvisible; 
+    { p with 
+      unvisible_right = unvisible; 
       unvisible_left = List.rev p.visible @ p.unvisible_left;
       visible; selected = 0; }
 
 
-let left f p = 
+let left p = 
   if p.selected = 0 then
-    let p' = page_left f p in
+    let p' = page_left p in
     { p' with selected = List.length p'.visible - 1 }
   else
     { p with selected = p.selected - 1 }
 
-let right f p = 
+let right p = 
   if p.selected = List.length p.visible - 1 then
-    page_right f p
+    page_right p
   else
     { p with selected = p.selected + 1 }
 

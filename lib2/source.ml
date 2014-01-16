@@ -208,3 +208,4 @@ let paths ~coupled_with =
     (fun _ -> true), Lazy.from_val coupled_with
   ]
 
+let initialize (S x) = ST (x.default_state, x)

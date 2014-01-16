@@ -38,5 +38,5 @@ val fuzzy_prefix : ?case:bool -> candidate:string -> string -> result option
 (** Same as [fuzzy_match] except that the first letter in [pattern] must be the
     first letter of [candidate]. *)
 
-val trivial : string -> result option
-(** Always matches its input *)
+val trivial : string -> string -> result option
+(** [trivial display] always matches its input *)

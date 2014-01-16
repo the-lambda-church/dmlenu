@@ -109,12 +109,30 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = X.Colors.default)
     } in
     let rec loop state = 
       let loop_pure f = loop { state with state = f state.state } in
+      let loop_transition f = 
+        let state', b = f state.state in
+        let state' = { state with state = state' } in
+        loop (if b then state'.hook state' else state')
+      in
       let open X.Events in
       draw state;
       match X.Events.poll ~state: xstate ~timeout: 1. with
       | Some (Key (0xff1b, _)) -> X.quit xstate; []
-      | Some (Key ((0xff51 | 0xff52), _)) -> loop_pure State.left
-      | Some (Key ((0xff53 | 0xff54), _)) -> loop_pure State.right
+
+      (* Arrows *)
+      | Some (Key (0xff51, _)) -> loop_pure State.left
+      | Some (Key (0xff52, _)) -> loop_pure State.up
+      | Some (Key (0xff53, _)) -> loop_pure State.right
+      | Some (Key (0xff54, _)) -> loop_pure State.down
+
+      (* Enter *)
+      | Some (Key (0xff0d, _)) -> 
+        X.quit xstate; State.get_list state.state
+
+      (* Tab *)
+      | Some (Key (0xff09, _)) -> loop_transition State.complete
+      (* Backspace *)
+      | Some (Key (0xff08, _)) -> loop_transition State.remove
       | Some (Key (_, s)) -> loop_pure (State.add_char s)
       | _ -> loop state
     in

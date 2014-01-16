@@ -16,6 +16,9 @@ type t = S : 'a t_open  -> t
 type state = ST : 'a * 'a t_open -> state
 (** A source and a state bundled together *)
 
+val initialize : t -> state
+(** Initialize a source to its default state *)
+
 (** {2 Examples of sources} *)
 
 val files : ?filter:(string -> bool) -> string -> t

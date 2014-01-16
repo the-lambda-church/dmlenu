@@ -72,7 +72,7 @@ let fuzzy_prefix ?(case=true) ~candidate query =
   if query <> "" && candidate <> "" && candidate.[0] <> query.[0] then None else
   fuzzy_match ~case ~candidate query
 
-let trivial _ = Some []
+let trivial s' _ = Some [false, 0, String.length s']
 
 (* ************************************************************************** *)
 let default_match_fun = ref (match_prefix ~case:true)

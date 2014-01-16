@@ -33,31 +33,101 @@ let on_modify state =
   { state with sources; candidates; compl_sources; compl_candidates }
 
 let initial ~separator ~program ~splitm ~splitc = 
-  let initialize (Source.S s) = Source.(ST (s.default_state, s)) in
   on_modify {
   splitm; splitc; separator; program;
   entries = []; candidates = Pagination.from_list splitm []; 
   compl_candidates = Pagination.from_list splitc [];
   before_cursor = ""; after_cursor = "";
-  sources = List.map initialize program.Program.sources;
-  compl_sources = List.map initialize program.Program.completion;
+  sources = List.map Source.initialize program.Program.sources;
+  compl_sources = List.map Source.initialize program.Program.completion;
 }
 
 let add_char s state = 
   on_modify { state with before_cursor = state.before_cursor ^ s }
 
-let complete state = state
-
-
 let is_2d state = state.compl_sources <> []
+
+let compl_candidates state = 
+  if is_2d state then state.compl_candidates
+  else state.candidates
+
+let next_entry candidate state =
+  let f = state.program.transition in
+  let ({ Program.sources ; _ } as program) =
+    f candidate
+  in
+  on_modify { state with
+    before_cursor = "";
+    after_cursor = "";
+    sources = List.map Source.initialize sources;
+    compl_sources = List.map Source.initialize program.completion;
+    candidates = Pagination.from_list state.splitm [];
+    compl_candidates = Pagination.from_list state.splitc [];
+    separator = state.separator;
+    program;
+    entries = state.entries @ [state.program, candidate]
+  }
+let complete state = 
+  try
+    let candidate = fst (Pagination.selected (compl_candidates state))
+    in
+    let state' = on_modify {
+      state with before_cursor = candidate#completion; after_cursor = ""
+    } in
+    if Pagination.all (compl_candidates state') |>
+        List.exists (fun (x, _) -> x#real = candidate#real) 
+    then
+      next_entry candidate state, true
+    else
+      state', false
+  with Failure _ ->
+    state, false
+
+
+
+
 let left state = 
   if is_2d state then
-    { state with compl_candidates = Pagination.left state.splitc state.compl_candidates }
+    { state with compl_candidates = Pagination.left state.compl_candidates }
   else
-    { state with candidates = Pagination.left state.splitm state.candidates }
+    { state with candidates = Pagination.left state.candidates }
+
+let up state = if is_2d state then
+    { state with candidates = Pagination.left state.candidates }
+  else
+    left state
+
 
 let right state = 
   if is_2d state then
-    { state with compl_candidates = Pagination.right state.splitc state.compl_candidates }
+    { state with compl_candidates = Pagination.right state.compl_candidates }
   else
-    { state with candidates = Pagination.right state.splitm state.candidates }
+    { state with candidates = Pagination.right state.candidates }
+
+let down state = 
+  if is_2d state then
+    { state with candidates = Pagination.right state.candidates }
+  else
+    right state
+
+let remove state =
+  if state.before_cursor = "" then
+    match List.rev state.entries with
+    | [] -> state, false
+    | ({ sources ; _ } as program, _) :: rest ->
+      on_modify { state with
+        before_cursor = ""; after_cursor = ""; program;
+        sources = List.map Source.initialize sources;
+        entries = List.rev rest
+      }, true
+  else
+  on_modify { state with before_cursor = String.rchop state.before_cursor }, false
+
+let get_list state = 
+  let s = 
+    if Pagination.is_empty state.candidates then
+      state.before_cursor ^ state.after_cursor
+    else
+      (fst (Pagination.selected state.candidates))#real
+  in
+  List.map (fun (_, s) -> s#real) state.entries @ [s]
