@@ -3,3 +3,5 @@
 /dmlenu
 *o
 Makefile.config
+_build
+*native
