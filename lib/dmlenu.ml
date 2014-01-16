@@ -73,17 +73,33 @@ let draw_vertical { xstate; state = { State.candidates } } =
 
 
 
-let draw ({ xstate; prompt; state } as app_state) = 
+let resize =
+  let current = ref 0 in
+  fun ~state ~lines ->
+    if !current <> lines then (
+      current := lines ;
+      X.resize ~state ~lines
+    )
+
+let draw ({ xstate; lines; prompt; state } as app_state) = 
+  resize ~state: xstate
+    ~lines: (min (List.length state.State.candidates.Pagination.visible) lines);
   X.Draw.clear ~state: xstate;
 
   X.Draw.text ~state: xstate ~focus: true "%s" prompt;
   incr ~xstate;
 
+  state.State.entries |> List.iter (fun (_, candidate) -> 
+    X.Draw.text ~state: xstate ~focus: false "%s" candidate#display;
+    incr ~xstate);
+
   State.(X.Draw.text 
            ~state: xstate 
            ~focus: false
            "%s|%s" state.before_cursor state.after_cursor);
+
   incr ~xstate;
+
 
   draw_horizontal app_state;
 
@@ -121,9 +137,9 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = X.Colors.default)
 
       (* Arrows *)
       | Some (Key (0xff51, _)) -> loop_pure State.left
-      | Some (Key (0xff52, _)) -> loop_pure State.up
+      | Some (Key (0xff52, _)) -> loop_pure State.down
       | Some (Key (0xff53, _)) -> loop_pure State.right
-      | Some (Key (0xff54, _)) -> loop_pure State.down
+      | Some (Key (0xff54, _)) -> loop_pure State.up
 
       (* Enter *)
       | Some (Key (0xff0d, _)) -> 
