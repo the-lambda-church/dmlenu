@@ -1,5 +1,4 @@
 open Batteries
-open Completion
 open Cmdliner
 
 module Parameter = struct
@@ -54,31 +53,22 @@ module Parameter = struct
       Arg.(value & flag & info ["s"; "stdin"] ~doc)
 end
 
-let run prompt stdin bottom focus_foreground focus_background normal_foreground
+let run prompt stdin topbar focus_foreground focus_background normal_foreground
       normal_background match_foreground window_background lines = 
   let () = Matching.(set_match_query_fun @@ subset ~case:false) in
-  let open Dmlenu in
-  let conf = {
-    lines; stdin; bottom; focus_foreground; focus_background; normal_foreground;
-    normal_background; match_foreground; window_background;
-  }
-  in
-  let init_state = {
-    prompt ;
-    compl =
-      let open Sources in
-      let stm =
-        if conf.stdin then singleton (Lazy.from_fun @@ stdin) else {
-          ex_sources = [ Lazy.from_val binaries ] ;
-          transition = fun o -> Extra_sources.stm_from_file o#display ;
-        }
-      in
-      make_state stm
-  }
-  in
-  match run init_state conf with
-  | None -> exit (-1)
-  | Some inputed -> Printf.printf "%s\n%!" inputed
+  let colors = { X.Colors.focus_foreground; focus_background;
+                 normal_foreground; normal_background; match_foreground; window_background } in
+  let program = 
+    if stdin then Program.singleton (Source.stdin ())
+    else {
+      Program.sources = [ Source.binaries ];
+      completion = [];
+      transition = fun o -> Extra_sources.stm_from_file o#display
+    }
+  in    
+  match Dmlenu.run ~prompt ~lines ~topbar ~colors program with
+  | None -> ()
+  | Some s -> print_endline s
 
 let info = 
   let doc = "print a menu with customizable completion" in

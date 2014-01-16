@@ -34,6 +34,12 @@ val from_list : (string * string * string) list -> t
     real, documentation)]. See {!Candidate.t} for more information about
     them. *)
 
+val from_list_lazy : (string * string * string) list Lazy.t -> t
+(** Same as {!from_list} but expects a non-evaluated list. *)
+
+val from_list_lazy_ : string list Lazy.t -> t
+(** Same as {!from_list_} but expects a non-evaluated list. *)
+
 val from_list_rev : (string * string * string) list -> t
 (** Same as {!from_list} but reverses the list in the process *)
 

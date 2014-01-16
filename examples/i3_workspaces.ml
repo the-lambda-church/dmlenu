@@ -1,7 +1,7 @@
 let get_workspace prompt =
   Matching.(set_match_query_fun @@ fuzzy_match ~case:false) ;
-  let compl = Completion.(make_state (singleton Extra_sources.i3_workspaces)) in
-  match Dmlenu.(run { prompt ; compl } default_conf) with
+  let compl = Program.singleton Extra_sources.i3_workspaces in
+  match Dmlenu.(run ~prompt compl) with
   | None -> exit 0
   | Some ws -> ws
 

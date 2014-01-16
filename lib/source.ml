@@ -135,12 +135,16 @@ let from_list_rev list =
   S { delay = false; default_state = (); 
       compute = (fun () _ -> ((), candidates)) }
 
-let from_list list =
-  let candidates = List.map from_list_aux list in
-  S { delay = false; default_state = (); 
-      compute = (fun () _ -> ((), candidates)) }
+let from_list_lazy list = 
+  let candidates = lazy (List.map from_list_aux (Lazy.force list)) in
+  S { delay = false; default_state = ();
+      compute = (fun () _ -> ((), Lazy.force candidates)) }
 
-let from_list_ list = List.map (fun x -> x, x, "") list |> from_list
+let from_list_lazy_ list = 
+  from_list_lazy (lazy (List.map (fun s -> s, s, "") (Lazy.force list)))
+
+let from_list list = from_list_lazy (lazy list)
+let from_list_ list = from_list_lazy_ (lazy list)
 let from_list_rev_ list = List.rev_map (fun x -> x, x, "") list |> from_list
 
 

@@ -52,7 +52,7 @@ let compl_candidates state =
   else state.candidates
 
 let next_entry candidate state =
-  let f = state.program.transition in
+  let f = state.program.Program.transition in
   let ({ Program.sources ; _ } as program) =
     f candidate
   in
@@ -60,7 +60,7 @@ let next_entry candidate state =
     before_cursor = "";
     after_cursor = "";
     sources = List.map Source.initialize sources;
-    compl_sources = List.map Source.initialize program.completion;
+    compl_sources = List.map Source.initialize program.Program.completion;
     candidates = Pagination.from_list state.splitm [];
     compl_candidates = Pagination.from_list state.splitc [];
     separator = state.separator;
@@ -114,7 +114,7 @@ let remove state =
   if state.before_cursor = "" then
     match List.rev state.entries with
     | [] -> state, false
-    | ({ sources ; _ } as program, _) :: rest ->
+    | ({ Program.sources ; _ } as program, _) :: rest ->
       on_modify { state with
         before_cursor = ""; after_cursor = ""; program;
         sources = List.map Source.initialize sources;

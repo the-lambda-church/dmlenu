@@ -31,9 +31,9 @@ let chromium_bookmarks =
       J.Util.convert_each convert_folder |> List.concat
     in
     let others = J.Util.member "other" data |> convert_folder in
-    Sources.from_list @@ main @ others
+    main @ others
   in
-  Lazy.from_fun aux
+  Source.from_list_lazy (Lazy.from_fun aux)
 
 module Mpc = struct
   let current_playlist =
@@ -47,9 +47,9 @@ module Mpc = struct
       in
       let songs = loop 1 in
       ignore (Unix.close_process_in ic) ;
-      Sources.from_list songs
+      songs
     in
-    Lazy.from_fun aux
+    Source.from_list_lazy (Lazy.from_fun aux)
 
   let playlists =
     let aux () =
@@ -62,9 +62,9 @@ module Mpc = struct
       in
       let playlists = loop () in
       ignore (Unix.close_process_in ic) ;
-      Sources.from_list_ playlists
+      playlists
     in
-    Lazy.from_fun aux
+    Source.from_list_lazy_ (Lazy.from_fun aux)
 end
 
 let i3_workspaces =
@@ -72,20 +72,20 @@ let i3_workspaces =
     let ic = Unix.open_process_in "i3-msg -t get_workspaces" in
     let lst = J.from_channel ic in
     let workspaces = J.Util.(convert_each (to_string % member "name")) lst in
-    Sources.from_list_ workspaces
+    workspaces
   in
-  Lazy.from_fun aux
+  Source.from_list_lazy_ (Lazy.from_fun aux)
 
 let from_file source_name =
   let prefix = Sys.getenv "HOME" / ".config/dmlenu" in
   let file = prefix / source_name  in
   if Sys.file_exists file then
-    Sources.from_list_ Batteries.(File.lines_of file |> List.of_enum)
+    Source.from_list_ Batteries.(File.lines_of file |> List.of_enum)
   else
-    Sources.empty
+    Source.empty
 
 let rec stm_from_file init = {
-  Completion.
-  ex_sources = [ Lazy.from_val (from_file init) ] ;
+  Program.sources = [ from_file init ] ;
+  completion = [];
   transition = fun o -> stm_from_file (init ^ o#display) ;
 }
