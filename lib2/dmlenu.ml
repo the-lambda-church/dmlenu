@@ -24,10 +24,11 @@ let splith state list =
 
 let incr ~xstate = X.Draw.update_x ~state: xstate ((+) 5)
 
-let draw_horizontal { xstate; state } = 
+let draw_horizontal { xstate; lines; state } = 
   let candidates = 
-    if Pagination.is_empty state.compl_candidates then state.candidates 
-    else state.compl_candidates
+    let open State in
+    if lines > 0 then state.compl_candidates
+    else state.candidates
   in
 
   if candidates.Pagination.unvisible_left <> [] then
@@ -97,11 +98,13 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = X.Colors.default)
   match X.setup ~topbar ~colors ~lines with
   | None -> failwith "X.setup"
   | Some xstate -> 
-    let rec splitv k = List.split_at k in
+    let rec splitv k l = 
+      if List.length l <= k then l, [] else List.split_at k l 
+    in
     let state = {
       colors; lines; prompt; topbar; hook; xstate;
       state = State.initial ~separator ~program ~splitc: (splith xstate) 
-        ~splitm: (if lines > 0 then splitv (X.width ~state: xstate)
+        ~splitm: (if lines > 0 then splitv lines
                   else splith xstate)
     } in
     let rec loop state = 
@@ -115,5 +118,7 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = X.Colors.default)
       | Some (Key (_, s)) -> loop_pure (State.add_char s)
       | _ -> loop state
     in
-    loop state
+    try loop state with e -> 
+      X.quit ~state: state.xstate; 
+      raise e
 
