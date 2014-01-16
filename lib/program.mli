@@ -1,5 +1,6 @@
 (** Completion programs *)
 
+
 type t = {
   sources: Source.t list; (** The sources we currently complete against *)
   transition : Candidate.t -> t; (** The transition function. *)
@@ -8,6 +9,15 @@ type t = {
        It is only when the lines mode is set. *)
        
 }
+(** A completion program is a way to provide different completion for
+    different tokens. [sources] are used to generate the possible
+    tokens and when the user has picked one, it uses [transition] to
+    know how to generate the possibilities for the next token, and so on.
+
+    If you want, you can also specify specifc sources that are going
+    to be used for completion. If not, then the source of candidates
+    will be used.
+*)
 
 val empty : t
 (** The empty program *)

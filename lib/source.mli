@@ -1,3 +1,5 @@
+(** Sources of candidates *)
+
 type 'a t_open = {
   delay: bool;
   (** Should we wait for the user to stop typing before trying to

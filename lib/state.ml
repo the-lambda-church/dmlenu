@@ -42,8 +42,6 @@ let initial ~separator ~program ~splitm ~splitc =
   compl_sources = List.map Source.initialize program.Program.completion;
 }
 
-let add_char s state = 
-  on_modify { state with before_cursor = state.before_cursor ^ s }
 
 let is_2d state = state.compl_sources <> []
 
@@ -82,6 +80,22 @@ let complete state =
       state', false
   with Failure _ ->
     state, false
+
+let add_char s state = 
+  let state' = 
+    on_modify { state with before_cursor = state.before_cursor ^ s } 
+  in
+  try
+    let first = fst @@ Pagination.selected (compl_candidates state) in
+    if
+      s = state.separator && state.after_cursor = "" &&
+      state.before_cursor ^ state.after_cursor = first#display
+    then
+      complete state
+    else
+      state', false
+  with _ ->
+    state', false
 
 
 

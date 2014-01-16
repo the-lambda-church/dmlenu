@@ -133,7 +133,9 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = X.Colors.default)
       | Some (Key (0xff09, _)) -> loop_transition State.complete
       (* Backspace *)
       | Some (Key (0xff08, _)) -> loop_transition State.remove
-      | Some (Key (_, s)) -> loop_pure (State.add_char s)
+
+      | Some (Key (_, s)) -> loop_transition (State.add_char s)
+
       | _ -> loop state
     in
     try loop state with e -> 
@@ -145,4 +147,4 @@ let run ?topbar ?separator ?colors ?lines ?prompt ?hook program =
     (run_list ?topbar ?separator ?colors ?lines ?prompt ?hook program)
   with
   | [] -> None
-  | l -> Some (String.concat " " l)
+  | l -> Some (String.concat (Option.default " " separator) l)
