@@ -129,9 +129,10 @@ let remove state =
   if state.before_cursor = "" then
     match List.rev state.entries with
     | [] -> state, false
-    | ({ Program.sources ; _ } as program, _) :: rest ->
+    | ({ Program.sources ; completion } as program, _) :: rest ->
       on_modify { state with
         before_cursor = ""; after_cursor = ""; program;
+        compl_sources = List.map Source.initialize completion;
         sources = List.map Source.initialize sources;
         entries = List.rev rest
       }, true
