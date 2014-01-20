@@ -14,8 +14,7 @@ let rec empty = {
 }
 
 let rec iterate ?(completion = []) sources = {
-  sources ;
-  completion = [];
+  sources; completion;
   transition = fun _ -> iterate sources ;
     
 }
