@@ -1,4 +1,5 @@
 open Batteries
+open Candidate
 
 type t = {
   separator: string; 
@@ -22,7 +23,7 @@ let on_modify state =
     let sources = sources |> List.map 
         (fun (Source.ST (state, s)) ->
           let state', candidates = s.Source.compute state input in
-          let test c = Option.map (fun x -> c, x) (c#matching_function input) in
+          let test c = Option.map (fun x -> c, x) (c.matching_function input) in
           r := !r @ List.filter_map test candidates; (* !r is empty most of the times *)
           Source.ST (state', s))
     in
@@ -70,10 +71,10 @@ let complete state =
     let candidate = fst (Pagination.selected (compl_candidates state))
     in
     let state' = on_modify {
-      state with before_cursor = candidate#completion; after_cursor = ""
+      state with before_cursor = candidate.completion; after_cursor = ""
     } in
     if Pagination.all (compl_candidates state') |>
-        List.exists (fun (x, _) -> x#real = candidate#real) 
+        List.exists (fun (x, _) -> x.real = candidate.real) 
     then
       next_entry candidate state, true
     else
@@ -89,7 +90,7 @@ let add_char s state =
     let first = fst @@ Pagination.selected (compl_candidates state) in
     if
       s = state.separator && state.after_cursor = "" &&
-      state.before_cursor ^ state.after_cursor = first#display
+      state.before_cursor ^ state.after_cursor = first.display
     then
       complete state
     else
@@ -142,6 +143,6 @@ let get_list state =
     if Pagination.is_empty state.candidates then
       state.before_cursor ^ state.after_cursor
     else
-      (fst (Pagination.selected state.candidates))#real
+      (fst (Pagination.selected state.candidates)).real
   in
-  List.map (fun (_, s) -> s#real) state.entries @ [s]
+  List.map (fun (_, s) -> s.real) state.entries @ [s]

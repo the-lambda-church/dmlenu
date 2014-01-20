@@ -1,6 +1,6 @@
 (** Type of candidates *)
 
-type t = <
+type t = {
   display: string;
   (** How to display the candidate to the user. *)
   real: string;
@@ -12,7 +12,7 @@ type t = <
       complete on that one. *)
   matching_function: (string -> Matching.result option);
   (** How to know if the user's input matches this candidate *)
->
+}
 (** The type of candidates.
     
     A candidate is a possibility for completion or matching returned

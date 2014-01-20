@@ -1,4 +1,5 @@
 open Batteries
+open Candidate
 
 
 type app_state = {
@@ -15,7 +16,7 @@ let splith state list =
   let rec go index = function
     | [] -> [], []
     | (candidate, rest) :: q as l->
-      let size = X.text_width ~state (candidate#display) + 10 in
+      let size = X.text_width ~state (candidate.display) + 10 in
       if (index + size) > X.width ~state - 5 then [], l else
       let a, b = go (index+size) q in
       (candidate, rest) :: a, b
@@ -38,7 +39,7 @@ let draw_horizontal { xstate; lines; state } =
       end;
   
   Pagination.fold_visible (fun () visible (candidate, result) ->
-    X.Draw.text_hl ~focus: visible ~result ~state: xstate candidate#display;
+    X.Draw.text_hl ~focus: visible ~result ~state: xstate candidate.display;
     X.Draw.update_x ~state: xstate ((+) 5))
     () candidates;
 
@@ -49,7 +50,7 @@ let draw_horizontal { xstate; lines; state } =
     end
 
 let rec shorten ~state candidate s = 
-  if X.text_width ~state (candidate#display ^ s) <= X.width ~state - 10 then 
+  if X.text_width ~state (candidate.display ^ s) <= X.width ~state - 10 then 
     s
   else
     shorten ~state candidate
@@ -59,13 +60,13 @@ let draw_vertical { xstate; state = { State.candidates } } =
   Pagination.fold_visible (fun line focus (candidate, result) ->
     X.Draw.set_x ~state: xstate ~x: 0;
     X.Draw.set_line ~state: xstate ~line;
-    X.Draw.text_hl ~state: xstate ~focus ~result candidate#display;
-    print_endline candidate#doc;
-    if candidate#doc <> "" then
-      (let str = shorten ~state: xstate candidate candidate#doc in
+    X.Draw.text_hl ~state: xstate ~focus ~result candidate.display;
+    print_endline candidate.doc;
+    if candidate.doc <> "" then
+      (let str = shorten ~state: xstate candidate candidate.doc in
       let x = X.width ~state: xstate - (X.text_width ~state: xstate str) - 10 in
       let () = X.Draw.set_x ~state: xstate ~x in
-        X.Draw.text ~focus: false ~state: xstate "%s" candidate#doc);
+        X.Draw.text ~focus: false ~state: xstate "%s" candidate.doc);
     line + 1)
     1 candidates |> ignore
           
@@ -90,7 +91,7 @@ let draw ({ xstate; lines; prompt; state } as app_state) =
   incr ~xstate;
 
   state.State.entries |> List.iter (fun (_, candidate) -> 
-    X.Draw.text ~state: xstate ~focus: false "%s" candidate#display;
+    X.Draw.text ~state: xstate ~focus: false "%s" candidate.display;
     incr ~xstate);
 
   State.(X.Draw.text 

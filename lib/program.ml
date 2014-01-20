@@ -35,4 +35,4 @@ let sum source f =
 
 let csum l =
   let src = Source.from_list_ @@ List.map fst l in
-  sum src (fun o -> Lazy.force (List.assoc o#display l))
+  sum src (fun o -> Lazy.force (List.assoc o.Candidate.display l))

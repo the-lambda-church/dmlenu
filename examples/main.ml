@@ -1,6 +1,6 @@
 open Batteries
 open Cmdliner
-
+open Candidate
 module Parameter = struct
     let normal_background_default = 
       try Sys.getenv "DMENU_NORMAL_BACKGROUND" with _ -> "#222222"
@@ -63,7 +63,7 @@ let run prompt stdin topbar focus_foreground focus_background normal_foreground
     else {
       Program.sources = [ Source.binaries ];
       completion = [];
-      transition = fun o -> Extra_sources.stm_from_file o#display
+      transition = fun o -> Extra_sources.stm_from_file o.display
     }
   in    
   match Dmlenu.run ~prompt ~lines ~topbar ~colors program with

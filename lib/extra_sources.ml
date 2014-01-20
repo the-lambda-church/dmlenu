@@ -1,5 +1,6 @@
-module J = Yojson.Basic
+open Candidate
 
+module J = Yojson.Basic
 let (/) = Filename.concat
 let (%) f g x = f (g x)
 
@@ -87,5 +88,5 @@ let from_file source_name =
 let rec stm_from_file init = {
   Program.sources = [ from_file init ] ;
   completion = [];
-  transition = fun o -> stm_from_file (init ^ o#display) ;
+  transition = fun o -> stm_from_file (init ^ o.display) ;
 }
