@@ -213,3 +213,14 @@ let paths ~coupled_with =
   ]
 
 let initialize (S x) = ST (x.default_state, x)
+
+let update_matching f (S x) = 
+  let open Candidate in
+  S { x
+      with compute = (fun state query ->
+        let state', candidates = x.compute state query in
+        state', candidates |> List.map 
+            (fun c -> { c with matching_function = f c.matching_function }))
+    }
+        
+          

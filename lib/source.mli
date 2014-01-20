@@ -76,3 +76,7 @@ val stdin : ?sep:string -> unit -> t
     display fields of the candidate is the same.  If it is supplied,
     then lines are split wrt it and the first part is used as the
     display and the second part as the real. *)
+
+val update_matching : (Matching.t -> Matching.t) -> t -> t
+(** Update the matching function of the candidates returned by this source *)
+
