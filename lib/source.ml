@@ -1,4 +1,5 @@
 open Batteries
+open Candidate
 type 'a t_open = {
   delay: bool;
   default_state: 'a;
@@ -213,14 +214,27 @@ let paths ~coupled_with =
   ]
 
 let initialize (S x) = ST (x.default_state, x)
-
-let update_matching f (S x) = 
-  let open Candidate in
-  S { x
-      with compute = (fun state query ->
+  
+let update_candidates f (S x) =
+    S { x with 
+      compute = (fun state query ->
         let state', candidates = x.compute state query in
-        state', candidates |> List.map 
-            (fun c -> { c with matching_function = f c.matching_function }))
+        state', List.map f candidates)
     }
-        
+
+let update_matching f = 
+  update_candidates (fun c ->
+    { c with matching_function = f c.matching_function })
+
+let update_real f = 
+  update_candidates (fun c ->
+    { c with real = f c.real })
+
+let update_display f = 
+  update_candidates (fun c ->
+    { c with display = f c.display })
+
+let update_completion f = 
+  update_candidates (fun c ->
+    { c with completion = f c.completion })
           
