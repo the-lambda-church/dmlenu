@@ -5,7 +5,7 @@ type t = {
   real: string;
   doc : string;
   completion: string;
-  matching_function: (string -> Matching.result option);
+  matching_function: Matching.t;
 }
 
 let make ?real ?(doc = "") ?matching_function ?completion display : t= 

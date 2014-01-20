@@ -10,7 +10,7 @@ type t = {
   completion: string;
   (** What should become of the inputbox after the user tried to
       complete on that one. *)
-  matching_function: (string -> Matching.result option);
+  matching_function: Matching.t
   (** How to know if the user's input matches this candidate *)
 }
 (** The type of candidates.
@@ -21,7 +21,7 @@ type t = {
     should be matched, displayed to the user. *)
 
     
-val make: ?real: string -> ?doc: string -> ?matching_function: (string -> Matching.result option) -> ?completion: string -> string -> t
+val make: ?real: string -> ?doc: string -> ?matching_function: Matching.t -> ?completion: string -> string -> t
 (** [make ~real ~doc ~matching_function ~completion display]
     creates a new candidate. The default values are:
     - real, completion: display
