@@ -14,6 +14,12 @@ let empty = {
   unvisible_right = []; split = (fun l -> l, [])
 }
 let all l = List.rev l.unvisible_left @ l.visible @ l.unvisible_right
+let dump p =
+  let list = String.concat "\n" % List.map dump in
+  Printf.printf "Unvisible: [%s]\n" (list p.unvisible_left);
+  Printf.printf "Visible: [%s] [%d]\n" (list p.visible) p.selected;
+  Printf.printf "Unvisible: [%s]\n" (list p.unvisible_right)
+
 let from_list split = function
   | [] -> { empty with split }
   | t :: q -> 
@@ -46,11 +52,15 @@ let page_right p =
 
 
 let left p = 
+  dump p;
   if p.selected = 0 then
-    let p' = page_left p in
-    { p' with selected = List.length p'.visible - 1 }
+    if p.unvisible_left = [] then p
+    else
+      let p' = page_left p in
+      { p' with selected = List.length p'.visible - 1 }
   else
     { p with selected = p.selected - 1 }
+
 
 let right p = 
   if p.selected = List.length p.visible - 1 then

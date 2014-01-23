@@ -4,7 +4,6 @@ open Candidate
 
 type app_state = {
   colors: X.Colors.t; (** The set of colors to use *)
-  lines: int; (** The maximum number of lines to use. (0 means no lines) *)
   prompt: string; (** The prompt to the user *)
   topbar: bool;  (** Shall dmlenu sit on the bottom or on the top of the screen? *)
   hook: (app_state -> app_state); (** Hook called whenever a token is added *)
@@ -25,10 +24,10 @@ let splith state list =
 
 let incr ~xstate = X.Draw.update_x ~state: xstate ((+) 5)
 
-let draw_horizontal { xstate; lines; state } = 
+let draw_horizontal { xstate; state } = 
   let open State in
   let candidates = 
-    if lines > 0 then state.compl_candidates
+    if state.lines > 0 then state.compl_candidates
     else state.candidates
   in
 
@@ -56,19 +55,23 @@ let rec shorten ~state candidate s =
     shorten ~state candidate
       (try "..." ^ String.sub s 10 (String.length s - 10) with _ -> "")
 
-let draw_vertical { xstate; state = { State.candidates } } =
+let draw_vertical { xstate; topbar; state = { State.candidates; lines } } =
+  let init, f = 
+    if topbar then 
+      1, succ else
+      List.length candidates.Pagination.visible, pred
+  in
   Pagination.fold_visible (fun line focus (candidate, result) ->
     X.Draw.set_x ~state: xstate ~x: 0;
     X.Draw.set_line ~state: xstate ~line;
     X.Draw.text_hl ~state: xstate ~focus ~result candidate.display;
-    print_endline candidate.doc;
     if candidate.doc <> "" then
       (let str = shorten ~state: xstate candidate candidate.doc in
       let x = X.width ~state: xstate - (X.text_width ~state: xstate str) - 10 in
       let () = X.Draw.set_x ~state: xstate ~x in
         X.Draw.text ~focus: false ~state: xstate "%s" candidate.doc);
-    line + 1)
-    1 candidates |> ignore
+    f line)
+    init candidates |> ignore
           
 
 
@@ -82,9 +85,10 @@ let resize =
       X.resize ~state ~lines
     )
 
-let draw ({ xstate; lines; prompt; state } as app_state) = 
+let draw ({ xstate; prompt; state } as app_state) = 
+  let open State in
   resize ~state: xstate
-    ~lines: (min (List.length state.State.candidates.Pagination.visible) lines);
+    ~lines: (min (List.length state.State.candidates.Pagination.visible) state.lines);
   X.Draw.clear ~state: xstate;
 
   X.Draw.text ~state: xstate ~focus: true "%s" prompt;
@@ -104,7 +108,7 @@ let draw ({ xstate; lines; prompt; state } as app_state) =
 
   draw_horizontal app_state;
 
-  if app_state.lines > 0 then
+  if app_state.state.lines > 0 then
     draw_vertical app_state;
 
   X.Draw.map ~state: xstate
@@ -112,17 +116,16 @@ let draw ({ xstate; lines; prompt; state } as app_state) =
 
 let run_list ?(topbar = true) ?(separator = " ") ?(colors = X.Colors.default) 
     ?(lines = 0) ?(prompt = "") ?(hook = fun x -> x) program = 
+  let hook state = 
+    let state = hook state in
+    { state with state = State.normalize state.state }
+  in
   match X.setup ~topbar ~colors ~lines with
   | None -> failwith "X.setup"
   | Some xstate -> 
-    let rec splitv k l = 
-      if List.length l <= k then l, [] else List.split_at k l 
-    in
     let state = {
-      colors; lines; prompt; topbar; hook; xstate;
-      state = State.initial ~separator ~program ~splitc: (splith xstate) 
-        ~splitm: (if lines > 0 then splitv lines
-                  else splith xstate)
+      colors; prompt; topbar; hook; xstate;
+      state = State.initial ~lines ~separator ~program ~split: (splith xstate)
     } in
     let rec loop state = 
       let loop_pure f = loop { state with state = f state.state } in
@@ -138,9 +141,9 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = X.Colors.default)
 
       (* Arrows *)
       | Some (Key (0xff51, _)) -> loop_pure State.left
-      | Some (Key (0xff52, _)) -> loop_pure State.down
+      | Some (Key (0xff52, _)) -> loop_pure State.up
       | Some (Key (0xff53, _)) -> loop_pure State.right
-      | Some (Key (0xff54, _)) -> loop_pure State.up
+      | Some (Key (0xff54, _)) -> loop_pure State.down
 
       (* Enter *)
       | Some (Key (0xff0d, _)) -> 

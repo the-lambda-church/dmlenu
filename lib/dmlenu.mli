@@ -2,7 +2,6 @@
 
 type app_state = {
   colors: X.Colors.t; (** The set of colors to use *)
-  lines: int; (** The maximum number of lines to use. (0 means no lines) *)
   prompt: string; (** The prompt to the user *)
   topbar: bool;  (** Shall dmlenu sit on the bottom or on the top of the screen? *)
   hook: (app_state -> app_state); (** Hook called whenever a token is added *)

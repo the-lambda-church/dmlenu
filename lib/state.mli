@@ -12,16 +12,15 @@ type t = {
   compl_sources : Source.state list; (** The current sources for completion *)
   compl_candidates: (Candidate.t * Matching.result) Pagination.t; (** The current candidates for completion *)
   entries: (Program.t * Candidate.t) list; (** The tokens we have read so far and the past program so we can go back there if we need to. *)
-  splitm: (Candidate.t * Matching.result) list -> (Candidate.t * Matching.result) list * (Candidate.t * Matching.result) list;
+  split: (Candidate.t * Matching.result) list -> (Candidate.t * Matching.result) list * (Candidate.t * Matching.result) list;
   (** How to know how many token candidates we can display *)
-  splitc: (Candidate.t * Matching.result) list -> (Candidate.t * Matching.result) list * (Candidate.t * Matching.result) list;
-  (** How to know how many completion candidates we can display *)
+  lines: int;
+  (** Size of the window *)
 }
 (** The type of state the engine *)
 
-val initial : separator: string -> program: Program.t -> 
-  splitm: ((Candidate.t * Matching.result) list -> (Candidate.t * Matching.result) list * (Candidate.t * Matching.result) list) ->
-  splitc: ((Candidate.t * Matching.result) list -> (Candidate.t * Matching.result) list * (Candidate.t * Matching.result) list) -> t
+val initial : separator: string -> program: Program.t -> lines: int ->
+  split: ((Candidate.t * Matching.result) list -> (Candidate.t * Matching.result) list * (Candidate.t * Matching.result) list) -> t
 (** Creates an initial state out of a separator a program, and split functions *)
 
 val on_modify : t -> t
@@ -53,3 +52,6 @@ val remove : t -> t * bool
 
 val get_list : t -> string list
 (** Returns the value of all tokens currently accumulated *)
+
+val normalize : t -> t
+(** Normalize the pagination for candidates *)

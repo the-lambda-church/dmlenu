@@ -30,10 +30,10 @@ let run =
     let () = Printf.eprintf "%s\n%!" source_name in
     if source_name = "chromium" then (
       Matching.(set_match_query_fun @@ fuzzy_match ~case:false) ;
-      { state with lines = 20 }
+      { state with state = { state.state with State.lines = 20 } }
     ) else (
       Matching.(set_match_query_fun @@ match_prefix ~case:false) ;
-      { state with lines = 0 }
+      { state with state = { state.state with State.lines = 0 } }
     )
   in
   match run_list ~hook stm with
