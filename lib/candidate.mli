@@ -21,7 +21,8 @@ type t = {
     should be matched, displayed to the user. *)
 
     
-val make: ?real: string -> ?doc: string -> ?matching_function: Matching.t -> ?completion: string -> string -> t
+val make : ?real:string -> ?doc:string -> ?matching_function:Matching.t ->
+  ?completion:string -> string -> t
 (** [make ~real ~doc ~matching_function ~completion display]
     creates a new candidate. The default values are:
     - real, completion: display

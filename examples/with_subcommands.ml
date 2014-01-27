@@ -4,14 +4,12 @@ let stm =
   let open Program in
   {
     sources = [ Source.binaries ] ;
-    completion = [];
     transition =
       fun cmd ->
         if cmd.display = "chromium" then
           iterate [ Extra_sources.chromium_bookmarks ]
         else {
           sources = [ Extra_sources.from_file cmd.display ] ;
-          completion = [];
           transition = fun arg ->
             if cmd.display = "mpc" && arg.display = "load" then
               iterate [ Extra_sources.Mpc.playlists ]
@@ -28,12 +26,13 @@ let run =
       String.concat ""
     in
     let () = Printf.eprintf "%s\n%!" source_name in
+    let several = State.MultiLine 20 in
     if source_name = "chromium" then (
       Matching.(set_match_query_fun @@ fuzzy_match ~case:false) ;
-      { state with state = { state.state with State.lines = 20 } }
+      { state with state = { state.state with State.layout = several } }
     ) else (
       Matching.(set_match_query_fun @@ match_prefix ~case:false) ;
-      { state with state = { state.state with State.lines = 0 } }
+      { state with state = { state.state with State.layout = several } }
     )
   in
   match run_list ~hook stm with

@@ -58,7 +58,7 @@ Executable "dmlenu"
   CompiledObject:       best
 
 Executable "dmlenu_subcommands"
-  Build$:               flag(all)
+  Build$:               flag(examples) || flag(all)
   Install:              true
   Path:                 examples
   MainIs:               with_subcommands.ml
@@ -66,7 +66,7 @@ Executable "dmlenu_subcommands"
   CompiledObject:       best
 
 Executable "dmlenu_workspaces"
-  Build$:               flag(all)
+  Build$:               flag(examples) || flag(all)
   Install:              true
   Path:                 examples
   MainIs:               i3_workspaces.ml

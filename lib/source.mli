@@ -21,7 +21,7 @@ type state = ST : 'a * 'a t_open -> state
 val initialize : t -> state
 (** Initialize a source to its default state *)
 
-(** {2 Examples of sources} *)
+(** {2 Examples of sources and source builders} *)
 
 val files : ?filter:(string -> bool) -> string -> t
 (** A source that completes filenames in a given directory (or

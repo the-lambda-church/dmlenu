@@ -13,7 +13,7 @@ val run_list :
   ?topbar: bool
   -> ?separator: string
   -> ?colors: X.Colors.t
-  -> ?lines: int 
+  -> ?layout:State.layout
   -> ?prompt: string
   -> ?hook : (app_state -> app_state)
   -> Program.t
@@ -33,7 +33,7 @@ val run :
   ?topbar: bool
   -> ?separator: string
   -> ?colors: X.Colors.t
-  -> ?lines: int 
+  -> ?layout:State.layout
   -> ?prompt: string
   -> ?hook : (app_state -> app_state)
   -> Program.t

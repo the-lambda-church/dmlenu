@@ -52,7 +52,7 @@ let page_right p =
 
 
 let left p = 
-  dump p;
+  (* dump p; *)
   if p.selected = 0 then
     if p.unvisible_left = [] then p
     else

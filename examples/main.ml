@@ -62,11 +62,15 @@ let run prompt stdin topbar focus_foreground focus_background normal_foreground
     if stdin then Program.singleton (Source.stdin ())
     else {
       Program.sources = [ Source.binaries ];
-      completion = [];
       transition = fun o -> Extra_sources.stm_from_file o.display
     }
   in    
-  match Dmlenu.run ~prompt ~lines ~topbar ~colors program with
+  let layout =
+    match lines with
+    | 0 -> State.SingleLine
+    | n -> State.MultiLine n
+  in
+  match Dmlenu.run ~prompt ~layout ~topbar ~colors program with
   | None -> ()
   | Some s -> print_endline s
 
