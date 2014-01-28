@@ -72,6 +72,14 @@ Executable "dmlenu_workspaces"
   MainIs:               i3_workspaces.ml
   BuildDepends:         dmlenu,dmlenu.extra
   CompiledObject:       best
+
+Executable "dmlenu_mpcgrid"
+  Build$:               flag(examples) || flag(all)
+  Install:              true
+  Path:                 examples
+  MainIs:               mpc2D.ml
+  BuildDepends:         dmlenu,dmlenu.extra
+  CompiledObject:       best
  
 Document "dmlenu-api"
   Title:                API reference for Dmlenu
