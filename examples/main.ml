@@ -59,9 +59,9 @@ let run prompt stdin topbar focus_foreground focus_background normal_foreground
   let colors = { X.Colors.focus_foreground; focus_background;
                  normal_foreground; normal_background; match_foreground; window_background } in
   let program = 
-    if stdin then Program.singleton (Source.stdin ())
+    if stdin then Engine.singleton (Source.stdin ())
     else {
-      Program.sources = [ Source.binaries ];
+      Engine.sources = [ Source.binaries ];
       transition = fun o -> Extra_sources.stm_from_file o.display
     }
   in    

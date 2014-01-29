@@ -15,10 +15,10 @@ type t = {
   separator: string;
   before_cursor: string;
   after_cursor : string;
-  program: Program.t;
+  program: Engine.t;
   sources : Source.state list;
   candidates: (Candidate.t * Matching.result) Pagination.t;
-  entries: (Program.t * Candidate.t) list;
+  entries: (Engine.t * Candidate.t) list;
   split: (Candidate.t * Matching.result) list -> (Candidate.t * Matching.result) list * (Candidate.t * Matching.result) list;
   layout : layout ;
 }
@@ -55,8 +55,8 @@ let update_layout state candidates =
       match column with
       | Some c when c.src.display = candidate.display -> state.layout
       | _ ->
-        let next_program = state.program.Program.transition candidate in
-        let next_sources = List.map Source.initialize next_program.Program.sources in
+        let next_program = state.program.Engine.transition candidate in
+        let next_sources = List.map Source.initialize next_program.Engine.sources in
         let _, pages = update_sources (take n) next_sources in
         Grid (n, Some { src = candidate ; pages = pages })
     with
@@ -79,13 +79,13 @@ let initial ~separator ~program ~layout ~split =
     split; layout; separator; program;
     before_cursor = ""; after_cursor = "";
     entries = [];
-    sources = List.map Source.initialize program.Program.sources;
+    sources = List.map Source.initialize program.Engine.sources;
     candidates = Pagination.from_list (if lines > 0 then take lines else split) [];
   }
 
 let next_entry candidate state =
-  let f = state.program.Program.transition in
-  let ({ Program.sources ; _ } as program) = f candidate in
+  let f = state.program.Engine.transition in
+  let ({ Engine.sources ; _ } as program) = f candidate in
   on_modify { state with
     before_cursor = "";
     after_cursor = "";
@@ -163,7 +163,7 @@ let remove state =
   if state.before_cursor = "" then
     match List.rev state.entries with
     | [] -> state, false
-    | ({ Program.sources ; _ } as program, _) :: rest ->
+    | ({ Engine.sources ; _ } as program, _) :: rest ->
       on_modify { state with
         before_cursor = ""; after_cursor = ""; program;
         sources = List.map Source.initialize sources;

@@ -26,12 +26,12 @@ type t = {
   before_cursor: string; (** The input before the cursor *)
   after_cursor : string; (** The input after the cursor *)
 
-  program: Program.t; (** The current program we are running *)
+  program: Engine.t; (** The current program we are running *)
 
   sources : Source.state list; (** The current sources of tokens *)
   candidates: (Candidate.t * Matching.result) Pagination.t; (** The current candidates for tokens *)
 
-  entries: (Program.t * Candidate.t) list; (** The tokens we have read so far and the past program so we can go back there if we need to. *)
+  entries: (Engine.t * Candidate.t) list; (** The tokens we have read so far and the past program so we can go back there if we need to. *)
 
   split: (Candidate.t * Matching.result) list -> (Candidate.t * Matching.result) list * (Candidate.t * Matching.result) list;
   (** How to know how many token candidates we can display *)
@@ -40,7 +40,7 @@ type t = {
 }
 (** The type of state the engine *)
 
-val initial : separator: string -> program: Program.t -> layout:layout ->
+val initial : separator: string -> program: Engine.t -> layout:layout ->
   split: ((Candidate.t * Matching.result) list -> (Candidate.t * Matching.result) list * (Candidate.t * Matching.result) list) -> t
 (** Creates an initial state out of a separator a program, and split functions *)
 

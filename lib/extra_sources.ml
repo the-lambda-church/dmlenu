@@ -86,6 +86,6 @@ let from_file source_name =
     Source.empty
 
 let rec stm_from_file init = {
-  Program.sources = [ from_file init ] ;
+  Engine.sources = [ from_file init ] ;
   transition = fun o -> stm_from_file (init ^ o.display) ;
 }

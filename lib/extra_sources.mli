@@ -22,7 +22,7 @@ val from_file : string -> Source.t
 (** [from_file filename] creates a source from the lines in
     [$HOME/.config/dmlenu/filename] (each line in this file is a candidate) *)
 
-val stm_from_file : string -> Program.t
+val stm_from_file : string -> Engine.t
 (** [stm_from_file f] starts by offering candidates returned by [from_file f],
     once a candidate [x] has been selected, it will behave as
     [stm_from_file (f ^ x)].  *)

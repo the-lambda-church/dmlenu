@@ -16,7 +16,7 @@ val run_list :
   -> ?layout:State.layout
   -> ?prompt: string
   -> ?hook : (app_state -> app_state)
-  -> Program.t
+  -> Engine.t
   -> string list
 (** Run a program and outputs the read tokens. You can override the
     default values for the parameter using optional parameters. The
@@ -36,7 +36,7 @@ val run :
   -> ?layout:State.layout
   -> ?prompt: string
   -> ?hook : (app_state -> app_state)
-  -> Program.t
+  -> Engine.t
   -> string option
 (* Same as {!run_list} but concatenates the tokens using the separator.
    If no token were read, returns [None] *)

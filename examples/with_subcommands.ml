@@ -1,7 +1,7 @@
 open Candidate
 
 let stm = 
-  let open Program in
+  let open Engine in
   {
     sources = [ Source.binaries ] ;
     transition =
