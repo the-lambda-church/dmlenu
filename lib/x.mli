@@ -37,11 +37,24 @@ val width : state: state -> int
 val text_width : state: state -> string -> int
 (** Returns the width of a text *)
 
+module Key : sig
+  type t =
+    | Escape
+    | Left
+    | Right
+    | Up
+    | Down
+    | Enter
+    | Tab
+    | Backspace
+    | Other of string
+end
+
 module Events : sig
   type t = 
-  | Key of (int * string) (** A key was pressed: keycode and textual representation *)
+  | Key of Key.t
 
-  val poll : state: state -> timeout: float -> t option
+  val poll : state: state -> timeout:float -> t option
   (** poll for an X event *)
 end
 

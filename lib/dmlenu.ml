@@ -142,26 +142,23 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = X.Colors.default)
       let open X.Events in
       draw state;
       match X.Events.poll ~state: xstate ~timeout: 1. with
-      | Some (Key (0xff1b, _)) -> X.quit xstate; []
+      | Some (Key X.Key.Escape) -> X.quit xstate; []
 
-      (* Arrows *)
-      | Some (Key (0xff51, _)) -> loop_pure State.left
-      | Some (Key (0xff52, _)) -> loop_pure State.up
-      | Some (Key (0xff53, _)) -> loop_pure State.right
-      | Some (Key (0xff54, _)) -> loop_pure State.down
+      | Some (Key X.Key.Left)  -> loop_pure State.left
+      | Some (Key X.Key.Up)    -> loop_pure State.up
+      | Some (Key X.Key.Right) -> loop_pure State.right
+      | Some (Key X.Key.Down)  -> loop_pure State.down
 
-      (* Enter *)
-      | Some (Key (0xff0d, _)) -> 
+      | Some (Key X.Key.Enter) -> 
         X.quit xstate; State.get_list state.state
 
-      (* Tab *)
-      | Some (Key (0xff09, _)) -> loop_transition State.complete
-      (* Backspace *)
-      | Some (Key (0xff08, _)) -> loop_transition State.remove
+      | Some (Key X.Key.Tab) -> loop_transition State.complete
 
-      | Some (Key (_, s)) -> loop_transition (State.add_char s)
+      | Some (Key X.Key.Backspace) -> loop_transition State.remove
 
-      | _ -> loop state
+      | Some (Key (X.Key.Other s)) -> loop_transition (State.add_char s)
+
+      | None -> loop state
     in
     try loop state with e -> 
       X.quit ~state: state.xstate; 

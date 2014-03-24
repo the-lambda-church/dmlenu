@@ -79,10 +79,35 @@ module Draw = struct
     let map ~state = Low_level.mapdc ()
 end
 
+module Key = struct
+  type t =
+    | Escape
+    | Left
+    | Right
+    | Up
+    | Down
+    | Enter
+    | Tab
+    | Backspace
+    | Other of string
+
+  let of_int (k, str) =
+    match k with
+    | 0xff1b -> Escape
+    | 0xff51 -> Left
+    | 0xff52 -> Up
+    | 0xff53 -> Right
+    | 0xff54 -> Down
+    | 0xff0d -> Enter
+    | 0xff09 -> Tab
+    | 0xff08 -> Backspace
+    | _ -> Other str
+end
+
 module Events = struct
   type t = 
-  | Key of (int * string) (** A key was pressed: keycode and textual representation *)
+    | Key of Key.t
 
   let poll ~state ~timeout = 
-    Some (Key (Low_level.next_event ()))
+    Some (Key (Key.of_int (Low_level.next_event ())))
 end
