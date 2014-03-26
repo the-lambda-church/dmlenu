@@ -42,7 +42,7 @@ caml_grabkeyboard(value unit) {
 caml_width(value unit)
 {
     CAMLparam1(unit);
-    CAMLreturn(Val_int(DisplayWidth(dc->dpy, screen)));
+    CAMLreturn(Val_int(mw));
 }
 
 void
