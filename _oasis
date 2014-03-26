@@ -37,7 +37,9 @@ Library "dmlenu"
   Path:                 lib
   if flag(xinerama)
     CCOpt: "-DXINERAMA"
-  CCLib:                -lX11
+    CCLib:                -lX11 -lXinerama
+  else
+    CCLib:                -lX11
   Modules:              Candidate, Matching, Pagination, Source, Engine, State, Dmlenu, X
   CSources:             draw_funs.h, draw_funs.c, draw_stubs.c
   BuildDepends:         batteries,lwt

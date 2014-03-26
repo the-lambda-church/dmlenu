@@ -3,9 +3,12 @@
 #ifndef DRAW_FUNS_H
 #define DRAW_FUNS_H
 
+#define MAX(a,b)              ((a) > (b) ? (a) : (b))
+#define MIN(a,b)              ((a) > (b) ? (b) : (a))
+#define INTERSECT(x,y,w,h,r)  (MAX(0, MIN((x)+(w),(r).x_org+(r).width)  - MAX((x),(r).x_org)) \
+                             * MAX(0, MIN((y)+(h),(r).y_org+(r).height) - MAX((y),(r).y_org)))
 #define FG(dc, col)  ((col)[(dc)->invert ? ColBG : ColFG])
 #define BG(dc, col)  ((col)[(dc)->invert ? ColFG : ColBG])
-#define MAX(a,b)              ((a) > (b) ? (a) : (b))
 enum { ColBG, ColFG, ColBorder, ColLast };
 
 typedef struct {
