@@ -16,6 +16,9 @@ Plugins: META (0.3), DevFiles (0.3)
 
 Synopsis: An OCaml library to easily create dmenu-like examples
 
+Flag xinerama
+  Description: Compile with xinerama support
+  Default: false
 Flag examples
   Description:  Build a generalist dmenu like examples with the library
   Default:      false
@@ -32,6 +35,8 @@ Library "dmlenu"
   Build:                true
   Install:              true
   Path:                 lib
+  if flag(xinerama)
+    CCOpt: "-DXINERAMA"
   CCLib:                -lX11
   Modules:              Candidate, Matching, Pagination, Source, Engine, State, Dmlenu, X
   CSources:             draw_funs.h, draw_funs.c, draw_stubs.c
