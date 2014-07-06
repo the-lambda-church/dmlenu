@@ -195,7 +195,8 @@ let get_list state =
     else
       (fst (Pagination.selected state.candidates)).real
   in
-  List.map (fun (_, s) -> s.real) state.entries @ [s]
+  let l = if state.before_cursor ^ state.after_cursor = "" then [] else [ s ] in
+  List.map (fun (_, s) -> s.real) state.entries @ l
 
 let normalize state =
   { state with
