@@ -151,6 +151,20 @@ caml_clear(value bg)
 }
 
 value
+caml_clear_line(value cline, value bg)
+{
+    CAMLparam2(cline, bg);
+    int line = Int_val(cline) ;
+    if (bottom)
+        /* magic formula */
+        dc->y = mh - (bh - dc->font.ascent - 1 + line * bh);
+    else
+        dc->y = dc->font.ascent+1 + line * bh;
+    drawrect(dc, 0, dc->y - dc->font.ascent - 1, mw, bh, True, getcolor(dc, String_val (bg)));
+    CAMLreturn(Val_unit);
+}
+
+value
 caml_resize(value line)
 {
     CAMLparam1(line);

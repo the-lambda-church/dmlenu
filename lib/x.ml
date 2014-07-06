@@ -8,6 +8,7 @@ module Low_level = struct
   external mapdc : unit -> unit = "caml_mapdc"
   external size : string -> int = "caml_size"
   external clear : string -> unit = "caml_clear"
+  external clear_line : int -> string -> unit = "caml_clear_line"
   external resize : int -> unit = "caml_resize"
 end
 
@@ -36,6 +37,9 @@ type state = {
   mutable x: int;
   mutable line: int;
 }
+
+let colors s = s.colors
+
 let quit ~state = Low_level.quit ()
 let setup ~topbar ~colors ~lines = 
   Low_level.setup topbar colors.Colors.window_background lines;
@@ -71,6 +75,8 @@ module Draw = struct
     let text ~state ~focus fmt = 
       fmt |> Printf.kprintf (fun s ->
         text_hl ~result: [false, 0, String.length s] ~state  ~focus s)
+
+    let clear_line line color = Low_level.clear_line line color
 
     let clear ~state = 
       state.x <- 0;

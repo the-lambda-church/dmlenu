@@ -26,6 +26,8 @@ val setup : topbar: bool -> colors: Colors.t -> lines: int -> state option
    It returns None if the setting up failed.
 *)
 
+val colors : state -> Colors.t
+
 val quit : state: state -> unit
 (* Destroy the window and release the keyboard *)
 val resize : state: state -> lines: int -> unit
@@ -79,6 +81,8 @@ module Draw : sig
 
     val clear : state: state -> unit
     (** Clear the screen with the background *)
+
+    val clear_line : int -> string -> unit
 
     val map : state: state -> unit
     (** Map the window on the screen *)

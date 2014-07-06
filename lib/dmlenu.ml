@@ -57,12 +57,14 @@ let draw_vertical xstate topbar candidates =
   Pagination.fold_visible (fun line focus (candidate, result) ->
     X.Draw.set_x ~state: xstate ~x: 0;
     X.Draw.set_line ~state: xstate ~line;
+    if focus then
+    X.Draw.clear_line line (X.colors xstate).X.Colors.focus_background ;
     X.Draw.text_hl ~state: xstate ~focus ~result candidate.display;
     if candidate.doc <> "" then (
       let str = shorten ~state: xstate candidate candidate.doc in
       let x = X.width ~state: xstate - (X.text_width ~state: xstate str) - 10 in
       let () = X.Draw.set_x ~state: xstate ~x in
-      X.Draw.text ~focus: false ~state: xstate "%s" candidate.doc
+      X.Draw.text ~focus ~state: xstate "%s" candidate.doc
     ) ;
     f line
   ) init candidates
@@ -88,8 +90,10 @@ let draw ({ xstate; prompt; state } as app_state) =
   resize ~state:xstate ~lines ;
   X.Draw.clear ~state:xstate;
 
-  X.Draw.text ~state: xstate ~focus: true "%s" prompt;
-  incr ~xstate;
+  if prompt <> "" then (
+    X.Draw.text ~state: xstate ~focus: true "%s" prompt;
+    incr ~xstate
+  );
 
   state.State.entries |> List.iter (fun (_, candidate) -> 
     X.Draw.text ~state: xstate ~focus: false "%s" candidate.display;
