@@ -149,6 +149,9 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = X.Colors.default)
       | Some (Key X.Key.Right) -> loop_pure State.right
       | Some (Key X.Key.Down)  -> loop_pure State.down
 
+      | Some (Key X.Key.Scroll_up)   -> loop_pure State.scroll_up
+      | Some (Key X.Key.Scroll_down) -> loop_pure State.scroll_down
+
       | Some (Key X.Key.Enter) -> 
         X.quit xstate; State.get_list state.state
 

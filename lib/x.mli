@@ -47,6 +47,8 @@ module Key : sig
     | Enter
     | Tab
     | Backspace
+    | Scroll_up
+    | Scroll_down
     | Other of string
 end
 

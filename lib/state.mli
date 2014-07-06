@@ -68,6 +68,12 @@ val up : t -> t
 val down : t -> t
 (** Moves the current selection to the down *)
 
+val scroll_up : t -> t
+(** Moves the current selection to the up (by one page) *)
+
+val scroll_down : t -> t
+(** Moves the current selection to the down (by one page) *)
+
 val remove : t -> t * bool
 (** Simulate a backspace. The boolean tells you whether the current token has changed *)
 

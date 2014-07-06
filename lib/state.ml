@@ -143,6 +143,14 @@ let up state =
     { state with layout = Grid (n, Some column') }
   | _ -> { state with candidates = Pagination.left state.candidates }
 
+let scroll_up state =
+  match state.layout with
+  | Grid (_, None) -> state
+  | Grid (n, Some column) ->
+    let column' = { column with pages = Pagination.page_left column.pages } in
+    { state with layout = Grid (n, Some column') }
+  | _ -> { state with candidates = Pagination.page_left state.candidates }
+
 let right state =
   let candidates = Pagination.right state.candidates in
   match state.layout with
@@ -158,6 +166,14 @@ let down state =
     let column' = { column with pages = Pagination.right column.pages } in
     { state with layout = Grid (n, Some column') }
   | _ -> { state with candidates = Pagination.right state.candidates }
+
+let scroll_down state =
+  match state.layout with
+  | Grid (_, None) -> state
+  | Grid (n, Some column) ->
+    let column' = { column with pages = Pagination.page_right column.pages } in
+    { state with layout = Grid (n, Some column') }
+  | _ -> { state with candidates = Pagination.page_right state.candidates }
 
 let remove state =
   if state.before_cursor = "" then

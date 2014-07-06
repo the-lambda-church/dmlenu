@@ -89,6 +89,8 @@ module Key = struct
     | Enter
     | Tab
     | Backspace
+    | Scroll_up
+    | Scroll_down
     | Other of string
 
   let of_int (k, str) =
@@ -101,6 +103,8 @@ module Key = struct
     | 0xff0d -> Enter
     | 0xff09 -> Tab
     | 0xff08 -> Backspace
+    | 0xff55 -> Scroll_up
+    | 0xff56 -> Scroll_down
     | _ -> Other str
 end
 
