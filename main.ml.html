@@ -1,0 +1,97 @@
+<html>
+    <head>
+      <title></title>
+      <link href="style.css" type="text/css" rel="stylesheet" media="all" />
+    </head>
+    <body>
+      
+<table class="highlighttable"><tr><td class="code"><div class="highlight"><pre><span class="k">open</span> <span class="nn">Core</span><span class="p">.</span><span class="nc">Std</span>
+
+<span class="c">(* Auxiliary sources *)</span>
+<span class="k">let</span> <span class="n">list_episodes</span> <span class="n">show_name</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">ic</span> <span class="o">=</span> <span class="nn">Unix</span><span class="p">.</span><span class="n">open_process_in</span> <span class="o">(</span><span class="s2">&quot;series &quot;</span> <span class="o">^</span> <span class="n">show_name</span><span class="o">)</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">episodes</span> <span class="o">=</span>
+    <span class="nn">In_channel</span><span class="p">.</span><span class="n">fold_lines</span> <span class="n">ic</span> <span class="o">~</span><span class="n">init</span><span class="o">:</span><span class="bp">[]</span> <span class="o">~</span><span class="n">f</span><span class="o">:(</span><span class="k">fun</span> <span class="n">acc</span> <span class="n">episode</span> <span class="o">-&gt;</span>
+      <span class="k">let</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">name</span><span class="o">)</span> <span class="o">=</span> <span class="nn">String</span><span class="p">.</span><span class="n">lsplit2_exn</span> <span class="n">episode</span> <span class="o">~</span><span class="n">on</span><span class="o">:</span><span class="sc">&#39;\t&#39;</span> <span class="k">in</span>
+      <span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="n">id</span><span class="o">)</span> <span class="o">::</span> <span class="n">acc</span>
+    <span class="o">)</span>
+  <span class="k">in</span>
+  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Unix</span><span class="p">.</span><span class="n">close_process_in</span> <span class="n">ic</span><span class="o">)</span> <span class="o">;</span>
+  <span class="nn">Sources</span><span class="p">.</span><span class="n">from_list_rev</span> <span class="n">episodes</span>
+
+<span class="k">let</span> <span class="n">list_shows</span> <span class="o">=</span>
+  <span class="k">lazy</span> <span class="o">(</span>
+    <span class="k">let</span> <span class="n">ic</span> <span class="o">=</span> <span class="nn">Unix</span><span class="p">.</span><span class="n">open_process_in</span> <span class="s2">&quot;series&quot;</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="n">shows</span> <span class="o">=</span>
+      <span class="nn">In_channel</span><span class="p">.</span><span class="n">fold_lines</span> <span class="n">ic</span> <span class="o">~</span><span class="n">init</span><span class="o">:</span><span class="bp">[]</span> <span class="o">~</span><span class="n">f</span><span class="o">:(</span><span class="k">fun</span> <span class="n">acc</span> <span class="n">show</span> <span class="o">-&gt;</span>
+        <span class="k">let</span> <span class="n">show_name</span><span class="o">,</span> <span class="n">nb_eps</span> <span class="o">=</span> <span class="nn">String</span><span class="p">.</span><span class="n">lsplit2_exn</span> <span class="n">show</span> <span class="o">~</span><span class="n">on</span><span class="o">:</span><span class="sc">&#39; &#39;</span> <span class="k">in</span>
+        <span class="o">(</span><span class="n">show_name</span><span class="o">,</span> <span class="n">show_name</span><span class="o">,</span> <span class="nn">String</span><span class="p">.</span><span class="n">lstrip</span> <span class="n">nb_eps</span><span class="o">)</span> <span class="o">::</span> <span class="n">acc</span>
+      <span class="o">)</span>
+    <span class="k">in</span>
+    <span class="n">ignore</span> <span class="o">(</span><span class="nn">Unix</span><span class="p">.</span><span class="n">close_process_in</span> <span class="n">ic</span><span class="o">)</span> <span class="o">;</span>
+    <span class="nn">Sources</span><span class="p">.</span><span class="n">from_list_rev</span> <span class="n">shows</span>
+  <span class="o">)</span>
+
+<span class="k">let</span> <span class="n">papers</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">filter</span> <span class="n">absolute_path</span> <span class="o">=</span>
+    <span class="k">match</span> <span class="nn">Sys</span><span class="p">.</span><span class="n">is_file</span> <span class="n">absolute_path</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="o">`</span><span class="nc">Yes</span> <span class="o">-&gt;</span>
+      <span class="k">begin</span> <span class="k">match</span> <span class="n">snd</span> <span class="o">@@</span> <span class="nn">Filename</span><span class="p">.</span><span class="n">split_extension</span> <span class="n">absolute_path</span> <span class="k">with</span>
+      <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+      <span class="o">|</span> <span class="nc">Some</span> <span class="n">ext</span> <span class="o">-&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">mem</span> <span class="o">[</span><span class="s2">&quot;pdf&quot;</span> <span class="o">;</span> <span class="s2">&quot;ps&quot;</span> <span class="o">;</span> <span class="s2">&quot;djvu&quot;</span> <span class="o">]</span> <span class="n">ext</span>
+      <span class="k">end</span>
+    <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">false</span>
+  <span class="k">in</span> <span class="o">[</span>
+    <span class="k">lazy</span> <span class="nn">Sources</span><span class="p">.</span><span class="err">(</span><span class="n">paths</span> <span class="o">~</span><span class="n">coupled_with</span><span class="o">:(</span><span class="n">files</span> <span class="o">~</span><span class="n">filter</span> <span class="s2">&quot;/tmp&quot;</span><span class="o">))</span> <span class="o">;</span>
+    <span class="k">lazy</span> <span class="nn">Sources</span><span class="p">.</span><span class="err">(</span><span class="n">paths</span> <span class="o">~</span><span class="n">coupled_with</span><span class="o">:(</span><span class="n">files</span> <span class="o">~</span><span class="n">filter</span> <span class="s2">&quot;/home/rks/Papiers&quot;</span><span class="o">))</span> <span class="o">;</span>
+  <span class="o">]</span>
+
+<span class="c">(* Completion engines *)</span>
+<span class="k">let</span> <span class="n">series</span> <span class="o">=</span> <span class="nn">Completion</span><span class="p">.</span><span class="err">({</span>
+  <span class="n">ex_sources</span> <span class="o">=</span> <span class="o">[</span> <span class="n">list_shows</span> <span class="o">]</span> <span class="o">;</span>
+  <span class="n">transition</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">show</span> <span class="o">-&gt;</span> <span class="n">singleton</span> <span class="o">(</span><span class="k">lazy</span> <span class="o">(</span><span class="n">list_episodes</span> <span class="n">show</span><span class="o">#</span><span class="n">display</span><span class="o">))</span>
+<span class="o">})</span>
+
+<span class="k">let</span> <span class="n">engine</span> <span class="o">=</span> 
+  <span class="k">let</span> <span class="k">open</span> <span class="nc">Completion</span> <span class="k">in</span>
+  <span class="n">sum</span> <span class="nn">Sources</span><span class="p">.</span><span class="n">binaries</span> <span class="o">(</span><span class="k">fun</span> <span class="n">o</span> <span class="o">-&gt;</span>
+    <span class="k">let</span> <span class="n">cmd</span> <span class="o">=</span> <span class="n">o</span><span class="o">#</span><span class="n">display</span> <span class="k">in</span>
+    <span class="k">match</span> <span class="n">cmd</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="s2">&quot;chromium&quot;</span> <span class="o">-&gt;</span> <span class="n">iterate</span> <span class="o">[</span> <span class="nn">Extra_sources</span><span class="p">.</span><span class="n">chromium_bookmarks</span> <span class="o">]</span>
+    <span class="o">|</span> <span class="s2">&quot;evince&quot;</span> <span class="o">-&gt;</span> <span class="n">iterate</span> <span class="n">papers</span>
+    <span class="o">|</span> <span class="s2">&quot;series&quot;</span> <span class="o">-&gt;</span> <span class="n">series</span>
+    <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span>
+      <span class="n">sum</span> <span class="o">(</span><span class="nn">Sources</span><span class="p">.</span><span class="n">paths</span> <span class="o">~</span><span class="n">coupled_with</span><span class="o">:(</span><span class="nn">Extra_sources</span><span class="p">.</span><span class="n">from_file</span> <span class="n">cmd</span><span class="o">))</span> <span class="o">(</span>
+        <span class="k">fun</span> <span class="n">arg</span> <span class="o">-&gt;</span>
+          <span class="k">match</span> <span class="n">cmd</span><span class="o">,</span> <span class="n">arg</span><span class="o">#</span><span class="n">display</span> <span class="k">with</span>
+          <span class="o">|</span> <span class="s2">&quot;mpc&quot;</span><span class="o">,</span> <span class="s2">&quot;load&quot;</span> <span class="o">-&gt;</span> <span class="n">iterate</span>  <span class="o">[</span> <span class="nn">Extra_sources</span><span class="p">.</span><span class="nn">Mpc</span><span class="p">.</span><span class="n">playlists</span> <span class="o">]</span>
+          <span class="o">|</span> <span class="s2">&quot;mpc&quot;</span><span class="o">,</span> <span class="s2">&quot;play&quot;</span> <span class="o">-&gt;</span> <span class="n">singleton</span> <span class="nn">Extra_sources</span><span class="p">.</span><span class="nn">Mpc</span><span class="p">.</span><span class="n">current_playlist</span>
+          <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="nn">Extra_sources</span><span class="p">.</span><span class="n">stm_from_file</span> <span class="o">(</span><span class="n">cmd</span> <span class="o">^</span> <span class="n">arg</span><span class="o">#</span><span class="n">display</span><span class="o">)</span>
+      <span class="o">)</span>
+  <span class="o">)</span>
+
+<span class="c">(* Main function *)</span>
+<span class="k">let</span> <span class="n">run</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="k">open</span> <span class="nc">Dmlenu</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">source_transition_hook</span> <span class="n">state</span> <span class="n">conf</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="k">open</span> <span class="nc">Matching</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="o">(</span><span class="n">match_fun</span><span class="o">,</span> <span class="n">lines</span><span class="o">)</span> <span class="o">=</span>
+      <span class="k">match</span> <span class="nn">List</span><span class="p">.</span><span class="n">map</span> <span class="n">state</span><span class="o">.</span><span class="nn">Completion</span><span class="p">.</span><span class="n">entries</span> <span class="o">~</span><span class="n">f</span><span class="o">:(</span><span class="k">fun</span> <span class="o">(_,</span> <span class="o">_,</span> <span class="n">s</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">s</span><span class="o">)</span> <span class="k">with</span>
+      <span class="o">|</span> <span class="s2">&quot;mpc&quot;</span> <span class="o">::</span> <span class="s2">&quot;play&quot;</span> <span class="o">::</span> <span class="o">_</span>                 <span class="o">-&gt;</span> <span class="o">(</span><span class="n">subset</span> <span class="o">~</span><span class="n">case</span><span class="o">:</span><span class="bp">false</span><span class="o">,</span> <span class="mi">20</span><span class="o">)</span>
+      <span class="o">|</span> <span class="s2">&quot;mpc&quot;</span> <span class="o">::</span> <span class="o">_</span>                           <span class="o">-&gt;</span> <span class="o">(</span><span class="n">fuzzy_match</span> <span class="o">~</span><span class="n">case</span><span class="o">:</span><span class="bp">false</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span>
+      <span class="o">|</span> <span class="s2">&quot;chromium&quot;</span> <span class="o">::</span> <span class="o">_</span> <span class="o">|</span> <span class="s2">&quot;evince&quot;</span> <span class="o">::</span> <span class="o">_</span>      <span class="o">-&gt;</span> <span class="o">(</span><span class="n">fuzzy_match</span> <span class="o">~</span><span class="n">case</span><span class="o">:</span><span class="bp">false</span><span class="o">,</span> <span class="mi">20</span><span class="o">)</span>
+      <span class="o">|</span> <span class="s2">&quot;series&quot;</span> <span class="o">::</span> <span class="n">l</span> <span class="k">when</span> <span class="nn">List</span><span class="p">.</span><span class="n">length</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">fuzzy_match</span> <span class="o">~</span><span class="n">case</span><span class="o">:</span><span class="bp">false</span><span class="o">,</span> <span class="mi">20</span><span class="o">)</span>
+      <span class="o">|</span> <span class="o">_</span>                                    <span class="o">-&gt;</span> <span class="o">(</span><span class="n">match_prefix</span> <span class="o">~</span><span class="n">case</span><span class="o">:</span><span class="bp">false</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span>
+    <span class="k">in</span>
+    <span class="n">set_match_query_fun</span> <span class="n">match_fun</span> <span class="o">;</span>
+    <span class="o">{</span> <span class="n">conf</span> <span class="k">with</span> <span class="n">lines</span> <span class="o">}</span>
+  <span class="k">in</span>
+  <span class="k">let</span> <span class="n">app_state</span> <span class="o">=</span> <span class="o">{</span> <span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="o">;</span> <span class="n">compl</span> <span class="o">=</span> <span class="nn">Completion</span><span class="p">.</span><span class="n">make_state</span> <span class="n">engine</span> <span class="o">}</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">conf</span> <span class="o">=</span> <span class="o">{</span> <span class="n">default_conf</span> <span class="k">with</span> <span class="n">window_background</span> <span class="o">=</span> <span class="s2">&quot;#222222&quot;</span> <span class="o">}</span> <span class="k">in</span>
+  <span class="k">match</span> <span class="n">run_list</span> <span class="o">~</span><span class="n">source_transition_hook</span> <span class="n">app_state</span> <span class="n">conf</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">()</span>
+  <span class="o">|</span> <span class="n">prog</span> <span class="o">::</span> <span class="o">_</span> <span class="k">as</span> <span class="n">args</span> <span class="o">-&gt;</span>
+    <span class="n">never_returns</span> <span class="o">@@</span> <span class="nn">Unix</span><span class="p">.</span><span class="n">exec</span> <span class="o">~</span><span class="n">prog</span> <span class="o">~</span><span class="n">args</span> <span class="bp">()</span>
+</pre></div>
+</td></tr></table>    </body>
+</html>
