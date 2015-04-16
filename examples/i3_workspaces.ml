@@ -7,12 +7,12 @@ let get_workspace prompt =
 
 let () =
   try
-    match Sys.argv.(1) with
-    | "rename" ->
-      let ws = get_workspace "rename to:" in
+    match Array.to_list Sys.argv |> List.tl with
+    | "rename" :: _ ->
+      let ws = get_workspace "Rename to:" in
       Unix.execvp "i3-msg" [| "i3-msg"; "-q"; "rename"; "workspace"; "to"; ws |]
-    | "move" ->
-      let ws = get_workspace "move to:" in
+    | "move" :: _ ->
+      let ws = get_workspace "Move to:" in
       Unix.execvp "i3-msg"
         [| "i3-msg"; "-q"; "move"; "window"; "to"; "workspace"; ws |]
     | _ ->
