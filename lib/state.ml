@@ -45,7 +45,7 @@ let update_sources ?(input="") split sources =
     r := !r @ List.filter_map test candidates; (* !r is empty most of the times *)
     Source.ST (state', s))
   in
-  sources, Pagination.from_list split !r
+  sources, Pagination.from_list split (Candidate.reorder_matched !r)
 
 let update_layout state candidates =
   match state.layout with

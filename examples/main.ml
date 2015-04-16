@@ -56,6 +56,7 @@ end
 let run prompt stdin topbar focus_foreground focus_background normal_foreground
       normal_background match_foreground window_background lines = 
   let () = Matching.(set_match_query_fun @@ subset ~case:false) in
+  let () = Candidate.(set_reorder_matched_fun prefixes_first) in
   let colors = { X.Colors.focus_foreground; focus_background;
                  normal_foreground; normal_background; match_foreground; window_background } in
   let program = 
