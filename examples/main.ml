@@ -53,9 +53,10 @@ module Parameter = struct
       Arg.(value & flag & info ["s"; "stdin"] ~doc)
 end
 
-let run prompt stdin topbar focus_foreground focus_background normal_foreground
+let run prompt stdin botbar focus_foreground focus_background normal_foreground
       normal_background match_foreground window_background lines = 
   let () = Matching.(set_match_query_fun @@ subset ~case:false) in
+  let () = Candidate.(set_reorder_matched_fun prefixes_first) in
   let colors = { X.Colors.focus_foreground; focus_background;
                  normal_foreground; normal_background; match_foreground; window_background } in
   let program = 
@@ -70,7 +71,7 @@ let run prompt stdin topbar focus_foreground focus_background normal_foreground
     | 0 -> State.SingleLine
     | n -> State.MultiLine n
   in
-  match Dmlenu.run ~prompt ~layout ~topbar ~colors program with
+  match Dmlenu.run ~prompt ~layout ~topbar:(not botbar) ~colors program with
   | None -> ()
   | Some s -> print_endline s
 
