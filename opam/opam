@@ -1,0 +1,42 @@
+opam-version: "1.2"
+name: "dmlenu"
+version: "0.1"
+maintainer: "opam-devel@lists.ocaml.org"
+authors: [ "Simon Castellan"
+           "Thomas Refis" ]
+license: "MIT"
+homepage: "http://the-lambda-church.github.io/dmlenu/"
+dev-repo: "https://github.com/the-lambda-church/dmlenu.git"
+bug-reports: "https://github.com/the-lambda-church/dmlenu/issues"
+doc: "http://the-lambda-church.github.io/dmlenu/doc"
+tags: [ "clib:Xinerama" "clib:X11" ]
+build: [
+  ["oasis" "setup"]
+  ["./configure"
+      "--bindir" "%{bin}%"
+      "--%{yojson:enable}%-extra"
+      "--%{cmdliner:enable}%-examples"
+  ]
+  [make]
+]
+install: [make "install"]
+remove: [
+  ["ocamlfind" "remove" "dmlenu"]
+  ["rm" "%{bin}%/dmlenu"]
+  ["rm" "%{bin}%/dmlenu_subcommands"]
+  ["rm" "%{bin}%/dmlenu_workspaces"]
+  ["rm" "%{bin}%/dmlenu_mpcgrid"]
+]
+build-doc: [ make "doc" ]
+depends: [
+  "batteries"
+  "lwt"
+  "oasis" {build}
+  "ocamlbuild" {build}
+  "ocamlfind" {build}
+]
+depopts: [
+  "yojson"
+  "cmdliner"
+]
+available: [ ocaml-version >= "4.00.1" ]
