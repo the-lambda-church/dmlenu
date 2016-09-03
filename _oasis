@@ -7,9 +7,8 @@ Version: 0.1
 License: MIT
 LicenseFile: LICENSE
 
-Authors:
-  Simon Castellan
-  Thomas Refis
+Authors: Simon Castellan, Thomas Refis
+Homepage: http://the-lambda-church.github.io/dmlenu/
 
 BuildTools: ocamldoc, ocamlbuild
 Plugins: META (0.3), DevFiles (0.3)
