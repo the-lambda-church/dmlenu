@@ -14,7 +14,7 @@ type t = {
   (** How to know if the user's input matches this candidate *)
 }
 (** The type of candidates.
-    
+
     A candidate is a possibility for completion or matching returned
     by sources. In dmenu, candidates were only strings but now we add
     more structure to differentiate the information and the way it
