@@ -20,5 +20,6 @@ val set_reorder_matched_fun : t -> unit
 
 (** {2 Predefined reordering functions} *)
 
-(** Reorder the candidates to put prefix matchings first. *)
+(** Reorder the candidates to put prefix matchings first (and among prefixes,
+    full matches first) *)
 val prefixes_first : t
