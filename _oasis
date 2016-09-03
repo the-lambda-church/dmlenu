@@ -40,7 +40,7 @@ Library "dmlenu"
     CCLib:                -lX11 -lXinerama
   else
     CCLib:                -lX11
-  Modules:              Candidate, Matching, Pagination, Source, Engine, State, Dmlenu, X
+  Modules:              Candidate, Matching, Ordering, Pagination, Source, Engine, State, Dmlenu, X
   CSources:             draw_funs.h, draw_funs.c, draw_stubs.c
   BuildDepends:         batteries,lwt
   XMetaDescription:     An OCaml library to easily create dmenu-like examples

@@ -29,19 +29,3 @@ val make : ?real:string -> ?doc:string -> ?matching_function:Matching.t ->
     - doc: [""]
     - matching_function: [Matching.match_query ~candidate]
 *)
-
-(** {3 Reordering functions} *)
-
-(** After matching on candidates, a reordering function is called that can
-    change their order. *)
-
-val reorder_matched : (t * Matching.result) list -> (t * Matching.result) list
-(** The reordering function (by default, the identity). *)
-
-val set_reorder_matched_fun : ((t * Matching.result) list -> (t * Matching.result) list) -> unit
-(** Set the reordering function. *)
-
-(** {2 Predefined reordering functions} *)
-
-(** Reorder the candidates to put prefix matchings first. *)
-val prefixes_first : (t * Matching.result) list -> (t * Matching.result) list
