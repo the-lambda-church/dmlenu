@@ -5,12 +5,14 @@
     {!set_match_query_fun} (in hooks for instance).
 *)
 type result = ((bool * int * int) list)
-(** The return type of matching functions.  If it succeeded Some l, a list of
-    terms (match, start, stop) that denotes substring of the candidates that are
-    matched or not.
+(** The return type of matching functions.  If a matching function succeeded
+    returning [Some l], then [l] must be a list of terms [(match, start, stop)],
+    splitting the candidate into substrings, where [match] describes whether the
+    substring is matched or not.
 
-    This is used to display feedback to the user on the matching bits
-    of the candidate. *)
+    For example: if substring ["bar"] of candidate ["foobarbaz"] is matched, the
+    corresponding {!result} is [[(false, 0, 3); (true, 3, 6); (false, 6, 9)]].
+*)
 
 type t = string -> result option
 (** The type of matching functions *)
