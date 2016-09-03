@@ -1,6 +1,6 @@
 (** Functions used to match candidates. *)
 
-(** Default sources (defined in {!Sources} use the default
+(** Default sources (defined in {!Sources}) use the default
     {!match_query} match function that you can change using
     {!set_match_query_fun} (in hooks for instance).
 *)
@@ -8,7 +8,8 @@ type result = ((bool * int * int) list)
 (** The return type of matching functions.  If a matching function succeeded
     returning [Some l], then [l] must be a list of terms [(match, start, stop)],
     splitting the candidate into substrings, where [match] describes whether the
-    substring is matched or not.
+    substring is matched or not. There must be at least one substring with
+    [match] being [true].
 
     For example: if substring ["bar"] of candidate ["foobarbaz"] is matched, the
     corresponding {!result} is [[(false, 0, 3); (true, 3, 6); (false, 6, 9)]].
@@ -56,5 +57,5 @@ val trivial : candidate: string -> t
     some two-dimensional magic. *)
 
 val on : (string -> string) -> t -> t
-(** [on t matching_function] returns a new matching function that as
-    [matching_function] on the output of [t] *)
+(** [on f matching_function] returns a new matching function that applies
+    [matching_function] on the output of [f] *)
