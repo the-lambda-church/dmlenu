@@ -1,0 +1,6 @@
+doc: [
+  "examples/main.ml" { "examples/main.ml" }
+  "examples/i3_workspaces.ml" { "examples/i3_workspaces.ml" }
+  "examples/with_subcommands.ml" { "examples/with_subcommands.ml" }
+  "examples/mpc2D.ml" { "examples/mpc2D.ml" }
+]
