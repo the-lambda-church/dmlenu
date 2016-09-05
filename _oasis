@@ -39,7 +39,7 @@ Library "dmlenu"
     CCLib:                -lX11 -lXinerama
   else
     CCLib:                -lX11
-  Modules:              Candidate, Matching, Pagination, Source, Engine, State, Dmlenu, X
+  Modules:              Candidate, Matching, Ordering, Pagination, Source, Engine, State, Dmlenu, X
   CSources:             draw_funs.h, draw_funs.c, draw_stubs.c
   BuildDepends:         batteries,lwt
   XMetaDescription:     An OCaml library to easily create dmenu-like examples
@@ -53,7 +53,7 @@ Library "dmlenu-extra"
   Modules:              Extra_sources
   BuildDepends:         dmlenu, yojson
   XMetaDescription:     Extra sources for the dmlenu library.
- 
+
 Executable "dmlenu"
   Build$:               flag(examples) || flag(all)
   Install:              true
@@ -85,7 +85,7 @@ Executable "dmlenu_mpcgrid"
   MainIs:               mpc2D.ml
   BuildDepends:         dmlenu,dmlenu.extra
   CompiledObject:       best
- 
+
 Document "dmlenu-api"
   Title:                API reference for Dmlenu
   Build:                true
@@ -94,7 +94,7 @@ Document "dmlenu-api"
   Type:                 ocamlbuild (0.3)
   XOCamlbuildPath:      ./
   XOCamlbuildLibraries: dmlenu, dmlenu.extra
- 
+
 SourceRepository head
   Type:         git
   Location:     https://github.com/the-lambda-church/dmlenu.git
