@@ -5,31 +5,39 @@
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Candidate" rel="Chapter" href="Candidate.html">
 <link title="Matching" rel="Chapter" href="Matching.html">
-<link title="Completion" rel="Chapter" href="Completion.html">
+<link title="Ordering" rel="Chapter" href="Ordering.html">
+<link title="Pagination" rel="Chapter" href="Pagination.html">
+<link title="Source" rel="Chapter" href="Source.html">
+<link title="Engine" rel="Chapter" href="Engine.html">
+<link title="State" rel="Chapter" href="State.html">
 <link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
-<link title="Sources" rel="Chapter" href="Sources.html">
+<link title="X" rel="Chapter" href="X.html">
 <link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>Dmlenu</title>
 </head>
 <body>
-<code class="code"><span class="keyword">sig</span><br>
-&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;conf&nbsp;=&nbsp;{<br>
-&nbsp;&nbsp;&nbsp;&nbsp;stdin&nbsp;:&nbsp;bool;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;bottom&nbsp;:&nbsp;bool;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;focus_foreground&nbsp;:&nbsp;string;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;focus_background&nbsp;:&nbsp;string;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;normal_foreground&nbsp;:&nbsp;string;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;normal_background&nbsp;:&nbsp;string;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;match_foreground&nbsp;:&nbsp;string;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;lines&nbsp;:&nbsp;int;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;window_background&nbsp;:&nbsp;string;<br>
-&nbsp;&nbsp;}<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;default_conf&nbsp;:&nbsp;<span class="constructor">Dmlenu</span>.conf<br>
-&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;app_state&nbsp;=&nbsp;{&nbsp;compl&nbsp;:&nbsp;<span class="constructor">Completion</span>.state;&nbsp;prompt&nbsp;:&nbsp;string;&nbsp;}<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;run&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;?source_transition_hook:(<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.conf&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.conf)&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Dmlenu</span>.app_state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.conf&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;option<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;run_list&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;?source_transition_hook:(<span class="constructor">Completion</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.conf&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.conf)&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Dmlenu</span>.app_state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.conf&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;list<br>
+<code class="code"><span class="keyword">sig</span>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;app_state&nbsp;=&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;colors&nbsp;:&nbsp;<span class="constructor">X</span>.<span class="constructor">Colors</span>.t;
+&nbsp;&nbsp;&nbsp;&nbsp;prompt&nbsp;:&nbsp;string;
+&nbsp;&nbsp;&nbsp;&nbsp;topbar&nbsp;:&nbsp;bool;
+&nbsp;&nbsp;&nbsp;&nbsp;hook&nbsp;:&nbsp;<span class="constructor">Dmlenu</span>.app_state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.app_state;
+&nbsp;&nbsp;&nbsp;&nbsp;state&nbsp;:&nbsp;<span class="constructor">State</span>.t;
+&nbsp;&nbsp;&nbsp;&nbsp;xstate&nbsp;:&nbsp;<span class="constructor">X</span>.state;
+&nbsp;&nbsp;}
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;run_list&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;?topbar:bool&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;?separator:string&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;?colors:<span class="constructor">X</span>.<span class="constructor">Colors</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;?layout:<span class="constructor">State</span>.layout&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;?prompt:string&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;?hook:(<span class="constructor">Dmlenu</span>.app_state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.app_state)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Engine</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;list
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;run&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;?topbar:bool&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;?separator:string&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;?colors:<span class="constructor">X</span>.<span class="constructor">Colors</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;?layout:<span class="constructor">State</span>.layout&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;?prompt:string&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;?hook:(<span class="constructor">Dmlenu</span>.app_state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Dmlenu</span>.app_state)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Engine</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;option
 <span class="keyword">end</span></code></body></html>

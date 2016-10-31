@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Dmlenu.html">
+<link rel="next" href="Extra_sources.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Candidate" rel="Chapter" href="Candidate.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
+<link title="Ordering" rel="Chapter" href="Ordering.html">
+<link title="Pagination" rel="Chapter" href="Pagination.html">
+<link title="Source" rel="Chapter" href="Source.html">
+<link title="Engine" rel="Chapter" href="Engine.html">
+<link title="State" rel="Chapter" href="State.html">
+<link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
+<link title="X" rel="Chapter" href="X.html">
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>X</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Dmlenu.html" title="Dmlenu">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Extra_sources.html" title="Extra_sources">Next</a>
+</div>
+<h1>Module <a href="type_X.html">X</a></h1>
+
+<pre><span class="keyword">module</span> X: <code class="code">sig</code> <a href="X.html">..</a> <code class="code">end</code></pre><div class="info module top">
+X operations<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEstate"><span class="keyword">type</span> <code class="type"></code>state</span> </pre>
+<div class="info ">
+The type of the X context<br>
+</div>
+
+
+<pre><span class="keyword">module</span> <a href="X.Colors.html">Colors</a>: <code class="code">sig</code> <a href="X.Colors.html">..</a> <code class="code">end</code></pre><div class="info">
+Colors we need to draw text
+</div>
+
+<pre><span id="VALsetup"><span class="keyword">val</span> setup</span> : <code class="type">topbar:bool -> colors:<a href="X.Colors.html#TYPEt">Colors.t</a> -> lines:int -> <a href="X.html#TYPEstate">state</a> option</code></pre><div class="info ">
+Set up X.
+<p>
+<ul>
+<li><code class="code">topbar</code> : true if the window should be at the top</li>
+<li><code class="code">colors</code> : the colors to use to render text</li>
+<li><code class="code">lines</code> : the size in lines of the window (at least one).</li>
+</ul>
+
+   It returns None if the setting up failed.<br>
+</div>
+
+<pre><span id="VALcolors"><span class="keyword">val</span> colors</span> : <code class="type"><a href="X.html#TYPEstate">state</a> -> <a href="X.Colors.html#TYPEt">Colors.t</a></code></pre>
+<pre><span id="VALquit"><span class="keyword">val</span> quit</span> : <code class="type">state:<a href="X.html#TYPEstate">state</a> -> unit</code></pre>
+<pre><span id="VALresize"><span class="keyword">val</span> resize</span> : <code class="type">state:<a href="X.html#TYPEstate">state</a> -> lines:int -> unit</code></pre><div class="info ">
+Resize the given X state<br>
+</div>
+
+<pre><span id="VALwidth"><span class="keyword">val</span> width</span> : <code class="type">state:<a href="X.html#TYPEstate">state</a> -> int</code></pre><div class="info ">
+Returns the width of the window<br>
+</div>
+
+<pre><span id="VALtext_width"><span class="keyword">val</span> text_width</span> : <code class="type">state:<a href="X.html#TYPEstate">state</a> -> string -> int</code></pre><div class="info ">
+Returns the width of a text<br>
+</div>
+
+<pre><span class="keyword">module</span> <a href="X.Key.html">Key</a>: <code class="code">sig</code> <a href="X.Key.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module</span> <a href="X.Events.html">Events</a>: <code class="code">sig</code> <a href="X.Events.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module</span> <a href="X.Draw.html">Draw</a>: <code class="code">sig</code> <a href="X.Draw.html">..</a> <code class="code">end</code></pre><div class="info">
+Low-level interface
+</div>
+
+<pre><span class="keyword">module</span> <a href="X.Low_level.html">Low_level</a>: <code class="code">sig</code> <a href="X.Low_level.html">..</a> <code class="code">end</code></pre></body></html>

@@ -4,152 +4,115 @@
 <link rel="stylesheet" href="style.css" type="text/css">
 <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
 <link rel="Start" href="index.html">
-<link rel="previous" href="Completion.html">
-<link rel="next" href="Sources.html">
+<link rel="previous" href="State.html">
+<link rel="next" href="X.html">
 <link rel="Up" href="index.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Candidate" rel="Chapter" href="Candidate.html">
 <link title="Matching" rel="Chapter" href="Matching.html">
-<link title="Completion" rel="Chapter" href="Completion.html">
+<link title="Ordering" rel="Chapter" href="Ordering.html">
+<link title="Pagination" rel="Chapter" href="Pagination.html">
+<link title="Source" rel="Chapter" href="Source.html">
+<link title="Engine" rel="Chapter" href="Engine.html">
+<link title="State" rel="Chapter" href="State.html">
 <link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
-<link title="Sources" rel="Chapter" href="Sources.html">
-<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><link title="Configuration" rel="Section" href="#2_Configuration">
-<link title="Execution" rel="Subsection" href="#3_Execution">
-<title>Dmlenu</title>
+<link title="X" rel="Chapter" href="X.html">
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>Dmlenu</title>
 </head>
 <body>
-<div class="navbar"><a class="pre" href="Completion.html" title="Completion">Previous</a>
+<div class="navbar"><a class="pre" href="State.html" title="State">Previous</a>
 &nbsp;<a class="up" href="index.html" title="Index">Up</a>
-&nbsp;<a class="post" href="Sources.html" title="Sources">Next</a>
+&nbsp;<a class="post" href="X.html" title="X">Next</a>
 </div>
 <h1>Module <a href="type_Dmlenu.html">Dmlenu</a></h1>
 
 <pre><span class="keyword">module</span> Dmlenu: <code class="code">sig</code> <a href="Dmlenu.html">..</a> <code class="code">end</code></pre><div class="info module top">
-Main module of the library.
-<p>
-
-    Use it to build your own dmenu-like application.<br>
+Main entry point of the library<br>
 </div>
 <hr width="100%">
-<br>
-<h2 id="2_Configuration">Configuration</h2><br>
 
-<pre><code><span id="TYPEconf"><span class="keyword">type</span> <code class="type"></code>conf</span> = {</code></pre><table class="typetable">
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTconf.stdin">stdin</span>&nbsp;: <code class="type">bool</code>;</code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTconf.bottom">bottom</span>&nbsp;: <code class="type">bool</code>;</code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTconf.focus_foreground">focus_foreground</span>&nbsp;: <code class="type">string</code>;</code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTconf.focus_background">focus_background</span>&nbsp;: <code class="type">string</code>;</code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTconf.normal_foreground">normal_foreground</span>&nbsp;: <code class="type">string</code>;</code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTconf.normal_background">normal_background</span>&nbsp;: <code class="type">string</code>;</code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTconf.match_foreground">match_foreground</span>&nbsp;: <code class="type">string</code>;</code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTconf.lines">lines</span>&nbsp;: <code class="type">int</code>;</code></td>
-
-</tr>
-<tr>
-<td align="left" valign="top" >
-<code>&nbsp;&nbsp;</code></td>
-<td align="left" valign="top" >
-<code><span id="TYPEELTconf.window_background">window_background</span>&nbsp;: <code class="type">string</code>;</code></td>
-
-</tr></table>
-}
-
-
-
-<pre><span id="VALdefault_conf"><span class="keyword">val</span> default_conf</span> : <code class="type"><a href="Dmlenu.html#TYPEconf">conf</a></code></pre>
 <pre><code><span id="TYPEapp_state"><span class="keyword">type</span> <code class="type"></code>app_state</span> = {</code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTapp_state.compl">compl</span>&nbsp;: <code class="type"><a href="Completion.html#TYPEstate">Completion.state</a></code>;</code></td>
-
+<code><span id="TYPEELTapp_state.colors">colors</span>&nbsp;: <code class="type"><a href="X.Colors.html#TYPEt">X.Colors.t</a></code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+The set of colors to use<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTapp_state.prompt">prompt</span>&nbsp;: <code class="type">string</code>;</code></td>
-
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+The prompt to the user<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTapp_state.topbar">topbar</span>&nbsp;: <code class="type">bool</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Shall dmlenu sit on the bottom or on the top of the screen?<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTapp_state.hook">hook</span>&nbsp;: <code class="type"><a href="Dmlenu.html#TYPEapp_state">app_state</a> -> <a href="Dmlenu.html#TYPEapp_state">app_state</a></code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Hook called whenever a token is added<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTapp_state.state">state</span>&nbsp;: <code class="type"><a href="State.html#TYPEt">State.t</a></code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+The state of the current engine<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTapp_state.xstate">xstate</span>&nbsp;: <code class="type"><a href="X.html#TYPEstate">X.state</a></code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Data related to X<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 }
 
+<div class="info ">
+The current state of the application<br>
+</div>
 
-<br>
-<h3 id="3_Execution">Execution</h3><br>
 
-<pre><span id="VALrun"><span class="keyword">val</span> run</span> : <code class="type">?source_transition_hook:(<a href="Completion.html#TYPEstate">Completion.state</a> -> <a href="Dmlenu.html#TYPEconf">conf</a> -> <a href="Dmlenu.html#TYPEconf">conf</a>) -><br>       <a href="Dmlenu.html#TYPEapp_state">app_state</a> -> <a href="Dmlenu.html#TYPEconf">conf</a> -> string option</code></pre><div class="info ">
-<code class="code">run initial_state conf</code> creates the window and handles user inputs.
-    Returns <code class="code">Some user_input</code> when the user valid a completion (i.e. hits RET)
-    or <code class="code">None</code> when the user cancels (i.e. hits ESC)
-<p>
-
-    N.B. this function is blocking.
-<p>
-
-    The <code class="code">source_transition_hook</code> parameter is to be used when you want to
-    perform side effects, or update the configuration when a transition happens.
-    The reason why you would want to use this hook instead of directly
-    performing your computation in the transition function of the state machine
-    (see <a href="Completion.html"><code class="code">Completion</code></a>) is:<ul>
-<li>You cannot modify the configuration in the machine transition function
-      (although we could allow it).</li>
-<li>This function will be called when the user completes something, but also
-      when he removes some of its input : i.e. when we backtrack in the
-      state_machine/automata, whereas the transition function is called only
-      when the user completes.</li>
+<pre><span id="VALrun_list"><span class="keyword">val</span> run_list</span> : <code class="type">?topbar:bool -><br>       ?separator:string -><br>       ?colors:<a href="X.Colors.html#TYPEt">X.Colors.t</a> -><br>       ?layout:<a href="State.html#TYPElayout">State.layout</a> -><br>       ?prompt:string -><br>       ?hook:(<a href="Dmlenu.html#TYPEapp_state">app_state</a> -> <a href="Dmlenu.html#TYPEapp_state">app_state</a>) -> <a href="Engine.html#TYPEt">Engine.t</a> -> string list</code></pre><div class="info ">
+Run a program and outputs the read tokens. You can override the
+    default values for the parameter using optional parameters. The
+    default values are<ul>
+<li>topbar: <code class="code">true</code></li>
+<li>separator: <code class="code">" "</code></li>
+<li>colors: <code class="code">X.Colors.default</code></li>
+<li>lines: <code class="code">0</code></li>
+<li>prompt: <code class="code">""</code></li>
+<li>hook: the identity function</li>
 </ul>
 <br>
 </div>
 
-<pre><span id="VALrun_list"><span class="keyword">val</span> run_list</span> : <code class="type">?source_transition_hook:(<a href="Completion.html#TYPEstate">Completion.state</a> -> <a href="Dmlenu.html#TYPEconf">conf</a> -> <a href="Dmlenu.html#TYPEconf">conf</a>) -><br>       <a href="Dmlenu.html#TYPEapp_state">app_state</a> -> <a href="Dmlenu.html#TYPEconf">conf</a> -> string list</code></pre><div class="info ">
-Same as <a href="Dmlenu.html#VALrun"><code class="code">Dmlenu.run</code></a> but returns the list of completed tokens.<br>
-</div>
-</body></html>
+<pre><span id="VALrun"><span class="keyword">val</span> run</span> : <code class="type">?topbar:bool -><br>       ?separator:string -><br>       ?colors:<a href="X.Colors.html#TYPEt">X.Colors.t</a> -><br>       ?layout:<a href="State.html#TYPElayout">State.layout</a> -><br>       ?prompt:string -><br>       ?hook:(<a href="Dmlenu.html#TYPEapp_state">app_state</a> -> <a href="Dmlenu.html#TYPEapp_state">app_state</a>) -> <a href="Engine.html#TYPEt">Engine.t</a> -> string option</code></pre></body></html>

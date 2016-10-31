@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Matching.html">
+<link rel="next" href="Pagination.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Candidate" rel="Chapter" href="Candidate.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
+<link title="Ordering" rel="Chapter" href="Ordering.html">
+<link title="Pagination" rel="Chapter" href="Pagination.html">
+<link title="Source" rel="Chapter" href="Source.html">
+<link title="Engine" rel="Chapter" href="Engine.html">
+<link title="State" rel="Chapter" href="State.html">
+<link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
+<link title="X" rel="Chapter" href="X.html">
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><link title="Predefined reordering functions" rel="Section" href="#2_Predefinedreorderingfunctions">
+<link title="Reordering function" rel="Subsection" href="#3_Reorderingfunction">
+<title>Ordering</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Matching.html" title="Matching">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Pagination.html" title="Pagination">Next</a>
+</div>
+<h1>Module <a href="type_Ordering.html">Ordering</a></h1>
+
+<pre><span class="keyword">module</span> Ordering: <code class="code">sig</code> <a href="Ordering.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Functions used to (re)order the list of candidates after matching.<br>
+</div>
+<hr width="100%">
+<br>
+State transition functions (defined in <a href="State.html"><code class="code">State</code></a>, used by <a href="Dmlenu.html#VALrun"><code class="code">Dmlenu.run</code></a>) use
+    the default <a href="Ordering.html#VALreorder_matched"><code class="code">Ordering.reorder_matched</code></a> reordering function, that you can change
+    using <a href="Ordering.html#VALset_reorder_matched_fun"><code class="code">Ordering.set_reorder_matched_fun</code></a>.<br>
+
+<pre><span id="TYPEmatched_candidate"><span class="keyword">type</span> <code class="type"></code>matched_candidate</span> = <code class="type"><a href="Candidate.html#TYPEt">Candidate.t</a> * <a href="Matching.html#TYPEresult">Matching.result</a></code> </pre>
+<div class="info ">
+A candidate that has been successfully matched.<br>
+</div>
+
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = <code class="type"><a href="Ordering.html#TYPEmatched_candidate">matched_candidate</a> list -> <a href="Ordering.html#TYPEmatched_candidate">matched_candidate</a> list</code> </pre>
+<div class="info ">
+The type of ordering functions<br>
+</div>
+
+<br>
+<h3 id="3_Reorderingfunction">Reordering function</h3><br>
+
+<pre><span id="VALreorder_matched"><span class="keyword">val</span> reorder_matched</span> : <code class="type"><a href="Ordering.html#TYPEt">t</a></code></pre><div class="info ">
+The default reordering function: by default, the identity<br>
+</div>
+
+<pre><span id="VALset_reorder_matched_fun"><span class="keyword">val</span> set_reorder_matched_fun</span> : <code class="type"><a href="Ordering.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Set the default reordering function<br>
+</div>
+<br>
+<h2 id="2_Predefinedreorderingfunctions">Predefined reordering functions</h2><br>
+
+<pre><span id="VALprefixes_first"><span class="keyword">val</span> prefixes_first</span> : <code class="type"><a href="Ordering.html#TYPEt">t</a></code></pre><div class="info ">
+Reorder the candidates to put prefix matchings first (and among prefixes,
+    full matches first)<br>
+</div>
+</body></html>

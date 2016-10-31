@@ -6,10 +6,15 @@
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Candidate" rel="Chapter" href="Candidate.html">
 <link title="Matching" rel="Chapter" href="Matching.html">
-<link title="Completion" rel="Chapter" href="Completion.html">
+<link title="Ordering" rel="Chapter" href="Ordering.html">
+<link title="Pagination" rel="Chapter" href="Pagination.html">
+<link title="Source" rel="Chapter" href="Source.html">
+<link title="Engine" rel="Chapter" href="Engine.html">
+<link title="State" rel="Chapter" href="State.html">
 <link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
-<link title="Sources" rel="Chapter" href="Sources.html">
+<link title="X" rel="Chapter" href="X.html">
 <link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>Index of values</title>
 </head>
 <body>
@@ -18,13 +23,18 @@
 <h1>Index of values</h1>
 <table>
 <tr><td align="left"><br>A</td></tr>
-<tr><td><a href="Completion.html#VALadd_string">add_string</a> [<a href="Completion.html">Completion</a>]</td>
+<tr><td><a href="State.html#VALadd_char">add_char</a> [<a href="State.html">State</a>]</td>
 <td><div class="info">
-Computes the new state corresponding to the user pressing a character
+Add a char to the current input.
+</div>
+</td></tr>
+<tr><td><a href="Pagination.html#VALall">all</a> [<a href="Pagination.html">Pagination</a>]</td>
+<td><div class="info">
+Collects all the entry in a pagination data
 </div>
 </td></tr>
 <tr><td align="left"><br>B</td></tr>
-<tr><td><a href="Sources.html#VALbinaries">binaries</a> [<a href="Sources.html">Sources</a>]</td>
+<tr><td><a href="Source.html#VALbinaries">binaries</a> [<a href="Source.html">Source</a>]</td>
 <td><div class="info">
 A source that list all the binaries in your PATH.
 </div>
@@ -35,19 +45,31 @@ A source that list all the binaries in your PATH.
 Offers completion on bookmarks names, and returns the bookmark url.
 </div>
 </td></tr>
-<tr><td><a href="Completion.html#VALcomplete">complete</a> [<a href="Completion.html">Completion</a>]</td>
+<tr><td><a href="X.Low_level.html#VALclear">clear</a> [<a href="X.Low_level.html">X.Low_level</a>]</td>
+<td></td></tr>
+<tr><td><a href="X.Draw.html#VALclear">clear</a> [<a href="X.Draw.html">X.Draw</a>]</td>
 <td><div class="info">
-Computes the new state corresponding to the user completing the entry
+Clear the screen with the background
 </div>
 </td></tr>
-<tr><td><a href="Completion.html#VALconcat">concat</a> [<a href="Completion.html">Completion</a>]</td>
+<tr><td><a href="X.Draw.html#VALclear_line">clear_line</a> [<a href="X.Draw.html">X.Draw</a>]</td>
+<td></td></tr>
+<tr><td><a href="X.html#VALcolors">colors</a> [<a href="X.html">X</a>]</td>
+<td></td></tr>
+<tr><td><a href="State.html#VALcomplete">complete</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+Tries to complete the current selected candidate.
+</div>
+</td></tr>
+<tr><td><a href="Engine.html#VALconcat">concat</a> [<a href="Engine.html">Engine</a>]</td>
 <td><div class="info">
 Concatenates two machines.
 </div>
 </td></tr>
-<tr><td><a href="Sources.html#VALcsum">csum</a> [<a href="Sources.html">Sources</a>]</td>
+<tr><td><a href="Engine.html#VALcsum">csum</a> [<a href="Engine.html">Engine</a>]</td>
 <td><div class="info">
-Simple case of dependant sum
+<code class="code">csum l</code> offers the completion over <code class="code">List.map fst l</code> and then
+    proceeds as the chosen program.
 </div>
 </td></tr>
 <tr><td><a href="Extra_sources.Mpc.html#VALcurrent_playlist">current_playlist</a> [<a href="Extra_sources.Mpc.html">Extra_sources.Mpc</a>]</td>
@@ -55,34 +77,40 @@ Simple case of dependant sum
 List songs currently in the playlist.
 </div>
 </td></tr>
-<tr><td><a href="Completion.html#VALcursor_left">cursor_left</a> [<a href="Completion.html">Completion</a>]</td>
-<td><div class="info">
-Computes the new state corresponding to the user going left
-</div>
-</td></tr>
-<tr><td><a href="Completion.html#VALcursor_right">cursor_right</a> [<a href="Completion.html">Completion</a>]</td>
-<td><div class="info">
-Computes the new state corresponding to the user going right
-</div>
-</td></tr>
 <tr><td align="left"><br>D</td></tr>
-<tr><td><a href="Dmlenu.html#VALdefault_conf">default_conf</a> [<a href="Dmlenu.html">Dmlenu</a>]</td>
+<tr><td><a href="X.Colors.html#VALdefault">default</a> [<a href="X.Colors.html">X.Colors</a>]</td>
+<td><div class="info">
+Default set of colors -- hardcoded at the moment
+</div>
+</td></tr>
+<tr><td><a href="State.html#VALdown">down</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+Moves the current selection to the down
+</div>
+</td></tr>
+<tr><td><a href="X.Low_level.html#VALdraw_text">draw_text</a> [<a href="X.Low_level.html">X.Low_level</a>]</td>
 <td></td></tr>
 <tr><td align="left"><br>E</td></tr>
-<tr><td><a href="Sources.html#VALempty">empty</a> [<a href="Sources.html">Sources</a>]</td>
+<tr><td><a href="Engine.html#VALempty">empty</a> [<a href="Engine.html">Engine</a>]</td>
+<td><div class="info">
+The empty program
+</div>
+</td></tr>
+<tr><td><a href="Source.html#VALempty">empty</a> [<a href="Source.html">Source</a>]</td>
 <td><div class="info">
 The empty source.
 </div>
 </td></tr>
-<tr><td><a href="Completion.html#VALempty">empty</a> [<a href="Completion.html">Completion</a>]</td>
+<tr><td align="left"><br>F</td></tr>
+<tr><td><a href="Source.html#VALfiles">files</a> [<a href="Source.html">Source</a>]</td>
 <td><div class="info">
-The state machine that does not offer any completion
+A source that completes filenames in a given directory (or
+    absolute filenames).
 </div>
 </td></tr>
-<tr><td align="left"><br>F</td></tr>
-<tr><td><a href="Sources.html#VALfiles">files</a> [<a href="Sources.html">Sources</a>]</td>
+<tr><td><a href="Pagination.html#VALfold_visible">fold_visible</a> [<a href="Pagination.html">Pagination</a>]</td>
 <td><div class="info">
-A source that completes filenames in a given directory (or absolute filenames).
+Fold over the visible elements of a pagination data.
 </div>
 </td></tr>
 <tr><td><a href="Extra_sources.html#VALfrom_file">from_file</a> [<a href="Extra_sources.html">Extra_sources</a>]</td>
@@ -91,19 +119,44 @@ A source that completes filenames in a given directory (or absolute filenames).
     <code class="code">$HOME/.config/dmlenu/filename</code> (each line in this file is a candidate)
 </div>
 </td></tr>
-<tr><td><a href="Sources.html#VALfrom_list">from_list</a> [<a href="Sources.html">Sources</a>]</td>
-<td></td></tr>
-<tr><td><a href="Sources.html#VALfrom_list_">from_list_</a> [<a href="Sources.html">Sources</a>]</td>
-<td></td></tr>
-<tr><td><a href="Sources.html#VALfrom_list_rev">from_list_rev</a> [<a href="Sources.html">Sources</a>]</td>
+<tr><td><a href="Source.html#VALfrom_list">from_list</a> [<a href="Source.html">Source</a>]</td>
 <td><div class="info">
-A source built from a list (display, real, documentation).
+A source built from a list of candidates of the form <code class="code">(display,
+    real, documentation)</code>.
 </div>
 </td></tr>
-<tr><td><a href="Sources.html#VALfrom_list_rev_">from_list_rev_</a> [<a href="Sources.html">Sources</a>]</td>
+<tr><td><a href="Pagination.html#VALfrom_list">from_list</a> [<a href="Pagination.html">Pagination</a>]</td>
 <td><div class="info">
-A source built from a list of candidates (display and real are the same, doc
-    is empty).
+Create a pagination data from a list where the first argument is
+    used to determine how many events are visible (It takes a list of
+    elements and return the initial segment of the list that would fit
+    on the screen and the rest).
+</div>
+</td></tr>
+<tr><td><a href="Source.html#VALfrom_list_">from_list_</a> [<a href="Source.html">Source</a>]</td>
+<td><div class="info">
+Same as <a href="Source.html#VALfrom_list"><code class="code">Source.from_list</code></a> but identifies real and display, and set
+    documentation to the empty string.
+</div>
+</td></tr>
+<tr><td><a href="Source.html#VALfrom_list_lazy">from_list_lazy</a> [<a href="Source.html">Source</a>]</td>
+<td><div class="info">
+Same as <a href="Source.html#VALfrom_list"><code class="code">Source.from_list</code></a> but expects a non-evaluated list.
+</div>
+</td></tr>
+<tr><td><a href="Source.html#VALfrom_list_lazy_">from_list_lazy_</a> [<a href="Source.html">Source</a>]</td>
+<td><div class="info">
+Same as <a href="Source.html#VALfrom_list_"><code class="code">Source.from_list_</code></a> but expects a non-evaluated list.
+</div>
+</td></tr>
+<tr><td><a href="Source.html#VALfrom_list_rev">from_list_rev</a> [<a href="Source.html">Source</a>]</td>
+<td><div class="info">
+Same as <a href="Source.html#VALfrom_list"><code class="code">Source.from_list</code></a> but reverses the list in the process
+</div>
+</td></tr>
+<tr><td><a href="Source.html#VALfrom_list_rev_">from_list_rev_</a> [<a href="Source.html">Source</a>]</td>
+<td><div class="info">
+Same as <a href="Source.html#VALfrom_list_"><code class="code">Source.from_list_</code></a> but reverses its argument.
 </div>
 </td></tr>
 <tr><td><a href="Matching.html#VALfuzzy_match">fuzzy_match</a> [<a href="Matching.html">Matching</a>]</td>
@@ -118,58 +171,104 @@ Same as <code class="code">fuzzy_match</code> except that the first letter in <c
     first letter of <code class="code">candidate</code>.
 </div>
 </td></tr>
+<tr><td align="left"><br>G</td></tr>
+<tr><td><a href="State.html#VALget_list">get_list</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+Returns the value of all tokens currently accumulated
+</div>
+</td></tr>
+<tr><td><a href="X.Low_level.html#VALgrabkeys">grabkeys</a> [<a href="X.Low_level.html">X.Low_level</a>]</td>
+<td></td></tr>
 <tr><td align="left"><br>I</td></tr>
 <tr><td><a href="Extra_sources.html#VALi3_workspaces">i3_workspaces</a> [<a href="Extra_sources.html">Extra_sources</a>]</td>
 <td><div class="info">
 List of existing i3 workspaces.
 </div>
 </td></tr>
-<tr><td><a href="Completion.html#VALiterate">iterate</a> [<a href="Completion.html">Completion</a>]</td>
+<tr><td><a href="State.html#VALinitial">initial</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+Creates an initial state out of a separator a program, and split functions
+</div>
+</td></tr>
+<tr><td><a href="Source.html#VALinitialize">initialize</a> [<a href="Source.html">Source</a>]</td>
+<td><div class="info">
+Initialize a source to its default state
+</div>
+</td></tr>
+<tr><td><a href="Pagination.html#VALis_empty">is_empty</a> [<a href="Pagination.html">Pagination</a>]</td>
+<td></td></tr>
+<tr><td><a href="Engine.html#VALiterate">iterate</a> [<a href="Engine.html">Engine</a>]</td>
 <td><div class="info">
 <code class="code">iterate sources</code> offers completions from sources, indefinitely.
 </div>
 </td></tr>
 <tr><td align="left"><br>L</td></tr>
-<tr><td><a href="Completion.html#VALleft">left</a> [<a href="Completion.html">Completion</a>]</td>
+<tr><td><a href="State.html#VALleft">left</a> [<a href="State.html">State</a>]</td>
 <td><div class="info">
-Computes the new state corresponding to the user selecting the candidate on the left
+Moves the current selection to the left
+</div>
+</td></tr>
+<tr><td><a href="Pagination.html#VALleft">left</a> [<a href="Pagination.html">Pagination</a>]</td>
+<td><div class="info">
+Move a pagination data to the left
 </div>
 </td></tr>
 <tr><td align="left"><br>M</td></tr>
-<tr><td><a href="Completion.html#VALmake_state">make_state</a> [<a href="Completion.html">Completion</a>]</td>
+<tr><td><a href="Candidate.html#VALmake">make</a> [<a href="Candidate.html">Candidate</a>]</td>
 <td><div class="info">
-<code class="code">make_state ?sep machine</code> initialize the machine; <code class="code">sep</code> will be used to mark
-    the end of a selection and the transition to the next sources (i.e.
+<code class="code">make ~real ~doc ~matching_function ~completion display</code>
+    creates a new candidate.
 </div>
 </td></tr>
+<tr><td><a href="X.Draw.html#VALmap">map</a> [<a href="X.Draw.html">X.Draw</a>]</td>
+<td><div class="info">
+Map the window on the screen
+</div>
+</td></tr>
+<tr><td><a href="X.Low_level.html#VALmapdc">mapdc</a> [<a href="X.Low_level.html">X.Low_level</a>]</td>
+<td></td></tr>
 <tr><td><a href="Matching.html#VALmatch_prefix">match_prefix</a> [<a href="Matching.html">Matching</a>]</td>
 <td></td></tr>
 <tr><td><a href="Matching.html#VALmatch_query">match_query</a> [<a href="Matching.html">Matching</a>]</td>
-<td></td></tr>
-<tr><td><a href="Completion.html#VALmk_candidate">mk_candidate</a> [<a href="Completion.html">Completion</a>]</td>
 <td><div class="info">
-A constructor
+The default matching function
+</div>
+</td></tr>
+<tr><td align="left"><br>N</td></tr>
+<tr><td><a href="State.html#VALnb_lines">nb_lines</a> [<a href="State.html">State</a>]</td>
+<td></td></tr>
+<tr><td><a href="X.Low_level.html#VALnext_event">next_event</a> [<a href="X.Low_level.html">X.Low_level</a>]</td>
+<td></td></tr>
+<tr><td><a href="State.html#VALnormalize">normalize</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+Normalize the pagination for candidates
+</div>
+</td></tr>
+<tr><td align="left"><br>O</td></tr>
+<tr><td><a href="Matching.html#VALon">on</a> [<a href="Matching.html">Matching</a>]</td>
+<td><div class="info">
+<code class="code">on f matching_function</code> returns a new matching function that applies
+    <code class="code">matching_function</code> on the output of <code class="code">f</code>
+</div>
+</td></tr>
+<tr><td><a href="State.html#VALon_modify">on_modify</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+Function to be called whenever the input is modified to recompute
+    candidates.
 </div>
 </td></tr>
 <tr><td align="left"><br>P</td></tr>
-<tr><td><a href="Completion.html#VALpagedown">pagedown</a> [<a href="Completion.html">Completion</a>]</td>
-<td><div class="info">
-Computes the new state corresponding to the user selecting the first non visible candidate on the right
-</div>
-</td></tr>
-<tr><td><a href="Completion.html#VALpageup">pageup</a> [<a href="Completion.html">Completion</a>]</td>
-<td><div class="info">
-Computes the new state corresponding to the user selecting the
-    first non visible candidate on the left.
-</div>
-</td></tr>
+<tr><td><a href="Pagination.html#VALpage_left">page_left</a> [<a href="Pagination.html">Pagination</a>]</td>
+<td></td></tr>
+<tr><td><a href="Pagination.html#VALpage_right">page_right</a> [<a href="Pagination.html">Pagination</a>]</td>
+<td></td></tr>
 <tr><td><a href="Matching.html#VALpartial_match">partial_match</a> [<a href="Matching.html">Matching</a>]</td>
 <td><div class="info">
 <code class="code">partial_match ?case ~candidate sub</code> will return <code class="code">Some _</code> if <code class="code">sub</code> is a
     substring of <code class="code">candidate</code>, <code class="code">None</code> otherwise..
 </div>
 </td></tr>
-<tr><td><a href="Sources.html#VALpaths">paths</a> [<a href="Sources.html">Sources</a>]</td>
+<tr><td><a href="Source.html#VALpaths">paths</a> [<a href="Source.html">Source</a>]</td>
 <td><div class="info">
 A source that complete like <code class="code">coupled_with</code> except when what is before the
     cursor is (syntactically) a path, i.e.
@@ -180,39 +279,105 @@ A source that complete like <code class="code">coupled_with</code> except when w
 List of mpc playlists.
 </div>
 </td></tr>
-<tr><td align="left"><br>R</td></tr>
-<tr><td><a href="Completion.html#VALremove">remove</a> [<a href="Completion.html">Completion</a>]</td>
+<tr><td><a href="X.Events.html#VALpoll">poll</a> [<a href="X.Events.html">X.Events</a>]</td>
 <td><div class="info">
-Computes the new state corresponding to the user removing the
-    character to the right of the cursor
+poll for an X event
 </div>
 </td></tr>
-<tr><td><a href="Completion.html#VALright">right</a> [<a href="Completion.html">Completion</a>]</td>
+<tr><td><a href="Ordering.html#VALprefixes_first">prefixes_first</a> [<a href="Ordering.html">Ordering</a>]</td>
 <td><div class="info">
-Computes the new state corresponding to the user selecting the candidate on the right
+Reorder the candidates to put prefix matchings first (and among prefixes,
+    full matches first)
+</div>
+</td></tr>
+<tr><td align="left"><br>Q</td></tr>
+<tr><td><a href="X.Low_level.html#VALquit">quit</a> [<a href="X.Low_level.html">X.Low_level</a>]</td>
+<td></td></tr>
+<tr><td><a href="X.html#VALquit">quit</a> [<a href="X.html">X</a>]</td>
+<td></td></tr>
+<tr><td align="left"><br>R</td></tr>
+<tr><td><a href="State.html#VALremove">remove</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+Simulate a backspace.
+</div>
+</td></tr>
+<tr><td><a href="Ordering.html#VALreorder_matched">reorder_matched</a> [<a href="Ordering.html">Ordering</a>]</td>
+<td><div class="info">
+The default reordering function: by default, the identity
+</div>
+</td></tr>
+<tr><td><a href="X.Low_level.html#VALresize">resize</a> [<a href="X.Low_level.html">X.Low_level</a>]</td>
+<td></td></tr>
+<tr><td><a href="X.html#VALresize">resize</a> [<a href="X.html">X</a>]</td>
+<td><div class="info">
+Resize the given X state
+</div>
+</td></tr>
+<tr><td><a href="State.html#VALright">right</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+Moves the current selection to the right
+</div>
+</td></tr>
+<tr><td><a href="Pagination.html#VALright">right</a> [<a href="Pagination.html">Pagination</a>]</td>
+<td><div class="info">
+Move a pagination data to the right
 </div>
 </td></tr>
 <tr><td><a href="Dmlenu.html#VALrun">run</a> [<a href="Dmlenu.html">Dmlenu</a>]</td>
-<td><div class="info">
-<code class="code">run initial_state conf</code> creates the window and handles user inputs.
-</div>
-</td></tr>
+<td></td></tr>
 <tr><td><a href="Dmlenu.html#VALrun_list">run_list</a> [<a href="Dmlenu.html">Dmlenu</a>]</td>
 <td><div class="info">
-Same as <a href="Dmlenu.html#VALrun"><code class="code">Dmlenu.run</code></a> but returns the list of completed tokens.
+Run a program and outputs the read tokens.
 </div>
 </td></tr>
 <tr><td align="left"><br>S</td></tr>
-<tr><td><a href="Matching.html#VALset_match_query_fun">set_match_query_fun</a> [<a href="Matching.html">Matching</a>]</td>
-<td></td></tr>
-<tr><td><a href="Completion.html#VALsingleton">singleton</a> [<a href="Completion.html">Completion</a>]</td>
-<td></td></tr>
-<tr><td><a href="Completion.html#VALsingleton'">singleton'</a> [<a href="Completion.html">Completion</a>]</td>
+<tr><td><a href="State.html#VALscroll_down">scroll_down</a> [<a href="State.html">State</a>]</td>
 <td><div class="info">
-Offers the argument for completion once and then do not provide any completion
+Moves the current selection to the down (by one page)
 </div>
 </td></tr>
-<tr><td><a href="Sources.html#VALstdin">stdin</a> [<a href="Sources.html">Sources</a>]</td>
+<tr><td><a href="State.html#VALscroll_up">scroll_up</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+Moves the current selection to the up (by one page)
+</div>
+</td></tr>
+<tr><td><a href="Pagination.html#VALselected">selected</a> [<a href="Pagination.html">Pagination</a>]</td>
+<td></td></tr>
+<tr><td><a href="X.Draw.html#VALset_line">set_line</a> [<a href="X.Draw.html">X.Draw</a>]</td>
+<td><div class="info">
+Set the current line of drawing
+</div>
+</td></tr>
+<tr><td><a href="Matching.html#VALset_match_query_fun">set_match_query_fun</a> [<a href="Matching.html">Matching</a>]</td>
+<td><div class="info">
+Set the default matching function
+</div>
+</td></tr>
+<tr><td><a href="Ordering.html#VALset_reorder_matched_fun">set_reorder_matched_fun</a> [<a href="Ordering.html">Ordering</a>]</td>
+<td><div class="info">
+Set the default reordering function
+</div>
+</td></tr>
+<tr><td><a href="X.Draw.html#VALset_x">set_x</a> [<a href="X.Draw.html">X.Draw</a>]</td>
+<td><div class="info">
+sets the current X position to draw
+</div>
+</td></tr>
+<tr><td><a href="X.Low_level.html#VALsetup">setup</a> [<a href="X.Low_level.html">X.Low_level</a>]</td>
+<td></td></tr>
+<tr><td><a href="X.html#VALsetup">setup</a> [<a href="X.html">X</a>]</td>
+<td><div class="info">
+Set up X.
+</div>
+</td></tr>
+<tr><td><a href="Engine.html#VALsingleton">singleton</a> [<a href="Engine.html">Engine</a>]</td>
+<td><div class="info">
+Makes a program that completes only one token using its argument
+</div>
+</td></tr>
+<tr><td><a href="X.Low_level.html#VALsize">size</a> [<a href="X.Low_level.html">X.Low_level</a>]</td>
+<td></td></tr>
+<tr><td><a href="Source.html#VALstdin">stdin</a> [<a href="Source.html">Source</a>]</td>
 <td><div class="info">
 A source that reads its elements off stdin.
 </div>
@@ -230,15 +395,75 @@ A source that reads its elements off stdin.
     characters) is a subset of candidate (interpreted as a set of chars again).
 </div>
 </td></tr>
-<tr><td><a href="Completion.html#VALsum">sum</a> [<a href="Completion.html">Completion</a>]</td>
-<td><div class="info">
-Dependant sum.
-</div>
-</td></tr>
-<tr><td><a href="Sources.html#VALswitch">switch</a> [<a href="Sources.html">Sources</a>]</td>
+<tr><td><a href="Source.html#VALswitch">switch</a> [<a href="Source.html">Source</a>]</td>
 <td><div class="info">
 <code class="code">switch guards</code> is a source that behaves like one of the sources in
     <code class="code">guards</code>.
+</div>
+</td></tr>
+<tr><td align="left"><br>T</td></tr>
+<tr><td><a href="X.Draw.html#VALtext">text</a> [<a href="X.Draw.html">X.Draw</a>]</td>
+<td><div class="info">
+Draw some text at the current position.
+</div>
+</td></tr>
+<tr><td><a href="X.Draw.html#VALtext_hl">text_hl</a> [<a href="X.Draw.html">X.Draw</a>]</td>
+<td><div class="info">
+Draw a text by highlighting some parts of it according to <code class="code">result</code>
+</div>
+</td></tr>
+<tr><td><a href="X.html#VALtext_width">text_width</a> [<a href="X.html">X</a>]</td>
+<td><div class="info">
+Returns the width of a text
+</div>
+</td></tr>
+<tr><td><a href="Matching.html#VALtrivial">trivial</a> [<a href="Matching.html">Matching</a>]</td>
+<td><div class="info">
+<code class="code">trivial ~candidate</code> always matches its input.
+</div>
+</td></tr>
+<tr><td align="left"><br>U</td></tr>
+<tr><td><a href="State.html#VALup">up</a> [<a href="State.html">State</a>]</td>
+<td><div class="info">
+Moves the current selection to the up
+</div>
+</td></tr>
+<tr><td><a href="Source.html#VALupdate_candidates">update_candidates</a> [<a href="Source.html">Source</a>]</td>
+<td><div class="info">
+Update the candidates returned by this source
+</div>
+</td></tr>
+<tr><td><a href="Source.html#VALupdate_completion">update_completion</a> [<a href="Source.html">Source</a>]</td>
+<td><div class="info">
+Update the completion of the candidates returned by this source
+</div>
+</td></tr>
+<tr><td><a href="Source.html#VALupdate_display">update_display</a> [<a href="Source.html">Source</a>]</td>
+<td><div class="info">
+Update the display of the candidates returned by this source
+</div>
+</td></tr>
+<tr><td><a href="Source.html#VALupdate_matching">update_matching</a> [<a href="Source.html">Source</a>]</td>
+<td><div class="info">
+Update the matching function of the candidates returned by this source
+</div>
+</td></tr>
+<tr><td><a href="Source.html#VALupdate_real">update_real</a> [<a href="Source.html">Source</a>]</td>
+<td><div class="info">
+Update the real of the candidates returned by this source
+</div>
+</td></tr>
+<tr><td><a href="X.Draw.html#VALupdate_x">update_x</a> [<a href="X.Draw.html">X.Draw</a>]</td>
+<td><div class="info">
+Updates the current X position
+</div>
+</td></tr>
+<tr><td align="left"><br>W</td></tr>
+<tr><td><a href="X.Low_level.html#VALwidth">width</a> [<a href="X.Low_level.html">X.Low_level</a>]</td>
+<td></td></tr>
+<tr><td><a href="X.html#VALwidth">width</a> [<a href="X.html">X</a>]</td>
+<td><div class="info">
+Returns the width of the window
 </div>
 </td></tr>
 </table>

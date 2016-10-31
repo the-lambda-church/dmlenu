@@ -1,0 +1,64 @@
+<html><head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Candidate" rel="Chapter" href="Candidate.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
+<link title="Ordering" rel="Chapter" href="Ordering.html">
+<link title="Pagination" rel="Chapter" href="Pagination.html">
+<link title="Source" rel="Chapter" href="Source.html">
+<link title="Engine" rel="Chapter" href="Engine.html">
+<link title="State" rel="Chapter" href="State.html">
+<link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
+<link title="X" rel="Chapter" href="X.html">
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>State</title>
+</head>
+<body>
+<code class="code"><span class="keyword">sig</span>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;column&nbsp;=&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;src&nbsp;:&nbsp;<span class="constructor">Candidate</span>.t;
+&nbsp;&nbsp;&nbsp;&nbsp;pages&nbsp;:&nbsp;(<span class="constructor">Candidate</span>.t&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;<span class="constructor">Pagination</span>.t;
+&nbsp;&nbsp;}
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;layout&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">SingleLine</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">MultiLine</span>&nbsp;<span class="keyword">of</span>&nbsp;int
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Grid</span>&nbsp;<span class="keyword">of</span>&nbsp;int&nbsp;*&nbsp;<span class="constructor">State</span>.column&nbsp;option
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;nb_lines&nbsp;:&nbsp;<span class="constructor">State</span>.layout&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;t&nbsp;=&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;separator&nbsp;:&nbsp;string;
+&nbsp;&nbsp;&nbsp;&nbsp;before_cursor&nbsp;:&nbsp;string;
+&nbsp;&nbsp;&nbsp;&nbsp;after_cursor&nbsp;:&nbsp;string;
+&nbsp;&nbsp;&nbsp;&nbsp;program&nbsp;:&nbsp;<span class="constructor">Engine</span>.t;
+&nbsp;&nbsp;&nbsp;&nbsp;sources&nbsp;:&nbsp;<span class="constructor">Source</span>.state&nbsp;list;
+&nbsp;&nbsp;&nbsp;&nbsp;candidates&nbsp;:&nbsp;(<span class="constructor">Candidate</span>.t&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;<span class="constructor">Pagination</span>.t;
+&nbsp;&nbsp;&nbsp;&nbsp;entries&nbsp;:&nbsp;(<span class="constructor">Engine</span>.t&nbsp;*&nbsp;<span class="constructor">Candidate</span>.t)&nbsp;list;
+&nbsp;&nbsp;&nbsp;&nbsp;split&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Candidate</span>.t&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Candidate</span>.t&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list&nbsp;*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Candidate</span>.t&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list;
+&nbsp;&nbsp;&nbsp;&nbsp;layout&nbsp;:&nbsp;<span class="constructor">State</span>.layout;
+&nbsp;&nbsp;}
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;initial&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;separator:string&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;program:<span class="constructor">Engine</span>.t&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;layout:<span class="constructor">State</span>.layout&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;split:((<span class="constructor">Candidate</span>.t&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Candidate</span>.t&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list&nbsp;*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Candidate</span>.t&nbsp;*&nbsp;<span class="constructor">Matching</span>.result)&nbsp;list)&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">State</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;on_modify&nbsp;:&nbsp;<span class="constructor">State</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">State</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;add_char&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">State</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">State</span>.t&nbsp;*&nbsp;bool
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;complete&nbsp;:&nbsp;<span class="constructor">State</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">State</span>.t&nbsp;*&nbsp;bool
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;left&nbsp;:&nbsp;<span class="constructor">State</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">State</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;right&nbsp;:&nbsp;<span class="constructor">State</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">State</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;up&nbsp;:&nbsp;<span class="constructor">State</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">State</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;down&nbsp;:&nbsp;<span class="constructor">State</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">State</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;scroll_up&nbsp;:&nbsp;<span class="constructor">State</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">State</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;scroll_down&nbsp;:&nbsp;<span class="constructor">State</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">State</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;remove&nbsp;:&nbsp;<span class="constructor">State</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">State</span>.t&nbsp;*&nbsp;bool
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_list&nbsp;:&nbsp;<span class="constructor">State</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;list
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;normalize&nbsp;:&nbsp;<span class="constructor">State</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">State</span>.t
+<span class="keyword">end</span></code></body></html>

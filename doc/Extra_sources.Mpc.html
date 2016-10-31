@@ -8,10 +8,15 @@
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Candidate" rel="Chapter" href="Candidate.html">
 <link title="Matching" rel="Chapter" href="Matching.html">
-<link title="Completion" rel="Chapter" href="Completion.html">
+<link title="Ordering" rel="Chapter" href="Ordering.html">
+<link title="Pagination" rel="Chapter" href="Pagination.html">
+<link title="Source" rel="Chapter" href="Source.html">
+<link title="Engine" rel="Chapter" href="Engine.html">
+<link title="State" rel="Chapter" href="State.html">
 <link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
-<link title="Sources" rel="Chapter" href="Sources.html">
+<link title="X" rel="Chapter" href="X.html">
 <link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>Extra_sources.Mpc</title>
 </head>
 <body>
@@ -21,11 +26,11 @@
 
 <pre><span class="keyword">module</span> Mpc: <code class="code">sig</code> <a href="Extra_sources.Mpc.html">..</a> <code class="code">end</code></pre><hr width="100%">
 
-<pre><span id="VALcurrent_playlist"><span class="keyword">val</span> current_playlist</span> : <code class="type"><a href="Sources.html#TYPEt">Sources.t</a> Lazy.t</code></pre><div class="info ">
+<pre><span id="VALcurrent_playlist"><span class="keyword">val</span> current_playlist</span> : <code class="type"><a href="Source.html#TYPEt">Source.t</a></code></pre><div class="info ">
 List songs currently in the playlist.<br>
 </div>
 
-<pre><span id="VALplaylists"><span class="keyword">val</span> playlists</span> : <code class="type"><a href="Sources.html#TYPEt">Sources.t</a> Lazy.t</code></pre><div class="info ">
+<pre><span id="VALplaylists"><span class="keyword">val</span> playlists</span> : <code class="type"><a href="Source.html#TYPEt">Source.t</a></code></pre><div class="info ">
 List of mpc playlists. Completion can then be used with commands like
       <code class="code">mpc load</code>.<br>
 </div>
