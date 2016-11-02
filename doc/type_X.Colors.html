@@ -1,5 +1,4 @@
-<html>
-<head>
+<html><head>
 <link rel="stylesheet" href="style.css" type="text/css">
 <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
 <link rel="Start" href="index.html">
@@ -15,13 +14,17 @@
 <link title="State" rel="Chapter" href="State.html">
 <link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
 <link title="X" rel="Chapter" href="X.html">
-<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>Index of module types</title>
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>X.Colors</title>
 </head>
 <body>
-<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
-&nbsp;</div>
-<h1>Index of module types</h1>
-<table>
-</table>
-</body>
-</html>
+<code class="code"><span class="keyword">sig</span>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;t&nbsp;=&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;focus_foreground&nbsp;:&nbsp;string;
+&nbsp;&nbsp;&nbsp;&nbsp;focus_background&nbsp;:&nbsp;string;
+&nbsp;&nbsp;&nbsp;&nbsp;normal_foreground&nbsp;:&nbsp;string;
+&nbsp;&nbsp;&nbsp;&nbsp;normal_background&nbsp;:&nbsp;string;
+&nbsp;&nbsp;&nbsp;&nbsp;match_foreground&nbsp;:&nbsp;string;
+&nbsp;&nbsp;&nbsp;&nbsp;window_background&nbsp;:&nbsp;string;
+&nbsp;&nbsp;}
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;default&nbsp;:&nbsp;<span class="constructor">X</span>.<span class="constructor">Colors</span>.t
+<span class="keyword">end</span></code></body></html>

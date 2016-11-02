@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Source.html">
+<link rel="next" href="State.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Candidate" rel="Chapter" href="Candidate.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
+<link title="Ordering" rel="Chapter" href="Ordering.html">
+<link title="Pagination" rel="Chapter" href="Pagination.html">
+<link title="Source" rel="Chapter" href="Source.html">
+<link title="Engine" rel="Chapter" href="Engine.html">
+<link title="State" rel="Chapter" href="State.html">
+<link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
+<link title="X" rel="Chapter" href="X.html">
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>Engine</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Source.html" title="Source">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="State.html" title="State">Next</a>
+</div>
+<h1>Module <a href="type_Engine.html">Engine</a></h1>
+
+<pre><span class="keyword">module</span> Engine: <code class="code">sig</code> <a href="Engine.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Completion programs<br>
+</div>
+<hr width="100%">
+
+<pre><code><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.sources">sources</span>&nbsp;: <code class="type"><a href="Source.html#TYPEt">Source.t</a> list</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+The sources we currently complete against<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.transition">transition</span>&nbsp;: <code class="type"><a href="Candidate.html#TYPEt">Candidate.t</a> -> <a href="Engine.html#TYPEt">t</a></code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+The transition function.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+}
+
+<div class="info ">
+A completion program is a way to provide different completion for
+    different tokens. <code class="code">sources</code> are used to generate the possible
+    tokens and when the user has picked one, it uses <code class="code">transition</code> to
+    know how to generate the possibilities for the next token, and so on.<br>
+</div>
+
+
+<pre><span id="VALempty"><span class="keyword">val</span> empty</span> : <code class="type"><a href="Engine.html#TYPEt">t</a></code></pre><div class="info ">
+The empty program<br>
+</div>
+
+<pre><span id="VALsingleton"><span class="keyword">val</span> singleton</span> : <code class="type"><a href="Source.html#TYPEt">Source.t</a> -> <a href="Engine.html#TYPEt">t</a></code></pre><div class="info ">
+Makes a program that completes only one token using its argument<br>
+</div>
+
+<pre><span id="VALiterate"><span class="keyword">val</span> iterate</span> : <code class="type"><a href="Source.html#TYPEt">Source.t</a> list -> <a href="Engine.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">iterate sources</code> offers completions from sources, indefinitely.<br>
+</div>
+
+<pre><span id="VALconcat"><span class="keyword">val</span> concat</span> : <code class="type"><a href="Engine.html#TYPEt">t</a> -> <a href="Engine.html#TYPEt">t</a> -> <a href="Engine.html#TYPEt">t</a></code></pre><div class="info ">
+Concatenates two machines. The first one is considered done when it returns
+    [].<br>
+</div>
+
+<pre><span id="VALcsum"><span class="keyword">val</span> csum</span> : <code class="type">(string * <a href="Engine.html#TYPEt">t</a> Lazy.t) list -> <a href="Engine.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">csum l</code> offers the completion over <code class="code">List.map fst l</code> and then
+    proceeds as the chosen program.<br>
+</div>
+</body></html>

@@ -1,0 +1,246 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Engine.html">
+<link rel="next" href="Dmlenu.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Candidate" rel="Chapter" href="Candidate.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
+<link title="Ordering" rel="Chapter" href="Ordering.html">
+<link title="Pagination" rel="Chapter" href="Pagination.html">
+<link title="Source" rel="Chapter" href="Source.html">
+<link title="Engine" rel="Chapter" href="Engine.html">
+<link title="State" rel="Chapter" href="State.html">
+<link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
+<link title="X" rel="Chapter" href="X.html">
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>State</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Engine.html" title="Engine">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Dmlenu.html" title="Dmlenu">Next</a>
+</div>
+<h1>Module <a href="type_State.html">State</a></h1>
+
+<pre><span class="keyword">module</span> State: <code class="code">sig</code> <a href="State.html">..</a> <code class="code">end</code></pre><div class="info module top">
+State of the completion engine<br>
+</div>
+<hr width="100%">
+<br>
+This module defines the completion engine used by dmlenu<br>
+
+<pre><code><span id="TYPEcolumn"><span class="keyword">type</span> <code class="type"></code>column</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTcolumn.src">src</span>&nbsp;: <code class="type"><a href="Candidate.html#TYPEt">Candidate.t</a></code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTcolumn.pages">pages</span>&nbsp;: <code class="type">(<a href="Candidate.html#TYPEt">Candidate.t</a> * <a href="Matching.html#TYPEresult">Matching.result</a>) <a href="Pagination.html#TYPEt">Pagination.t</a></code>;</code></td>
+
+</tr></table>
+}
+
+
+
+<pre><code><span id="TYPElayout"><span class="keyword">type</span> <code class="type"></code>layout</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTlayout.SingleLine"><span class="constructor">SingleLine</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Display the candidates horizontally on a single line<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTlayout.MultiLine"><span class="constructor">MultiLine</span></span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Display the candidates vertically on several lines<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTlayout.Grid"><span class="constructor">Grid</span></span> <span class="keyword">of</span> <code class="type">int * <a href="State.html#TYPEcolumn">column</a> option</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+2-dimensional view. This activates a "preview" mode: the candidates are
+      displayed horizontally on a single line and vertically are show the
+      candidates who would be available if you completed the "current"
+      candidate.
+      See the examples.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+
+
+<pre><span id="VALnb_lines"><span class="keyword">val</span> nb_lines</span> : <code class="type"><a href="State.html#TYPElayout">layout</a> -> int</code></pre>
+<pre><code><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.separator">separator</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+The separator between tokens<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.before_cursor">before_cursor</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+The input before the cursor<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.after_cursor">after_cursor</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+The input after the cursor<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.program">program</span>&nbsp;: <code class="type"><a href="Engine.html#TYPEt">Engine.t</a></code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+The current program we are running<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.sources">sources</span>&nbsp;: <code class="type"><a href="Source.html#TYPEstate">Source.state</a> list</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+The current sources of tokens<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.candidates">candidates</span>&nbsp;: <code class="type">(<a href="Candidate.html#TYPEt">Candidate.t</a> * <a href="Matching.html#TYPEresult">Matching.result</a>) <a href="Pagination.html#TYPEt">Pagination.t</a></code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+The current candidates for tokens<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.entries">entries</span>&nbsp;: <code class="type">(<a href="Engine.html#TYPEt">Engine.t</a> * <a href="Candidate.html#TYPEt">Candidate.t</a>) list</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+The tokens we have read so far and the past program so we can go back there if we need to.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.split">split</span>&nbsp;: <code class="type">(<a href="Candidate.html#TYPEt">Candidate.t</a> * <a href="Matching.html#TYPEresult">Matching.result</a>) list -><br>       (<a href="Candidate.html#TYPEt">Candidate.t</a> * <a href="Matching.html#TYPEresult">Matching.result</a>) list * (<a href="Candidate.html#TYPEt">Candidate.t</a> * <a href="Matching.html#TYPEresult">Matching.result</a>) list</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+How to know how many token candidates we can display<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.layout">layout</span>&nbsp;: <code class="type"><a href="State.html#TYPElayout">layout</a></code>;</code></td>
+
+</tr></table>
+}
+
+<div class="info ">
+The type of state the engine<br>
+</div>
+
+
+<pre><span id="VALinitial"><span class="keyword">val</span> initial</span> : <code class="type">separator:string -><br>       program:<a href="Engine.html#TYPEt">Engine.t</a> -><br>       layout:<a href="State.html#TYPElayout">layout</a> -><br>       split:((<a href="Candidate.html#TYPEt">Candidate.t</a> * <a href="Matching.html#TYPEresult">Matching.result</a>) list -><br>              (<a href="Candidate.html#TYPEt">Candidate.t</a> * <a href="Matching.html#TYPEresult">Matching.result</a>) list *<br>              (<a href="Candidate.html#TYPEt">Candidate.t</a> * <a href="Matching.html#TYPEresult">Matching.result</a>) list) -><br>       <a href="State.html#TYPEt">t</a></code></pre><div class="info ">
+Creates an initial state out of a separator a program, and split functions<br>
+</div>
+
+<pre><span id="VALon_modify"><span class="keyword">val</span> on_modify</span> : <code class="type"><a href="State.html#TYPEt">t</a> -> <a href="State.html#TYPEt">t</a></code></pre><div class="info ">
+Function to be called whenever the input is modified to recompute
+    candidates. It will reset the selected candidates too.<br>
+</div>
+
+<pre><span id="VALadd_char"><span class="keyword">val</span> add_char</span> : <code class="type">string -> <a href="State.html#TYPEt">t</a> -> <a href="State.html#TYPEt">t</a> * bool</code></pre><div class="info ">
+Add a char to the current input. If the char is a separator and we
+    are done completing, it also completes the token, in that case the boolean returned is true<br>
+</div>
+
+<pre><span id="VALcomplete"><span class="keyword">val</span> complete</span> : <code class="type"><a href="State.html#TYPEt">t</a> -> <a href="State.html#TYPEt">t</a> * bool</code></pre><div class="info ">
+Tries to complete the current selected candidate. Returns true whenever we moved to a new token.<br>
+</div>
+
+<pre><span id="VALleft"><span class="keyword">val</span> left</span> : <code class="type"><a href="State.html#TYPEt">t</a> -> <a href="State.html#TYPEt">t</a></code></pre><div class="info ">
+Moves the current selection to the left<br>
+</div>
+
+<pre><span id="VALright"><span class="keyword">val</span> right</span> : <code class="type"><a href="State.html#TYPEt">t</a> -> <a href="State.html#TYPEt">t</a></code></pre><div class="info ">
+Moves the current selection to the right<br>
+</div>
+<br>
+Moves right<br>
+
+<pre><span id="VALup"><span class="keyword">val</span> up</span> : <code class="type"><a href="State.html#TYPEt">t</a> -> <a href="State.html#TYPEt">t</a></code></pre><div class="info ">
+Moves the current selection to the up<br>
+</div>
+
+<pre><span id="VALdown"><span class="keyword">val</span> down</span> : <code class="type"><a href="State.html#TYPEt">t</a> -> <a href="State.html#TYPEt">t</a></code></pre><div class="info ">
+Moves the current selection to the down<br>
+</div>
+
+<pre><span id="VALscroll_up"><span class="keyword">val</span> scroll_up</span> : <code class="type"><a href="State.html#TYPEt">t</a> -> <a href="State.html#TYPEt">t</a></code></pre><div class="info ">
+Moves the current selection to the up (by one page)<br>
+</div>
+
+<pre><span id="VALscroll_down"><span class="keyword">val</span> scroll_down</span> : <code class="type"><a href="State.html#TYPEt">t</a> -> <a href="State.html#TYPEt">t</a></code></pre><div class="info ">
+Moves the current selection to the down (by one page)<br>
+</div>
+
+<pre><span id="VALremove"><span class="keyword">val</span> remove</span> : <code class="type"><a href="State.html#TYPEt">t</a> -> <a href="State.html#TYPEt">t</a> * bool</code></pre><div class="info ">
+Simulate a backspace. The boolean tells you whether the current token has changed<br>
+</div>
+
+<pre><span id="VALget_list"><span class="keyword">val</span> get_list</span> : <code class="type"><a href="State.html#TYPEt">t</a> -> string list</code></pre><div class="info ">
+Returns the value of all tokens currently accumulated<br>
+</div>
+
+<pre><span id="VALnormalize"><span class="keyword">val</span> normalize</span> : <code class="type"><a href="State.html#TYPEt">t</a> -> <a href="State.html#TYPEt">t</a></code></pre><div class="info ">
+Normalize the pagination for candidates<br>
+</div>
+</body></html>

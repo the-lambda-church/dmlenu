@@ -1,0 +1,34 @@
+<html><head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Candidate" rel="Chapter" href="Candidate.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
+<link title="Ordering" rel="Chapter" href="Ordering.html">
+<link title="Pagination" rel="Chapter" href="Pagination.html">
+<link title="Source" rel="Chapter" href="Source.html">
+<link title="Engine" rel="Chapter" href="Engine.html">
+<link title="State" rel="Chapter" href="State.html">
+<link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
+<link title="X" rel="Chapter" href="X.html">
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>X.Low_level</title>
+</head>
+<body>
+<code class="code"><span class="keyword">sig</span>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;setup&nbsp;:&nbsp;bool&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit&nbsp;=&nbsp;<span class="string">"caml_setup"</span>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;quit&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit&nbsp;=&nbsp;<span class="string">"caml_xquit"</span>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;width&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;=&nbsp;<span class="string">"caml_width"</span>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;grabkeys&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;=&nbsp;<span class="string">"caml_grabkeyboard"</span>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;next_event&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;*&nbsp;string&nbsp;=&nbsp;<span class="string">"caml_next_event"</span>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;draw_text&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;*&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;(bool&nbsp;*&nbsp;int&nbsp;*&nbsp;int)&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;*&nbsp;string&nbsp;*&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"caml_drawtext"</span>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mapdc&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit&nbsp;=&nbsp;<span class="string">"caml_mapdc"</span>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;size&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;=&nbsp;<span class="string">"caml_size"</span>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;clear&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit&nbsp;=&nbsp;<span class="string">"caml_clear"</span>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;resize&nbsp;:&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit&nbsp;=&nbsp;<span class="string">"caml_resize"</span>
+<span class="keyword">end</span></code></body></html>

@@ -1,0 +1,38 @@
+<html><head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Candidate" rel="Chapter" href="Candidate.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
+<link title="Ordering" rel="Chapter" href="Ordering.html">
+<link title="Pagination" rel="Chapter" href="Pagination.html">
+<link title="Source" rel="Chapter" href="Source.html">
+<link title="Engine" rel="Chapter" href="Engine.html">
+<link title="State" rel="Chapter" href="State.html">
+<link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
+<link title="X" rel="Chapter" href="X.html">
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>Pagination</title>
+</head>
+<body>
+<code class="code"><span class="keyword">sig</span>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;t&nbsp;=&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;unvisible_left&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;list;
+&nbsp;&nbsp;&nbsp;&nbsp;visible&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;list;
+&nbsp;&nbsp;&nbsp;&nbsp;selected&nbsp;:&nbsp;int;
+&nbsp;&nbsp;&nbsp;&nbsp;unvisible_right&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;list;
+&nbsp;&nbsp;&nbsp;&nbsp;split&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;list&nbsp;*&nbsp;<span class="keywordsign">'</span>a&nbsp;list;
+&nbsp;&nbsp;}
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;all&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Pagination</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;list
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;from_list&nbsp;:
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="keywordsign">'</span>a&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;list&nbsp;*&nbsp;<span class="keywordsign">'</span>a&nbsp;list)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Pagination</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;left&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Pagination</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Pagination</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;right&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Pagination</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Pagination</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;page_left&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Pagination</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Pagination</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;page_right&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Pagination</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Pagination</span>.t
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;fold_visible&nbsp;:&nbsp;(<span class="keywordsign">'</span>b&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>b)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>b&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Pagination</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>b
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;is_empty&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Pagination</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;selected&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Pagination</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a
+<span class="keyword">end</span></code></body></html>

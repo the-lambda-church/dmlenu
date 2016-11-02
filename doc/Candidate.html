@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="next" href="Matching.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Candidate" rel="Chapter" href="Candidate.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
+<link title="Ordering" rel="Chapter" href="Ordering.html">
+<link title="Pagination" rel="Chapter" href="Pagination.html">
+<link title="Source" rel="Chapter" href="Source.html">
+<link title="Engine" rel="Chapter" href="Engine.html">
+<link title="State" rel="Chapter" href="State.html">
+<link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
+<link title="X" rel="Chapter" href="X.html">
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>Candidate</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Matching.html" title="Matching">Next</a>
+</div>
+<h1>Module <a href="type_Candidate.html">Candidate</a></h1>
+
+<pre><span class="keyword">module</span> Candidate: <code class="code">sig</code> <a href="Candidate.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Type of candidates<br>
+</div>
+<hr width="100%">
+
+<pre><code><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.display">display</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+How to display the candidate to the user.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.real">real</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+What information it represents<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.doc">doc</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Additional information that may be displayed to the user.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.completion">completion</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+What should become of the inputbox after the user tried to
+      complete on that one.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.matching_function">matching_function</span>&nbsp;: <code class="type"><a href="Matching.html#TYPEt">Matching.t</a></code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+How to know if the user's input matches this candidate<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+}
+
+<div class="info ">
+The type of candidates.
+<p>
+
+    A candidate is a possibility for completion or matching returned
+    by sources. In dmenu, candidates were only strings but now we add
+    more structure to differentiate the information and the way it
+    should be matched or displayed to the user.<br>
+</div>
+
+
+<pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">?real:string -><br>       ?doc:string -><br>       ?matching_function:<a href="Matching.html#TYPEt">Matching.t</a> -> ?completion:string -> string -> <a href="Candidate.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">make ~real ~doc ~matching_function ~completion display</code>
+    creates a new candidate. The default values are:<ul>
+<li>real, completion: <code class="code">display</code></li>
+<li>doc: <code class="code">""</code></li>
+<li>matching_function: <code class="code">Matching.match_query ~candidate</code></li>
+</ul>
+<br>
+</div>
+</body></html>

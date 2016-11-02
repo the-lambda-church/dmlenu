@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="X.Events.html">
+<link rel="next" href="X.Low_level.html">
+<link rel="Up" href="X.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Candidate" rel="Chapter" href="Candidate.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
+<link title="Ordering" rel="Chapter" href="Ordering.html">
+<link title="Pagination" rel="Chapter" href="Pagination.html">
+<link title="Source" rel="Chapter" href="Source.html">
+<link title="Engine" rel="Chapter" href="Engine.html">
+<link title="State" rel="Chapter" href="State.html">
+<link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
+<link title="X" rel="Chapter" href="X.html">
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><title>X.Draw</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="X.Events.html" title="X.Events">Previous</a>
+&nbsp;<a class="up" href="X.html" title="X">Up</a>
+&nbsp;<a class="post" href="X.Low_level.html" title="X.Low_level">Next</a>
+</div>
+<h1>Module <a href="type_X.Draw.html">X.Draw</a></h1>
+
+<pre><span class="keyword">module</span> Draw: <code class="code">sig</code> <a href="X.Draw.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Low-level interface<br>
+</div>
+<hr width="100%">
+<br>
+Drawing text<br>
+
+<pre><span id="VALset_line"><span class="keyword">val</span> set_line</span> : <code class="type">state:<a href="X.html#TYPEstate">X.state</a> -> line:int -> unit</code></pre><div class="info ">
+Set the current line of drawing<br>
+</div>
+
+<pre><span id="VALset_x"><span class="keyword">val</span> set_x</span> : <code class="type">state:<a href="X.html#TYPEstate">X.state</a> -> x:int -> unit</code></pre><div class="info ">
+sets the current X position to draw<br>
+</div>
+
+<pre><span id="VALupdate_x"><span class="keyword">val</span> update_x</span> : <code class="type">state:<a href="X.html#TYPEstate">X.state</a> -> (int -> int) -> unit</code></pre><div class="info ">
+Updates the current X position<br>
+</div>
+
+<pre><span id="VALtext"><span class="keyword">val</span> text</span> : <code class="type">state:<a href="X.html#TYPEstate">X.state</a> -><br>       focus:bool -> ('a, unit, string, unit) Pervasives.format4 -> 'a</code></pre><div class="info ">
+Draw some text at the current position. <code class="code">focus</code> is used to
+        know which colors to use<br>
+</div>
+
+<pre><span id="VALtext_hl"><span class="keyword">val</span> text_hl</span> : <code class="type">state:<a href="X.html#TYPEstate">X.state</a> -> result:<a href="Matching.html#TYPEresult">Matching.result</a> -> focus:bool -> string -> unit</code></pre><div class="info ">
+Draw a text by highlighting some parts of it according to <code class="code">result</code><br>
+</div>
+
+<pre><span id="VALclear"><span class="keyword">val</span> clear</span> : <code class="type">state:<a href="X.html#TYPEstate">X.state</a> -> unit</code></pre><div class="info ">
+Clear the screen with the background<br>
+</div>
+
+<pre><span id="VALclear_line"><span class="keyword">val</span> clear_line</span> : <code class="type">int -> string -> unit</code></pre>
+<pre><span id="VALmap"><span class="keyword">val</span> map</span> : <code class="type">state:<a href="X.html#TYPEstate">X.state</a> -> unit</code></pre><div class="info ">
+Map the window on the screen<br>
+</div>
+</body></html>

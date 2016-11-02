@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Pagination.html">
+<link rel="next" href="Engine.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Candidate" rel="Chapter" href="Candidate.html">
+<link title="Matching" rel="Chapter" href="Matching.html">
+<link title="Ordering" rel="Chapter" href="Ordering.html">
+<link title="Pagination" rel="Chapter" href="Pagination.html">
+<link title="Source" rel="Chapter" href="Source.html">
+<link title="Engine" rel="Chapter" href="Engine.html">
+<link title="State" rel="Chapter" href="State.html">
+<link title="Dmlenu" rel="Chapter" href="Dmlenu.html">
+<link title="X" rel="Chapter" href="X.html">
+<link title="Extra_sources" rel="Chapter" href="Extra_sources.html"><link title="Examples of sources and source builders" rel="Section" href="#2_Examplesofsourcesandsourcebuilders">
+<title>Source</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Pagination.html" title="Pagination">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Engine.html" title="Engine">Next</a>
+</div>
+<h1>Module <a href="type_Source.html">Source</a></h1>
+
+<pre><span class="keyword">module</span> Source: <code class="code">sig</code> <a href="Source.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Sources of candidates<br>
+</div>
+<hr width="100%">
+
+<pre><code><span id="TYPEt_open"><span class="keyword">type</span> <code class="type">'a</code> t_open</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt_open.delay">delay</span>&nbsp;: <code class="type">bool</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Should we wait for the user to stop typing before trying to
+      compute the candidates ?<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt_open.default_state">default_state</span>&nbsp;: <code class="type">'a</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+The state the source should start in.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt_open.compute">compute</span>&nbsp;: <code class="type">'a -> string -> 'a * <a href="Candidate.html#TYPEt">Candidate.t</a> list</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+computes the list of candidates and the new state out of the
+      current state and the current user input.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+}
+
+<div class="info ">
+A source is a way to produce candidates from the user input.<br>
+</div>
+
+
+<pre><code><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTt.S"><span class="constructor">S</span></span> <span class="keyword">:</span> <code class="type">'a <a href="Source.html#TYPEt_open">t_open</a></code> <span class="keyword">-></span> <code class="type"><a href="Source.html#TYPEt">t</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Existential closure of <a href="Source.html#TYPEt_open"><code class="code">Source.t_open</code></a><br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+
+
+<pre><code><span id="TYPEstate"><span class="keyword">type</span> <code class="type"></code>state</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstate.ST"><span class="constructor">ST</span></span> <span class="keyword">:</span> <code class="type">'a * 'a <a href="Source.html#TYPEt_open">t_open</a></code> <span class="keyword">-></span> <code class="type"><a href="Source.html#TYPEstate">state</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+A source and a state bundled together<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+
+
+<pre><span id="VALinitialize"><span class="keyword">val</span> initialize</span> : <code class="type"><a href="Source.html#TYPEt">t</a> -> <a href="Source.html#TYPEstate">state</a></code></pre><div class="info ">
+Initialize a source to its default state<br>
+</div>
+<br>
+<h2 id="2_Examplesofsourcesandsourcebuilders">Examples of sources and source builders</h2><br>
+
+<pre><span id="VALfiles"><span class="keyword">val</span> files</span> : <code class="type">?filter:(string -> bool) -> string -> <a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+A source that completes filenames in a given directory (or
+    absolute filenames). 
+<p>
+
+    The <code class="code">filter</code> function is used to exclude some files from the
+    completion. It is given the absolute path.<br>
+</div>
+
+<pre><span id="VALfrom_list"><span class="keyword">val</span> from_list</span> : <code class="type">(string * string * string) list -> <a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+A source built from a list of candidates of the form <code class="code">(display,
+    real, documentation)</code>. See <a href="Candidate.html#TYPEt"><code class="code">Candidate.t</code></a> for more information about
+    them.<br>
+</div>
+
+<pre><span id="VALfrom_list_lazy"><span class="keyword">val</span> from_list_lazy</span> : <code class="type">(string * string * string) list Lazy.t -> <a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+Same as <a href="Source.html#VALfrom_list"><code class="code">Source.from_list</code></a> but expects a non-evaluated list.<br>
+</div>
+
+<pre><span id="VALfrom_list_lazy_"><span class="keyword">val</span> from_list_lazy_</span> : <code class="type">string list Lazy.t -> <a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+Same as <a href="Source.html#VALfrom_list_"><code class="code">Source.from_list_</code></a> but expects a non-evaluated list.<br>
+</div>
+
+<pre><span id="VALfrom_list_rev"><span class="keyword">val</span> from_list_rev</span> : <code class="type">(string * string * string) list -> <a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+Same as <a href="Source.html#VALfrom_list"><code class="code">Source.from_list</code></a> but reverses the list in the process<br>
+</div>
+
+<pre><span id="VALfrom_list_"><span class="keyword">val</span> from_list_</span> : <code class="type">string list -> <a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+Same as <a href="Source.html#VALfrom_list"><code class="code">Source.from_list</code></a> but identifies real and display, and set
+    documentation to the empty string.<br>
+</div>
+
+<pre><span id="VALfrom_list_rev_"><span class="keyword">val</span> from_list_rev_</span> : <code class="type">string list -> <a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+Same as <a href="Source.html#VALfrom_list_"><code class="code">Source.from_list_</code></a> but reverses its argument.<br>
+</div>
+
+<pre><span id="VALbinaries"><span class="keyword">val</span> binaries</span> : <code class="type"><a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+A source that list all the binaries in your PATH. 
+<p>
+
+    The display is the binary name and the display its absolute path.<br>
+</div>
+
+<pre><span id="VALswitch"><span class="keyword">val</span> switch</span> : <code class="type">((string -> bool) * <a href="Source.html#TYPEt">t</a> Lazy.t) list -> <a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">switch guards</code> is a source that behaves like one of the sources in
+    <code class="code">guards</code>. To know what it source it behave like, it applies the
+    predicate to the input and uses the first matching source.<br>
+</div>
+
+<pre><span id="VALempty"><span class="keyword">val</span> empty</span> : <code class="type"><a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+The empty source.<br>
+</div>
+
+<pre><span id="VALpaths"><span class="keyword">val</span> paths</span> : <code class="type">coupled_with:<a href="Source.html#TYPEt">t</a> -> <a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+A source that complete like <code class="code">coupled_with</code> except when what is before the
+    cursor is (syntactically) a path, i.e. start with "/", "~/", or "./"<br>
+</div>
+
+<pre><span id="VALstdin"><span class="keyword">val</span> stdin</span> : <code class="type">?sep:string -> unit -> <a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+A source that reads its elements off stdin. If separator is not
+    supplied, then there is a candidate per line and the real and
+    display fields of the candidate is the same.  If it is supplied,
+    then lines are split wrt it and the first part is used as the
+    display and the second part as the real.<br>
+</div>
+
+<pre><span id="VALupdate_candidates"><span class="keyword">val</span> update_candidates</span> : <code class="type">(<a href="Candidate.html#TYPEt">Candidate.t</a> -> <a href="Candidate.html#TYPEt">Candidate.t</a>) -> <a href="Source.html#TYPEt">t</a> -> <a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+Update the candidates returned by this source<br>
+</div>
+
+<pre><span id="VALupdate_matching"><span class="keyword">val</span> update_matching</span> : <code class="type">(<a href="Matching.html#TYPEt">Matching.t</a> -> <a href="Matching.html#TYPEt">Matching.t</a>) -> <a href="Source.html#TYPEt">t</a> -> <a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+Update the matching function of the candidates returned by this source<br>
+</div>
+
+<pre><span id="VALupdate_completion"><span class="keyword">val</span> update_completion</span> : <code class="type">(string -> string) -> <a href="Source.html#TYPEt">t</a> -> <a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+Update the completion of the candidates returned by this source<br>
+</div>
+
+<pre><span id="VALupdate_display"><span class="keyword">val</span> update_display</span> : <code class="type">(string -> string) -> <a href="Source.html#TYPEt">t</a> -> <a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+Update the display of the candidates returned by this source<br>
+</div>
+
+<pre><span id="VALupdate_real"><span class="keyword">val</span> update_real</span> : <code class="type">(string -> string) -> <a href="Source.html#TYPEt">t</a> -> <a href="Source.html#TYPEt">t</a></code></pre><div class="info ">
+Update the real of the candidates returned by this source<br>
+</div>
+</body></html>
