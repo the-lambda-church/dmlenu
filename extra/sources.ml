@@ -82,7 +82,7 @@ let from_file source_name =
   let prefix = Sys.getenv "HOME" / ".config/dmlenu" in
   let file = prefix / source_name  in
   if Sys.file_exists file then
-    Source.from_list_ Batteries.(File.lines_of file |> List.of_enum)
+    Source.from_list_ (Stdio.In_channel.read_lines file)
   else
     Source.empty
 

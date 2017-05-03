@@ -1,4 +1,4 @@
-open Batteries
+open Base
 
 type t = {
   display: string;
@@ -10,8 +10,8 @@ type t = {
 
 let make ?real ?(doc = "") ?matching_function ?completion display : t = {
   display; doc;
-  real = Option.default display real;
-  completion = Option.default display completion;
+  real = Option.value ~default:display real;
+  completion = Option.value ~default:display completion;
   matching_function =
-    Option.default (Matching.match_query ~candidate: display) matching_function;
+    Option.value ~default:(Matching.match_query ~candidate: display) matching_function;
 }

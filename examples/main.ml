@@ -1,16 +1,16 @@
-open Batteries
+open Base
 open Cmdliner
 open Dmlenu
 open Candidate
 
 module Parameter = struct
     let normal_background_default =
-      try Sys.getenv "DMENU_NORMAL_BACKGROUND" with _ -> "#222222"
+      try Caml.Sys.getenv "DMENU_NORMAL_BACKGROUND" with _ -> "#222222"
     let normal_foreground_default =
-      try Sys.getenv "DMENU_NORMAL_FOREGROUND" with _ -> "#bbbbbb"
-    let focus_background_default = try Sys.getenv "DMENU_FOCUS_BACKGROUND" with _ -> "#005577"
-    let focus_foreground_default = try Sys.getenv "DMENU_FOCUS_FOREGROUND" with _ -> "#eeeeee"
-    let match_foreground_default = try Sys.getenv "DMENU_FOCUS_FOREGROUND_MATCH" with _ -> "#ff0000"
+      try Caml.Sys.getenv "DMENU_NORMAL_FOREGROUND" with _ -> "#bbbbbb"
+    let focus_background_default = try Caml.Sys.getenv "DMENU_FOCUS_BACKGROUND" with _ -> "#005577"
+    let focus_foreground_default = try Caml.Sys.getenv "DMENU_FOCUS_FOREGROUND" with _ -> "#eeeeee"
+    let match_foreground_default = try Caml.Sys.getenv "DMENU_FOCUS_FOREGROUND_MATCH" with _ -> "#ff0000"
 
     let window_background = "#000000"
 
@@ -57,7 +57,7 @@ end
 
 let run prompt stdin botbar focus_foreground focus_background normal_foreground
       normal_background match_foreground window_background lines =
-  let () = Matching.(set_match_query_fun @@ subset ~case:false) in
+  let () = Matching.(set_match_query_fun (subset ~case:false)) in
   let () = Ordering.(set_reorder_matched_fun prefixes_first) in
   let colors = { X.Colors.focus_foreground; focus_background;
                  normal_foreground; normal_background; match_foreground; window_background } in
@@ -75,7 +75,7 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
   in
   match App.run ~prompt ~layout ~topbar:(not botbar) ~colors program with
   | None -> ()
-  | Some s -> print_endline s
+  | Some s -> Stdio.print_endline s
 
 let info =
   let doc = "print a menu with customizable completion" in
@@ -92,5 +92,5 @@ let dmlenu =
 
 let _ =
   match Term.eval (dmlenu, info) with
-  | `Error _ -> exit 1
-  | _ -> exit 0
+  | `Error _ -> Caml.exit 1
+  | _ -> Caml.exit 0

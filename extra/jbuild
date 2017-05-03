@@ -3,4 +3,4 @@
 (library
  ((name dmlenu_extra)
   (public_name dmlenu_extra)
-  (libraries (dmlenu yojson))))
+  (libraries (dmlenu stdio yojson))))

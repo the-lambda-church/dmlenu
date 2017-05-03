@@ -1,4 +1,6 @@
-open Batteries
+module O = Ordering
+
+open Base
 open Candidate
 
 type column = {
@@ -27,9 +29,7 @@ let nb_lines = function
   | SingleLine  | Grid (_, None) -> 0
   | MultiLine n | Grid (n, _)    -> n
 
-let take lines a =
-  if List.length a < lines then a, []
-  else List.split_at lines a
+let take lines a = List.split_n a lines
 
 let split_function state =
   match state.layout with
@@ -39,13 +39,13 @@ let split_function state =
 
 let update_sources ?(input="") split sources =
   let r = ref [] in
-  let sources = sources |> List.map (fun (Source.ST (state, s)) ->
+  let sources = sources |> List.map ~f:(fun (Source.ST (state, s)) ->
     let state', candidates = s.Source.compute state input in
-    let test c = Option.map (fun x -> c, x) (c.matching_function input) in
-    r := !r @ List.filter_map test candidates; (* !r is empty most of the times *)
+    let test c = Option.map ~f:(fun x -> c, x) (c.matching_function input) in
+    r := !r @ List.filter_map ~f:test candidates; (* !r is empty most of the times *)
     Source.ST (state', s))
   in
-  sources, Pagination.from_list split (Ordering.reorder_matched !r)
+  sources, Pagination.from_list split (O.reorder_matched !r)
 
 let update_layout state candidates =
   match state.layout with
@@ -53,10 +53,10 @@ let update_layout state candidates =
     begin try
       let candidate, _ = Pagination.selected candidates in
       match column with
-      | Some c when c.src.display = candidate.display -> state.layout
+      | Some c when String.equal c.src.display candidate.display -> state.layout
       | _ ->
         let next_program = state.program.Engine.transition candidate in
-        let next_sources = List.map Source.initialize next_program.Engine.sources in
+        let next_sources = List.map ~f:Source.initialize next_program.Engine.sources in
         let _, pages = update_sources (take n) next_sources in
         Grid (n, Some { src = candidate ; pages = pages })
     with
@@ -79,7 +79,7 @@ let initial ~separator ~program ~layout ~split =
     split; layout; separator; program;
     before_cursor = ""; after_cursor = "";
     entries = [];
-    sources = List.map Source.initialize program.Engine.sources;
+    sources = List.map ~f:Source.initialize program.Engine.sources;
     candidates = Pagination.from_list (if lines > 0 then take lines else split) [];
   }
 
@@ -89,7 +89,7 @@ let next_entry candidate state =
   on_modify { state with
     before_cursor = "";
     after_cursor = "";
-    sources = List.map Source.initialize sources;
+    sources = List.map ~f:Source.initialize sources;
     candidates = Pagination.from_list (split_function state) [];
     separator = state.separator;
     program;
@@ -103,7 +103,7 @@ let complete state =
       state with before_cursor = candidate.completion; after_cursor = ""
     } in
     if Pagination.all state'.candidates |>
-        List.exists (fun (x, _) -> x.real = candidate.real)
+        List.exists ~f:(fun (x, _) -> String.equal x.real candidate.real)
     then
       next_entry candidate state, true
     else
@@ -116,10 +116,10 @@ let add_char s state =
     on_modify { state with before_cursor = state.before_cursor ^ s }
   in
   try
-    let first = fst @@ Pagination.selected state.candidates in
+    let first = fst (Pagination.selected state.candidates) in
     if
-      s = state.separator && state.after_cursor = "" &&
-      state.before_cursor ^ state.after_cursor = first.display
+      String.equal s state.separator && String.is_empty state.after_cursor &&
+      String.equal (state.before_cursor ^ state.after_cursor) first.display
     then
       complete state
     else
@@ -146,7 +146,7 @@ let up state =
 let scroll_up state =
   let page_left p =
     let tmp = Pagination.page_left p in
-    if tmp != p then tmp else Pagination.({ p with selected = 0 })
+    if not (phys_equal tmp p) then tmp else Pagination.({ p with selected = 0 })
   in
   match state.layout with
   | Grid (_, None) -> state
@@ -174,7 +174,7 @@ let down state =
 let scroll_down state =
   let page_right p =
     let tmp = Pagination.page_right p in
-    if tmp != p then tmp else
+    if not (phys_equal tmp p) then tmp else
     Pagination.({ p with selected = List.length p.visible - 1 })
   in
   match state.layout with
@@ -185,17 +185,19 @@ let scroll_down state =
   | _ -> { state with candidates = page_right state.candidates }
 
 let remove state =
-  if state.before_cursor = "" then
+  if String.is_empty state.before_cursor then
     match List.rev state.entries with
     | [] -> state, false
     | ({ Engine.sources ; _ } as program, _) :: rest ->
       on_modify { state with
         before_cursor = ""; after_cursor = ""; program;
-        sources = List.map Source.initialize sources;
+        sources = List.map ~f:Source.initialize sources;
         entries = List.rev rest
       }, true
   else
-  on_modify { state with before_cursor = String.rchop state.before_cursor }, false
+    on_modify
+      { state with before_cursor = String.drop_suffix state.before_cursor 1},
+    false
 
 let get_list state =
   let s =
@@ -204,8 +206,12 @@ let get_list state =
     else
       (fst (Pagination.selected state.candidates)).real
   in
-  let l = if state.before_cursor ^ state.after_cursor = "" then [] else [ s ] in
-  List.map (fun (_, s) -> s.real) state.entries @ l
+  let l =
+    if String.is_empty (state.before_cursor ^ state.after_cursor)
+    then []
+    else [ s ]
+  in
+  List.map ~f:(fun (_, s) -> s.real) state.entries @ l
 
 let normalize state =
   { state with

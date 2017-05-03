@@ -3,6 +3,6 @@
 (library
  ((name dmlenu)
   (public_name dmlenu)
-  (libraries (batteries lwt))
+  (libraries (base lwt stdio str))
   (c_library_flags (-lX11))
   (c_names (draw_funs draw_stubs))))

@@ -70,7 +70,7 @@ val paths : coupled_with:t -> t
 (** A source that complete like [coupled_with] except when what is before the
     cursor is (syntactically) a path, i.e. start with "/", "~/", or "./" *)
 
-val stdin : ?sep:string -> unit -> t
+val stdin : ?sep:char -> unit -> t
 (** A source that reads its elements off stdin. If separator is not
     supplied, then there is a candidate per line and the real and
     display fields of the candidate is the same.  If it is supplied,
