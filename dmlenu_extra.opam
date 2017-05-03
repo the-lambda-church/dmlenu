@@ -1,0 +1,20 @@
+opam-version: "1.2"
+name: "dmlenu_extra"
+version: "0.1"
+maintainer: "opam-devel@lists.ocaml.org"
+authors: [ "Simon Castellan"
+           "Thomas Refis" ]
+license: "MIT"
+homepage: "http://the-lambda-church.github.io/dmlenu/"
+dev-repo: "https://github.com/the-lambda-church/dmlenu.git"
+bug-reports: "https://github.com/the-lambda-church/dmlenu/issues"
+doc: "http://the-lambda-church.github.io/dmlenu/doc"
+build: [
+  ["jbuilder" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "dmlenu"
+  "yojson"
+  "jbuilder" {build}
+]
+available: [ ocaml-version >= "4.00.1" ]

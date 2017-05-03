@@ -3,29 +3,25 @@ A library to easily create dmenu-like applications.
 Dependencies
 ------------
 
-- Oasis
-- Batteries
+- jbuilder (build)
+- Base
+- Stdio
 - Yojson (optional)
 - Cmdliner (optional, needed only to build the examples)
 
-Building and installing
+Building
 -----------------------
 
-    $ oasis setup
-    $ ./configure [options]
     $ make
-    $ make install
 
 Examples
 --------
 
-In the `examples/` directory. They can be built using:
+In the `examples/` directory. They can be built (from the root of the repo) using:
 
-    $ ./configure --enable-examples # optionally: --enable-extra
-    $ make
+    $ make examples
 
 Documentation
 -------------
 
-Once `oasis setup` has run, just call `make doc`.
-Or just go to : http://the-lambda-church.github.io/dmlenu/
+http://the-lambda-church.github.io/dmlenu/ (might be outdated)

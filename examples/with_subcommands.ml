@@ -1,25 +1,26 @@
+open Dmlenu
 open Candidate
 
-let stm = 
+let stm =
   let open Engine in
   {
     sources = [ Source.binaries ] ;
     transition =
       fun cmd ->
         if cmd.display = "chromium" then
-          iterate [ Extra_sources.chromium_bookmarks ]
+          iterate [ Dmlenu_extra.Sources.chromium_bookmarks ]
         else {
-          sources = [ Extra_sources.from_file cmd.display ] ;
+          sources = [ Dmlenu_extra.Sources.from_file cmd.display ] ;
           transition = fun arg ->
             if cmd.display = "mpc" && arg.display = "load" then
-              iterate [ Extra_sources.Mpc.playlists ]
+              iterate [ Dmlenu_extra.Sources.Mpc.playlists ]
             else
-              Extra_sources.stm_from_file (cmd.display ^ arg.display)
+              Dmlenu_extra.Sources.stm_from_file (cmd.display ^ arg.display)
         }
   }
 
 let run =
-  let open Dmlenu in
+  let open App in
   let hook state =
     let source_name =
       List.map (fun (_, c) -> c.display) state.state.State.entries |>

@@ -1,7 +1,9 @@
 (** More specific sources.
-  
+
     These are environment dependent, and require yojson to compile. They are
     shipped with the [dmlenu.extra] findlib package. *)
+
+open Dmlenu
 
 val chromium_bookmarks : Source.t
 (** Offers completion on bookmarks names, and returns the bookmark url. *)

@@ -1,6 +1,8 @@
 open Batteries
 open Cmdliner
+open Dmlenu
 open Candidate
+
 module Parameter = struct
     let normal_background_default =
       try Sys.getenv "DMENU_NORMAL_BACKGROUND" with _ -> "#222222"
@@ -34,7 +36,7 @@ module Parameter = struct
 
     let match_foreground =
       let doc = "Color to display matches inside candidates" in
-      Arg.(value & opt string match_foreground_default & info ["ff"] ~docv: "mf" ~doc)
+      Arg.(value & opt string match_foreground_default & info ["mf"] ~docv: "mf" ~doc)
 
     let window_background =
       let doc = "Color of the window background" in
@@ -63,7 +65,7 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
     if stdin then Engine.singleton (Source.stdin ())
     else {
       Engine.sources = [ Source.binaries ];
-      transition = fun o -> Extra_sources.stm_from_file o.display
+      transition = fun o -> Dmlenu_extra.Sources.stm_from_file o.display
     }
   in
   let layout =
@@ -71,7 +73,7 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
     | 0 -> State.SingleLine
     | n -> State.MultiLine n
   in
-  match Dmlenu.run ~prompt ~layout ~topbar:(not botbar) ~colors program with
+  match App.run ~prompt ~layout ~topbar:(not botbar) ~colors program with
   | None -> ()
   | Some s -> print_endline s
 

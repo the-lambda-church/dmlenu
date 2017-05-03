@@ -1,7 +1,0 @@
-S lib
-B _build/lib
-
-S examples
-B _build/examples
-
-PKG batteries cmdliner yojson

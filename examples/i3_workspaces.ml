@@ -1,7 +1,9 @@
+open Dmlenu
+
 let get_workspace prompt =
   Matching.(set_match_query_fun @@ fuzzy_match ~case:false) ;
-  let compl = Engine.singleton Extra_sources.i3_workspaces in
-  match Dmlenu.(run ~prompt compl) with
+  let compl = Engine.singleton Dmlenu_extra.Sources.i3_workspaces in
+  match App.(run ~prompt compl) with
   | None -> exit 0
   | Some ws -> ws
 
