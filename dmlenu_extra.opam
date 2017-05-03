@@ -16,5 +16,6 @@ depends: [
   "dmlenu"
   "yojson"
   "jbuilder" {build}
+  "ocamlfind" {build}
 ]
 available: [ ocaml-version >= "4.00.1" ]

@@ -11,32 +11,13 @@ bug-reports: "https://github.com/the-lambda-church/dmlenu/issues"
 doc: "http://the-lambda-church.github.io/dmlenu/doc"
 tags: [ "clib:Xinerama" "clib:X11" ]
 build: [
-  ["oasis" "setup"]
-  ["./configure"
-      "--bindir" "%{bin}%"
-      "--%{yojson:enable}%-extra"
-      "--%{cmdliner:enable}%-examples"
-  ]
-  [make]
-]
-install: [make "install"]
-remove: [
-  ["ocamlfind" "remove" "dmlenu"]
-  ["rm" "%{bin}%/dmlenu"]
-  ["rm" "%{bin}%/dmlenu_subcommands"]
-  ["rm" "%{bin}%/dmlenu_workspaces"]
-  ["rm" "%{bin}%/dmlenu_mpcgrid"]
+  ["jbuilder" "build" "-p" name "-j" jobs]
 ]
 build-doc: [ make "doc" ]
 depends: [
-  "batteries"
-  "lwt"
-  "oasis" {build}
-  "ocamlbuild" {build}
+  "base"
+  "stdio"
+  "jbuilder" {build}
   "ocamlfind" {build}
-]
-depopts: [
-  "yojson"
-  "cmdliner"
 ]
 available: [ ocaml-version >= "4.00.1" ]
