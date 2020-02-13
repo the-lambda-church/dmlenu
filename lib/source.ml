@@ -14,7 +14,7 @@ let (/) = Caml.Filename.concat
 
 let getenv var =
   try Caml.Sys.getenv var
-  with Not_found -> ""
+  with Caml.Not_found -> ""
 
 (* Word manipulation *)
 let rec compute_word_index ?(acc = 0) words position = match words with
@@ -180,7 +180,7 @@ let binaries =
   let lower_compare s1 s2 = String.(compare (lowercase s1) (lowercase s2)) in
   String.split ~on:':' (getenv "PATH")
   |> List.concat_map ~f:aux
-  |> List.sort ~cmp:(fun (s1, _) (s2, _) -> lower_compare s1 s2)
+  |> List.sort ~compare:(fun (s1, _) (s2, _) -> lower_compare s1 s2)
   |> List.map ~f:(fun (x, y) -> (x, y, ""))
   |> from_list
 

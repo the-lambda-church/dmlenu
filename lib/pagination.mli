@@ -26,6 +26,7 @@ val left: 'a t -> 'a t
 
 val right: 'a t -> 'a t
 (** Move a pagination data to the right *)
+
 val page_left: 'a t -> 'a t
 val page_right: 'a t -> 'a t
 val fold_visible: ('b -> bool -> 'a -> 'b) -> 'b -> 'a t -> 'b

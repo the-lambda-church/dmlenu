@@ -30,8 +30,8 @@ let subset ?(case=true) ~candidate query =
     in
     Some
       (make_list candidate
-         (List.sort (fun x y -> compare (fst x) (fst y)) matches))
-  with Not_found -> None
+         (List.sort ~compare:(fun x y -> compare (fst x) (fst y)) matches))
+  with Caml.Not_found | Not_found_s _ -> None
 
 let partial_match ?(case=true) ~candidate query =
   let query, candidate = handle_case case query candidate in
@@ -64,7 +64,7 @@ let fuzzy_match ?(case=true) ~candidate query =
   try
     let (lst,offset,_) = String.fold ~f:find_char ~init:([], 0, candidate) query in
     Some (List.rev ((false, offset, String.length candidate) :: lst))
-  with Not_found ->
+  with Caml.Not_found | Not_found_s _ ->
     None
 
 let fuzzy_prefix ?(case=true) ~candidate query =
