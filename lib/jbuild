@@ -1,8 +1,0 @@
-(jbuild_version 1)
-
-(library
- ((name dmlenu)
-  (public_name dmlenu)
-  (libraries (base stdio str))
-  (c_library_flags (-lX11))
-  (c_names (draw_funs draw_stubs))))

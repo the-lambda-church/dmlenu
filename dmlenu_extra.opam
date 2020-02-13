@@ -10,12 +10,12 @@ dev-repo: "https://github.com/the-lambda-church/dmlenu.git"
 bug-reports: "https://github.com/the-lambda-church/dmlenu/issues"
 doc: "http://the-lambda-church.github.io/dmlenu/doc"
 build: [
-  ["jbuilder" "build" "-p" name "-j" jobs]
+  ["dune" "build" "-p" name "-j" jobs]
 ]
 depends: [
   "dmlenu"
   "yojson"
-  "jbuilder" {build}
+  "dune" {build & >= "1.0"}
   "ocamlfind" {build}
 ]
 available: [ ocaml-version >= "4.00.1" ]
