@@ -1,0 +1,23 @@
+(executable
+ (name main)
+ (modules main)
+ (libraries dmlenu dmlenu_extra cmdliner))
+
+(executable
+ (name i3_workspaces)
+ (modules i3_workspaces)
+ (libraries dmlenu dmlenu_extra))
+
+(executable
+ (name mpc2D)
+ (modules mpc2D)
+ (libraries dmlenu dmlenu_extra))
+
+(executable
+ (name with_subcommands)
+ (modules with_subcommands)
+ (libraries dmlenu dmlenu_extra))
+
+(alias
+ (name examples)
+ (deps main.exe i3_workspaces.exe mpc2D.exe with_subcommands.exe))
