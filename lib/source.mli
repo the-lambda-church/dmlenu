@@ -77,14 +77,19 @@ val stdin : ?sep:char -> unit -> t
     then lines are split wrt it and the first part is used as the
     display and the second part as the real. *)
 
+
 val update_candidates : (Candidate.t -> Candidate.t) -> t -> t
 (** Update the candidates returned by this source *)
+
 val update_matching : (Matching.t -> Matching.t) -> t -> t
 (** Update the matching function of the candidates returned by this source *)
+
 val update_completion : (string -> string) -> t -> t
 (** Update the completion of the candidates returned by this source *)
+
 val update_display : (string -> string) -> t -> t
 (** Update the display of the candidates returned by this source *)
+
 val update_real : (string -> string) -> t -> t
 (** Update the real of the candidates returned by this source *)
 

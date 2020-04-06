@@ -29,7 +29,7 @@ let page_left p =
   let visible, unvisible = p.split p.unvisible_left in
   match visible with
   | [] -> p
-  | t :: q ->
+  | _ :: _ ->
     { p with
       unvisible_left = unvisible;
       unvisible_right = p.visible @ p.unvisible_right;
@@ -39,7 +39,7 @@ let page_right p =
   let visible, unvisible = p.split p.unvisible_right in
   match visible with
   | [] -> p
-  | t :: q ->
+  | _ :: _ ->
     { p with
       unvisible_right = unvisible;
       unvisible_left = List.rev p.visible @ p.unvisible_left;
