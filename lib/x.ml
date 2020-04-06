@@ -3,7 +3,7 @@ module Low_level = struct
   external width : unit -> int = "caml_width"
   external quit : unit -> unit = "caml_xquit"
   external grabkeys : unit -> bool = "caml_grabkeyboard"
-  external next_event : unit -> (int * string) = "caml_next_event"
+  external next_event : unit -> (int * int * bool * string) = "caml_next_event"
   external draw_text : string -> (int * int) -> (bool * int * int) list -> (string * string * string) ->  int = "caml_drawtext"
   external mapdc : unit -> unit = "caml_mapdc"
   external size : string -> int = "caml_size"
@@ -86,7 +86,7 @@ module Draw = struct
 end
 
 module Key = struct
-  type t =
+  type keysym =
     | Escape
     | Left
     | Right
@@ -97,10 +97,17 @@ module Key = struct
     | Backspace
     | Scroll_up
     | Scroll_down
-    | Other of string
+    | K_b
+    | K_f
+    | K_p
+    | K_n
+    | K_h
+    | K_j
+    | K_k
+    | K_l
+    | Other
 
-  let of_int (k, str) =
-    match k with
+  let keysym_of_int = function
     | 0xff1b -> Escape
     | 0xff51 -> Left
     | 0xff52 -> Up
@@ -111,13 +118,58 @@ module Key = struct
     | 0xff08 -> Backspace
     | 0xff55 -> Scroll_up
     | 0xff56 -> Scroll_down
-    | _ -> Other str
+    | 0x0062 -> K_b
+    | 0x0066 -> K_f
+    | 0x0070 -> K_p
+    | 0x006e -> K_n
+    | 0x0068 -> K_h
+    | 0x006a -> K_j
+    | 0x006b -> K_k
+    | 0x006c -> K_l
+    | _ -> Other
+
+  let shiftMask = 1 lsl 0
+  let lockMask = 1 lsl 1
+  let controlMask = 1 lsl 2
+  let mod1Mask = 1 lsl 3
+  let mod2Mask = 1 lsl 4
+  let mod3Mask = 1 lsl 5
+  let mod4Mask = 1 lsl 6
+  let mod5Mask = 1 lsl 7
+
+  type modifier =
+    | Shift
+    | Lock
+    | Control
+    | Mod1
+    | Mod2
+    | Mod3
+    | Mod4
+    | Mod5
+
+  let mods_of_int x =
+    let mods = ref [] in
+    let add_mod m z = if x land m <> 0 then mods := z :: !mods in
+    add_mod shiftMask Shift;
+    add_mod lockMask Lock;
+    add_mod controlMask Control;
+    add_mod mod1Mask Mod1;
+    add_mod mod2Mask Mod2;
+    add_mod mod3Mask Mod3;
+    add_mod mod4Mask Mod4;
+    add_mod mod5Mask Mod5;
+    !mods
 end
 
 module Events = struct
-  type t = 
-    | Key of Key.t
+  type t =
+    | Key of (Key.keysym * Key.modifier list) option * string
 
-  let poll ~state:_ ~timeout:_ =
-    Some (Key (Key.of_int (Low_level.next_event ())))
+  let wait () =
+    let (k, mods, k_valid, str) = Low_level.next_event () in
+    let key =
+      if k_valid then Some (Key.keysym_of_int k, Key.mods_of_int mods)
+      else None
+    in
+    Key (key, str)
 end

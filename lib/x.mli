@@ -40,7 +40,7 @@ val text_width : state: state -> string -> int
 (** Returns the width of a text *)
 
 module Key : sig
-  type t =
+  type keysym =
     | Escape
     | Left
     | Right
@@ -51,15 +51,33 @@ module Key : sig
     | Backspace
     | Scroll_up
     | Scroll_down
-    | Other of string
+    | K_b
+    | K_f
+    | K_p
+    | K_n
+    | K_h
+    | K_j
+    | K_k
+    | K_l
+    | Other
+
+  type modifier =
+    | Shift
+    | Lock
+    | Control
+    | Mod1
+    | Mod2
+    | Mod3
+    | Mod4
+    | Mod5
 end
 
 module Events : sig
   type t = 
-  | Key of Key.t
+  | Key of (Key.keysym * Key.modifier list) option * string
 
-  val poll : state: state -> timeout:float -> t option
-  (** poll for an X event *)
+  val wait : unit -> t
+  (** wait for the next X event *)
 end
 
 module Draw : sig
@@ -97,7 +115,7 @@ module Low_level : sig
   external quit : unit -> unit = "caml_xquit"
   external width : unit -> int = "caml_width"
   external grabkeys : unit -> bool = "caml_grabkeyboard"
-  external next_event : unit -> (int * string) = "caml_next_event"
+  external next_event : unit -> (int * int * bool * string) = "caml_next_event"
   external draw_text : string -> (int * int) -> (bool * int * int) list -> (string * string * string) ->  int = "caml_drawtext"
   external mapdc : unit -> unit = "caml_mapdc"
   external size : string -> int = "caml_size"
