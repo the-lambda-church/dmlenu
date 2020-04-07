@@ -22,16 +22,18 @@ let make_list candidate list =
 
 let subset ?(case=true) ~candidate query =
   let query, candidate = handle_case case query candidate in
+  let opt_value_exn = function Some x -> x | None -> raise Caml.Not_found in
   try
-    let words = List.filter ~f:String.is_empty (String.split query ~on:' ') in
+    let words =
+      List.filter ~f:(Fn.non String.is_empty) (String.split query ~on:' ') in
     let matches = List.map ~f:(fun word ->
-      let n = String.substr_index_exn candidate ~pattern:word in
+      let n = String.substr_index candidate ~pattern:word |> opt_value_exn in
       (n, n + String.length word)) words
     in
     Some
       (make_list candidate
          (List.sort ~compare:(fun x y -> compare (fst x) (fst y)) matches))
-  with Caml.Not_found | Not_found_s _ -> None
+  with Caml.Not_found -> None
 
 let partial_match ?(case=true) ~candidate query =
   let query, candidate = handle_case case query candidate in

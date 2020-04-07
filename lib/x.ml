@@ -40,7 +40,7 @@ type state = {
 
 let colors s = s.colors
 
-let quit ~state = Low_level.quit ()
+let quit ~state:_ = Low_level.quit ()
 let setup ~topbar ~colors ~lines = 
   Low_level.setup topbar colors.Colors.window_background lines;
   if Low_level.grabkeys () then
@@ -48,11 +48,11 @@ let setup ~topbar ~colors ~lines =
   else
     None
 
-let resize ~state ~lines = 
+let resize ~state:_ ~lines =
   Low_level.resize lines
 
-let width ~state = Low_level.width ()
-let text_width ~state s = Low_level.size s
+let width ~state:_ = Low_level.width ()
+let text_width ~state:_ s = Low_level.size s
 
 module Draw = struct
     let set_line ~state ~line =
@@ -82,7 +82,7 @@ module Draw = struct
       state.x <- 0;
       state.line <- 0;
       Low_level.clear state.colors.Colors.window_background
-    let map ~state = Low_level.mapdc ()
+    let map ~state:_ = Low_level.mapdc ()
 end
 
 module Key = struct
@@ -118,6 +118,6 @@ module Events = struct
   type t = 
     | Key of Key.t
 
-  let poll ~state ~timeout = 
+  let poll ~state:_ ~timeout:_ =
     Some (Key (Key.of_int (Low_level.next_event ())))
 end

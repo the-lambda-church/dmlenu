@@ -21,8 +21,8 @@ let rec compute_word_index ?(acc = 0) words position = match words with
   | [] -> acc, 0, "", ""
   | t :: q ->
     if position <= String.length t then (
-      acc, position, String.sub t 0 position,
-      String.sub t position (String.length t - position)
+      acc, position, String.sub t ~pos:0 ~len:position,
+      String.sub t ~pos:position ~len:(String.length t - position)
     ) else
       compute_word_index ~acc:(acc + 1) q (position - String.length t - 1)
 
@@ -70,6 +70,9 @@ let complete_in_word ?(drop_cont = false) separator f before after =
   let before, after = w.new_word (f w.before_inside w.after_inside) in
   before, if drop_cont then "" else after
 
+(* ? *)
+let _ = complete_in_word
+
 let match_in_word separator f query =
   let { word ; _ } = get_word separator query "" in
   f word
@@ -91,7 +94,7 @@ let expand_tilde s = try
   with _ -> s
 
 (* Actual sources *)
-let files ?(filter=fun x -> true) root =
+let files ?(filter=fun _ -> true) root =
   let root = root / "" in (* make it end by a slash *)
   let compute (old_dir, cache) query =
     let query = expand_tilde query in
@@ -198,7 +201,7 @@ let switch list =
     default_state = None;
     compute = fun st query ->
       let (S source) =
-        Lazy.force (snd (List.find_exn ~f:(fun (f, b) -> f query) list))
+        Lazy.force (snd (List.find_exn ~f:(fun (f, _b) -> f query) list))
       in
       match st with
       | Some (ST (state, source'))

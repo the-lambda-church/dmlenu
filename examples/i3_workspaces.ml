@@ -20,5 +20,5 @@ let () =
     | _ ->
       let ws = get_workspace "Go to:" in
       Unix.execvp "i3-msg" [| "i3-msg" ; "-q" ; "workspace" ; ws |]
-  with e ->
+  with _ ->
     exit 1

@@ -24,7 +24,7 @@ let splith state list =
 
 let incr ~xstate = X.Draw.update_x ~state: xstate ((+) 5)
 
-let draw_horizontal { xstate; state } =
+let draw_horizontal { xstate; state; _ } =
   let open State in
   let candidates = state.candidates in
   if not (List.is_empty candidates.Pagination.unvisible_left) then (
@@ -45,7 +45,7 @@ let rec shorten ~state candidate s =
     s
   else
     shorten ~state candidate
-      (try "..." ^ String.sub s 10 (String.length s - 10) with _ -> "")
+      (try "..." ^ String.sub s ~pos:10 ~len:(String.length s - 10) with _ -> "")
 
 let draw_vertical xstate topbar candidates =
   let init, f =
@@ -76,12 +76,12 @@ let resize =
       X.resize ~state ~lines
     )
 
-let draw ({ xstate; prompt; state } as app_state) =
+let draw ({ xstate; prompt; state; _ } as app_state) =
   let open State in
   let lines =
     match state.layout with
     | SingleLine | Grid (_, None) -> 0
-    | Grid (n, Some { pages }) -> min n (List.length pages.Pagination.visible)
+    | Grid (n, Some { pages; _ }) -> min n (List.length pages.Pagination.visible)
     | MultiLine n ->
       min n (List.length state.State.candidates.Pagination.visible)
   in
@@ -144,7 +144,7 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = X.Colors.default)
       let open X.Events in
       draw state;
       match X.Events.poll ~state: xstate ~timeout: 1. with
-      | Some (Key X.Key.Escape) -> X.quit xstate; []
+      | Some (Key X.Key.Escape) -> X.quit ~state:xstate; []
 
       | Some (Key X.Key.Left)  -> loop_pure State.left
       | Some (Key X.Key.Up)    -> loop_pure State.up
@@ -154,7 +154,7 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = X.Colors.default)
       | Some (Key X.Key.Scroll_up)   -> loop_pure State.scroll_up
       | Some (Key X.Key.Scroll_down) -> loop_pure State.scroll_down
 
-      | Some (Key X.Key.Enter) -> X.quit xstate; State.get_list state.state
+      | Some (Key X.Key.Enter) -> X.quit ~state:xstate; State.get_list state.state
 
       | Some (Key X.Key.Tab) -> loop_transition State.complete
 

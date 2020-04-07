@@ -1,10 +1,10 @@
 all:
-	jbuilder build @install
+	dune build @install
 
 clean:
 	@rm -r _build
 
 examples:
-	jbuilder build examples/main.exe examples/i3_workspaces.exe examples/with_subcommands.exe
+	dune build @examples
 
 .PHONY: all examples clean

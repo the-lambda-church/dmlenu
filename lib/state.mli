@@ -60,7 +60,6 @@ val left : t -> t
 
 val right : t -> t
 (** Moves the current selection to the right *)
-(** Moves right *)
 
 val up : t -> t
 (** Moves the current selection to the up *)

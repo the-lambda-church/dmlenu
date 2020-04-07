@@ -38,4 +38,4 @@ let run =
   in
   match run_list ~hook stm with
   | [] -> ()
-  | prog :: params as lst -> Unix.execv prog (Array.of_list lst)
+  | prog :: _ as lst -> Unix.execv prog (Array.of_list lst)

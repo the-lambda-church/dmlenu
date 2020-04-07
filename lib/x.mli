@@ -67,10 +67,13 @@ module Draw : sig
     
     val set_line : state: state -> line: int -> unit
     (** Set the current line of drawing *)
+
     val set_x : state: state -> x: int -> unit
     (** sets the current X position to draw *)
+
     val update_x : state: state -> (int -> int) -> unit
     (** Updates the current X position *)
+
     val text: state: state -> focus: bool -> ('a, unit, string, unit) format4 -> 'a
     (** Draw some text at the current position. [focus] is used to
         know which colors to use *)
@@ -87,6 +90,7 @@ module Draw : sig
     val map : state: state -> unit
     (** Map the window on the screen *)
 end
+
 (** Low-level interface *)
 module Low_level : sig
   external setup : bool -> string -> int -> unit = "caml_setup"
