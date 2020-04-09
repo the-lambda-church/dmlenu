@@ -7,6 +7,10 @@ type column = {
   pages : (Candidate.t * Matching.result) Pagination.t ;
 }
 
+type line_geometry = {
+  height : int;
+  baseline : int;
+}
 
 type layout =
   | SingleLine       (** Display the candidates horizontally on a single line *)
@@ -37,6 +41,8 @@ type t = {
   (** How to know how many token candidates we can display *)
 
   layout : layout ;
+
+  bar_geometry: line_geometry;
 }
 (** The type of state the engine *)
 

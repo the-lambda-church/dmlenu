@@ -1,0 +1,11 @@
+(library
+ (name backend)
+ (public_name dmlenu.backend)
+ (libraries cairo2 cairo2-pango)
+ (c_names x11 x11_stubs xkb_unicode)
+ (c_flags
+  (:standard -Werror -pedantic -Wall -Wunused -O0 -g)
+  (:include ../config/ccopt.sexp))
+ (c_library_flags
+  :standard
+  (:include ../config/cclib.sexp)))
