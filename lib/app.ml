@@ -340,8 +340,19 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = X.Colors.default)
       | _ ->
         if Uchar.to_scalar unicode = 0 then
           loop state
-        else
-          loop_transition (State.add_char (utf8_of_uchar unicode))
+        else (
+          let s = utf8_of_uchar unicode in
+          (* let s =
+           *   if String.equal s "z" then
+           *     "は世界"
+           *   else if String.equal s "w" then
+           *     "こんにち"
+           *   else if String.equal s "j" then
+           *     "🤔"
+           *   else s
+           * in *)
+          loop_transition (State.add_char s)
+        )
     )
   in
   try loop state with e ->
