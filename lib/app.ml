@@ -279,14 +279,7 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = X.Colors.default)
       loop (if b then state'.hook state' else state')
     in
 
-    (* let input_text s =
-     *   if not (String.is_empty s) then loop_transition (State.add_char s)
-     *   else loop state
-     * in *)
-
-    let ksym, mods, unicode = X11.next_key_event () in
-    let ksym = X11.Key.keysym_of_int ksym in
-    let mods = X11.Key.mods_of_int mods in
+    let Key (ksym, mods, unicode) = X11.Events.wait () in
     let utf8_of_uchar u =
       let b = Buffer.create 8 in
       Uutf.Buffer.add_utf_8 b u;

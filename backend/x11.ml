@@ -7,6 +7,10 @@ external get_width : unit -> int = "caml_x11_get_width"
 external get_height : unit -> int = "caml_x11_get_height"
 external next_key_event : unit -> int * int * Uchar.t = "caml_x11_next_key_event"
 
+let init ?(monitor = 0) ~topbar () =
+  if init (not topbar) monitor then ()
+  else failwith "Error: cannot initialize the X context"
+
 module Key = struct
   type keysym =
     | Escape
@@ -81,4 +85,13 @@ module Key = struct
     add_mod mod4Mask Mod4;
     add_mod mod5Mask Mod5;
     !mods
+end
+
+module Events = struct
+  type t =
+    | Key of Key.keysym * Key.modifier list * Uchar.t
+
+  let wait () =
+    let ksym, mods, uchar = next_key_event () in
+    Key (Key.keysym_of_int ksym, Key.mods_of_int mods, uchar)
 end

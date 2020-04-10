@@ -193,7 +193,7 @@ let draw_text_hl ?markup ?color_background ~color_foreground ?xoff
         prepared matching_result)
 
 let init ~font ~topbar =
-  let _ = X11.init (not topbar) 0 (* default monitor *) in
+  let () = X11.init ~topbar () in
   let surf = X11.get_cairo_surface () in
   let cairo = Cairo.create surf in
   Cairo.set_antialias cairo Cairo.ANTIALIAS_SUBPIXEL;
