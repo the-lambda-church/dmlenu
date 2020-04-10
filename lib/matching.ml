@@ -11,14 +11,23 @@ let handle_case case_sensitive query candidate =
     String.lowercase query, String.lowercase candidate
 
 let make_list candidate list =
-  let list, old =
-    List.fold ~f:(fun (list, old) (start', stop') ->
-      (true, start', stop') :: (false, old, start') :: list, stop'
-    ) ~init:([], 0) list
+  let list = List.fold_left ~f:(fun acc (start', stop') ->
+    match acc with
+    | [] -> (true, start', stop') :: (false, 0, start') :: []
+    | (true, start, stop) :: acc' ->
+      if stop <= start' then
+        (true, start', stop') :: (false, stop, start') :: acc
+      else
+        (true, start, max stop stop') :: acc'
+    | (false, _, _) :: _ -> assert false
+  ) ~init:[] list
   in
-  let list = List.filter ~f:(fun (_, k, k') -> k <> k')
-    (List.rev ((false, old, String.length candidate) :: list)) in
-  list
+  let list =
+    match list with
+    | [] -> [false, 0, String.length candidate]
+    | (_, _, stop) :: _ -> (false, stop, String.length candidate) :: list
+  in
+  List.filter ~f:(fun (_, k, k') -> k <> k') (List.rev list)
 
 let subset ?(case=true) ~candidate query =
   let query, candidate = handle_case case query candidate in
