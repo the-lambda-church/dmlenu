@@ -6,3 +6,4 @@ Makefile.config
 _build
 *native
 .merlin
+*.install
