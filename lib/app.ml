@@ -88,23 +88,16 @@ let rec shorten ~dstate candidate s =
       (try "..." ^ String.sub s ~pos:10 ~len:(String.length s - 10)
        with _ -> "")
 
-let draw_vertical ~xoff ({ dstate; topbar; _} as st)
+let draw_vertical ~xoff ({ dstate; _} as st)
       extra_lines_geometry candidates =
-  let move_before (line_geom: State.line_geometry) =
-    if topbar then () else
-      Cairo.rel_move_to dstate.cairo 0. (float (- line_geom.height))
-  and move_after (line_geom: State.line_geometry) =
-    if topbar then Cairo.rel_move_to dstate.cairo 0. (float line_geom.height)
-    else ()
-  in
 
   Pagination.fold_visible (fun lines_geom focus (candidate, result) ->
     (* XXX *)
-    let line_geom, lines_geom_tl = match lines_geom with
+    let (line_geom: State.line_geometry), lines_geom_tl =
+      match lines_geom with
       | x :: xs -> x, xs
       | [] -> assert false
     in
-    move_before line_geom;
     let _, y = Cairo.Path.get_current_point dstate.cairo in
     if focus then
       Draw.draw_sharp_filled_rectangle dstate.cairo
@@ -127,8 +120,7 @@ let draw_vertical ~xoff ({ dstate; topbar; _} as st)
         ~height:line_geom.height ~baseline:line_geom.baseline
         ~state:dstate candidate.doc
     );
-    Cairo.move_to dstate.cairo 0. y;
-    move_after line_geom;
+    Cairo.move_to dstate.cairo 0. (y +. float line_geom.height);
     lines_geom_tl
 
     (* X.Draw.clear_line line (X.colors xstate).X.Colors.focus_background ;
@@ -203,8 +195,8 @@ let draw ({ dstate; prompt; state; topbar; _ } as app_state) =
   let bar_geometry =
     (* XX *)
     let voff = 2 in
-    { height = app_state.state.bar_geometry.height + voff;
-      baseline = app_state.state.bar_geometry.baseline }
+    { height = app_state.state.bar_geometry.height + 2 * voff;
+      baseline = app_state.state.bar_geometry.baseline + voff }
   in
   let total_height =
     bar_geometry.height +
@@ -244,10 +236,7 @@ let draw ({ dstate; prompt; state; topbar; _ } as app_state) =
     draw_bar_text ~focus:false (state.before_cursor ^ "|" ^ state.after_cursor);
     incr ~dstate;
 
-    let extra_lines_y =
-      if topbar then float bar_geometry.height
-      else float (total_height - bar_geometry.height)
-    in
+    let extra_lines_y = if topbar then float bar_geometry.height else 0. in
     begin match app_state.state.State.layout with
     | State.Grid (_, None)
     | State.SingleLine  -> draw_horizontal ~xoff app_state bar_geometry
@@ -268,7 +257,7 @@ let draw ({ dstate; prompt; state; topbar; _ } as app_state) =
 
 
 let run_list ?(topbar = true) ?(separator = " ") ?(colors = X.Colors.default)
-      ?(font = "monospace 10") ?(layout = State.SingleLine) ?(prompt = "")
+      ?(font = "DejaVu Sans Mono 9") ?(layout = State.SingleLine) ?(prompt = "")
       ?(hook = fun x -> x) program
   =
   let hook state =

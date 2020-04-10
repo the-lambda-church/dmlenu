@@ -111,6 +111,13 @@ let draw_text_hl_raw state
       (matching_result: (bool * int * int) list)
   =
   let r, g, b = color and rhl, ghl, bhl = color_hl in
+  Printf.printf "text: \'%s\'\n" text.text;
+  Printf.printf "matching res:";
+  List.iter (fun (b, start, stop) ->
+    Printf.printf " %b, %d, %d |" b start stop
+  ) matching_result;
+  print_endline "";
+
   let matched, text_parts =
     List.fold_right (fun (m, start, stop) (matched, text_parts) ->
       (m :: matched,
