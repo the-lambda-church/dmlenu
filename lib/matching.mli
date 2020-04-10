@@ -31,8 +31,8 @@ val set_match_query_fun : (candidate:string -> t) -> unit
 (** NB: for the following functions the default value of [case] is [true] (case sensitive search). *)
 
 val subset : ?case:bool -> candidate:string -> t
-(** [subset ?case ~candidate query] will match if query (interpreded as a set of
-    characters) is a subset of candidate (interpreted as a set of chars again).
+(** [subset ?case ~candidate query] will match if the words of the query
+    can be found in the candidate (in any order, and possibly overlapping).
 *)
 
 val partial_match : ?case:bool -> candidate:string -> t
