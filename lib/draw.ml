@@ -1,6 +1,3 @@
-let horizontal_padding = 5.
-let vertical_padding = 1.5
-
 type state = {
   surf: Cairo.Surface.t;
   cairo: Cairo.context;
@@ -39,36 +36,9 @@ let parse_color_exn color =
   | None ->
     raise (Invalid_argument ("parse_color_exn: " ^ color))
 
-(*
-let markup_of_matching_result
-      ~(color: string)
-      ~(text: string)
-      (result: (bool * int * int) list): string
-  =
-  let b = Buffer.create 32 in
-  List.iter (fun (is_hl, start, stop) ->
-    let text_part = String.sub text start (stop - start) in
-    if is_hl then (
-      Buffer.add_string b "<span foreground='";
-      Buffer.add_string b color;
-      Buffer.add_string b "'>"
-    );
-    Buffer.add_string b text_part;
-    if is_hl then (
-      Buffer.add_string b "</span>"
-    );
-  ) result;
-  Buffer.contents b
-*)
-
-let get_pango_layout ?(markup = false) state text =
+let get_pango_layout state text =
   let layout = Cairo_pango.create_layout state.cairo in
-  (if markup then
-     (* TODO: error reporting in case of invalid markup?
-        Currently pango prints a warning on stderr *)
-     Pango.Layout.set_markup layout text
-   else
-     Pango.Layout.set_text layout text);
+  Pango.Layout.set_text layout text;
   Pango.Layout.set_font_description layout state.font;
   Pango.Layout.set_single_paragraph_mode layout true;
   (* TODO: handle scaling *)
@@ -81,8 +51,8 @@ type prepared_text = {
   layout: Pango.layout;
 }
 
-let prepare_text ?markup state text =
-  let layout = get_pango_layout ?markup state text in
+let prepare_text state text =
+  let layout = get_pango_layout state text in
   Cairo_pango.update_layout state.cairo layout;
   let width, height = Pango.Layout.get_pixel_size layout in
   let baseline = Pango.Layout.get_baseline layout / Pango.scale in
@@ -94,8 +64,8 @@ type aligned_texts = {
   aligned_texts : prepared_text list;
 }
 
-let prepare_aligned_texts ?markup state texts =
-  let texts = List.map (prepare_text ?markup state) texts in
+let prepare_aligned_texts state texts =
+  let texts = List.map (prepare_text state) texts in
   let max_above, max_below =
     List.fold_left (fun (max_above, max_below) t ->
       max max_above t.baseline, max max_below (t.height - t.baseline))
@@ -160,10 +130,10 @@ let draw_sharp_rectangle cairo ~color ~x ~y ~w ~h =
   Cairo.restore cairo;
   ()
 
-let draw_text_aux ?markup ?color_background ~color_foreground ?(xoff = 0)
+let draw_text_aux ?color_background ~color_foreground ?(xoff = 0)
       ~height ~baseline ~state text show_layout
   =
-  let prepared = prepare_text ?markup state text in
+  let prepared = prepare_text state text in
   let x, y = Cairo.Path.get_current_point state.cairo in
   (match color_background with
    | None -> ()
@@ -179,15 +149,15 @@ let draw_text_aux ?markup ?color_background ~color_foreground ?(xoff = 0)
   Cairo.restore state.cairo;
   Cairo.rel_move_to state.cairo (float (prepared.width + xoff)) (-. yoff)
 
-let draw_text ?markup ?color_background ~color_foreground ?xoff
+let draw_text ?color_background ~color_foreground ?xoff
       ~height ~baseline ~state text =
-  draw_text_aux ?markup ?color_background ~color_foreground ?xoff
+  draw_text_aux ?color_background ~color_foreground ?xoff
     ~height ~baseline ~state text (fun state prepared ->
       Cairo_pango.show_layout state.cairo prepared.layout)
 
-let draw_text_hl ?markup ?color_background ~color_foreground ?xoff
+let draw_text_hl ?color_background ~color_foreground ?xoff
       ~color_hl ~height ~baseline ~state text matching_result =
-  draw_text_aux ?markup ?color_background ~color_foreground ?xoff
+  draw_text_aux ?color_background ~color_foreground ?xoff
     ~height ~baseline ~state text (fun state prepared ->
       draw_text_hl_raw state ~color:color_foreground ~color_hl
         prepared matching_result)

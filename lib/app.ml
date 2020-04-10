@@ -52,14 +52,14 @@ let draw_horizontal ~xoff ({ dstate; state; _ } as st) bar_geometry  =
   let open State in
   let candidates = state.candidates in
   let draw_text ~focus txt =
-    Draw.draw_text ~markup:false ~xoff
+    Draw.draw_text ~xoff
       ~color_background:(text_background ~focus st)
       ~color_foreground:(text_foreground ~focus st)
       ~height:bar_geometry.height ~baseline:bar_geometry.baseline
       ~state:dstate txt
   in
   let draw_text_hl ~focus txt matching_result =
-    Draw.draw_text_hl ~markup:false ~xoff
+    Draw.draw_text_hl ~xoff
       ~color_background:(text_background ~focus st)
       ~color_foreground:(text_foreground ~focus st)
       ~height:bar_geometry.height ~baseline:bar_geometry.baseline
@@ -104,7 +104,7 @@ let draw_vertical ~xoff ({ dstate; _} as st)
         ~color:(Draw.parse_color_exn st.colors.focus_background)
         ~x:0. ~y ~w:(float (X11.get_width ())) ~h:(float line_geom.height);
     Cairo.move_to dstate.cairo 0. y;
-    Draw.draw_text_hl ~markup:false ~xoff
+    Draw.draw_text_hl ~xoff
       ~color_background:(text_background ~focus st)
       ~color_foreground:(text_foreground ~focus st)
       ~color_hl:(Draw.parse_color_exn st.colors.match_foreground)
