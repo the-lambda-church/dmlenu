@@ -1,4 +1,8 @@
-/* from bemenu
+/* original import from bemenu
+ *
+ * - fixed the binary search implementation: the case where the search
+ * would fail in the left part of the search was not handled properly
+ * (in that case, max becomes -1)...
  */
 /**
  * From GLFW
@@ -833,7 +837,7 @@ static const struct codepair {
 uint32_t
 bm_x11_key_sym2unicode(uint32_t keysym)
 {
-    uint32_t min = 0, max = sizeof(keysymtab) / sizeof(struct codepair) - 1, mid;
+    int64_t min = 0, max = sizeof(keysymtab) / sizeof(struct codepair) - 1, mid;
 
     // First check for Latin-1 characters (1:1 mapping)
     if ((keysym >= 0x0020 && keysym <= 0x007e) || (keysym >= 0x00a0 && keysym <= 0x00ff))
@@ -844,7 +848,7 @@ bm_x11_key_sym2unicode(uint32_t keysym)
         return keysym & 0x00ffffff;
 
     // Binary search in table
-    while (max >= min) {
+    while (0 <= max && max >= min) {
         mid = (min + max) / 2;
         if (keysymtab[mid].keysym < keysym)
             min = mid + 1;
