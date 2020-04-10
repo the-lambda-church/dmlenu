@@ -143,26 +143,50 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = X.Colors.default)
       in
       let open X.Events in
       draw state;
-      match X.Events.poll ~state: xstate ~timeout: 1. with
-      | Some (Key X.Key.Escape) -> X.quit ~state:xstate; []
 
-      | Some (Key X.Key.Left)  -> loop_pure State.left
-      | Some (Key X.Key.Up)    -> loop_pure State.up
-      | Some (Key X.Key.Right) -> loop_pure State.right
-      | Some (Key X.Key.Down)  -> loop_pure State.down
+      let input_text s =
+        if not (String.is_empty s) then loop_transition (State.add_char s)
+        else loop state
+      in
 
-      | Some (Key X.Key.Scroll_up)   -> loop_pure State.scroll_up
-      | Some (Key X.Key.Scroll_down) -> loop_pure State.scroll_down
+      match X.Events.wait () with
+      | Key (None, s) -> input_text s
+      | Key (Some (key, mods), s) ->
+        if List.mem ~equal:Poly.(=) mods X.Key.Control then (
+          match key with
+          | X.Key.K_b -> loop_pure State.left
+          | X.Key.K_f -> loop_pure State.right
+          | X.Key.K_p -> loop_pure State.up
+          | X.Key.K_n -> loop_pure State.down
+          | X.Key.K_h -> loop_transition State.remove
+          | _ -> loop state
+        ) else if List.mem ~equal:Poly.(=) mods X.Key.Mod1 then (
+          match key with
+          | X.Key.K_h -> loop_pure State.left
+          | X.Key.K_j -> loop_pure State.down
+          | X.Key.K_k -> loop_pure State.up
+          | X.Key.K_l -> loop_pure State.right
+          | _ -> loop state
+        ) else (
+          match key with
+          | X.Key.Escape -> X.quit ~state:xstate; []
 
-      | Some (Key X.Key.Enter) -> X.quit ~state:xstate; State.get_list state.state
+          | X.Key.Left  -> loop_pure State.left
+          | X.Key.Up    -> loop_pure State.up
+          | X.Key.Right -> loop_pure State.right
+          | X.Key.Down  -> loop_pure State.down
 
-      | Some (Key X.Key.Tab) -> loop_transition State.complete
+          | X.Key.Scroll_up   -> loop_pure State.scroll_up
+          | X.Key.Scroll_down -> loop_pure State.scroll_down
 
-      | Some (Key X.Key.Backspace) -> loop_transition State.remove
+          | X.Key.Enter -> X.quit ~state:xstate; State.get_list state.state
 
-      | Some (Key (X.Key.Other s)) -> loop_transition (State.add_char s)
+          | X.Key.Tab -> loop_transition State.complete
 
-      | None -> loop state
+          | X.Key.Backspace -> loop_transition State.remove
+
+          | _ -> input_text s
+        )
     in
     try loop state with e ->
       X.quit ~state: state.xstate;

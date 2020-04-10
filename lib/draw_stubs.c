@@ -5,6 +5,7 @@
 #include <caml/alloc.h>
 #include <caml/custom.h>
 #include <caml/fail.h>
+#include <ctype.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -216,7 +217,7 @@ caml_next_event(value unit) {
     char buf[32];
     KeySym ksym = NoSymbol;
     Status status;
-    size_t len;
+    size_t len = 0;
     while(!XNextEvent(dc->dpy, &ev)) {
         if(XFilterEvent(&ev, win))
             continue;
@@ -228,10 +229,31 @@ caml_next_event(value unit) {
                 break;
             case KeyPress:
                 len = XmbLookupString(xic, &ev.xkey, buf, sizeof buf, &ksym, &status);
-                buf[len] = '\0';
-                mlev = caml_alloc_tuple(2);
+                mlev = caml_alloc_tuple(4);
                 Field(mlev, 0) = Val_int(ksym);
-                Field(mlev, 1) = caml_copy_string (buf);
+                Field(mlev, 1) = Val_int(ev.xkey.state);
+                Field(mlev, 2) = Val_true;
+                buf[len] = '\0';
+
+                switch(status) {
+                case XLookupChars:
+                    Field(mlev, 2) = Val_false;
+                    if (iscntrl(*buf)) buf[0] = '\0';
+                    break;
+                case XLookupNone:
+                case XBufferOverflow:
+                    Field(mlev, 2) = Val_false;
+                    buf[0] = '\0';
+                    break;
+                case XLookupKeySym:
+                    Field(mlev, 2) = Val_true;
+                    buf[0] = '\0';
+                    break;
+                default: /* XLookupBoth */
+                    break;
+                }
+
+                Field(mlev, 3) = caml_copy_string (buf);
                 CAMLreturn (mlev);
                 break;
             case SelectionNotify:
