@@ -1,3 +1,5 @@
+/* from bemenu */
+
 #ifndef _BM_XKB_UNICODE_H_
 #define _BM_XKB_UNICODE_H_
 

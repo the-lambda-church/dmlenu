@@ -28,6 +28,7 @@ static void die(const char *fmt, ...)
   exit(EXIT_FAILURE);
 }
 
+/* from bemenu */
 void create_window(struct x11_ctx* x11)
 {
   assert(x11);
@@ -76,6 +77,7 @@ uint32_t compute_y (struct x11_ctx *x11) {
   return x11->y0 + (x11->bottom ? x11->max_height - x11->cur_height : 0);
 }
 
+/* from bemenu */
 void put_window_on_monitor(struct x11_ctx *x11)
 {
   Window root = DefaultRootWindow(x11->display);
