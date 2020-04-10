@@ -7,7 +7,7 @@ type app_state = {
   topbar: bool;  (** Shall dmlenu sit on the bottom or on the top of the screen? *)
   hook: (app_state -> app_state); (** Hook called whenever a token is added *)
   state: State.t; (** The state of the current engine *)
-  dstate: Backend.Draw.state; (** Data related to X *)
+  dstate: Draw.state; (** Data related to X *)
 }
 (** The current state of the application *)
 

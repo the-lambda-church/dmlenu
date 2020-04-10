@@ -193,6 +193,7 @@ let draw_text_hl ?markup ?color_background ~color_foreground ?xoff
         prepared matching_result)
 
 let init ~font ~topbar =
+  let open Backend in
   let () = X11.init ~topbar () in
   let surf = X11.get_cairo_surface () in
   let cairo = Cairo.create surf in
@@ -206,10 +207,10 @@ let init ~font ~topbar =
   { cairo = cairo; font; surf }
 
 let terminate _state =
-  X11.terminate ()
+  Backend.X11.terminate ()
 
 let render state height draw_f =
-  X11.resize_height height;
+  Backend.X11.resize_height height;
 
   Cairo.Group.push state.cairo;
 
@@ -224,4 +225,4 @@ let render state height draw_f =
   Cairo.Group.pop_to_source state.cairo;
   Cairo.paint state.cairo;
   Cairo.Surface.flush state.surf;
-  X11.flush ()
+  Backend.X11.flush ()
