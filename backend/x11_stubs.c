@@ -41,6 +41,7 @@ value caml_x11_get_cairo_surface(value unit)
   CAMLparam1(unit);
   CAMLlocal1(vsurf);
   cairo_surface_t* surf = current_x11_ctx->cairo_surface;
+  cairo_surface_reference(surf);
   vsurf = alloc_custom(&caml_surface_ops, sizeof(void*), 1, 50);
   SURFACE_VAL(vsurf) = surf;
   CAMLreturn(vsurf);
