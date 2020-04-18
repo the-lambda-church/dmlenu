@@ -1,7 +1,20 @@
 (** Main entry point of the library *)
 
+module Colors : sig
+  type t = {
+    focus_foreground: Draw.Color.t;
+    focus_background: Draw.Color.t;
+    normal_foreground: Draw.Color.t;
+    normal_background: Draw.Color.t;
+    match_foreground: Draw.Color.t;
+    window_background: Draw.Color.t;
+  }
+  val default : t
+end
+(** Colors for the UI elements of the bar *)
+
 type app_state = {
-  colors: X.Colors.t; (** The set of colors to use *)
+  colors: Colors.t; (** The set of colors to use *)
   font: string;
   prompt: string; (** The prompt to the user *)
   topbar: bool;  (** Shall dmlenu sit on the bottom or on the top of the screen? *)
@@ -14,7 +27,7 @@ type app_state = {
 val run_list : 
   ?topbar: bool
   -> ?separator: string
-  -> ?colors: X.Colors.t
+  -> ?colors: Colors.t
   -> ?font: string
   -> ?layout:State.layout
   -> ?prompt: string
@@ -35,7 +48,7 @@ val run_list :
 val run : 
   ?topbar: bool
   -> ?separator: string
-  -> ?colors: X.Colors.t
+  -> ?colors: Colors.t
   -> ?layout:State.layout
   -> ?prompt: string
   -> ?hook : (app_state -> app_state)

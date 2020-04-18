@@ -1,40 +1,50 @@
+module Color = struct
+  type t = float * float * float
+
+  let of_string (color: string) =
+    let color_l =
+      match String.to_seq color |> List.of_seq with
+      | '#' :: xs -> xs
+      | xs -> xs
+    in
+    let str_of_list l = String.of_seq (List.to_seq l) in
+    let color_of_chars x0 x1 =
+      Scanf.sscanf (str_of_list [x0; x1]) "%x"
+        (fun i -> float i /. 255.)
+    in
+    try
+      match color_l with
+      | [r0; r1; g0; g1; b0; b1] ->
+        Some (
+          color_of_chars r0 r1,
+          color_of_chars g0 g1,
+          color_of_chars b0 b1
+        )
+      | _ ->
+        None
+    with Scanf.Scan_failure _ -> None
+
+  let of_string_exn s =
+    match of_string s with
+    | Some c -> c
+    | None ->
+      failwith ("Color.of_string: invalid color " ^ s)
+end
+
 type state = {
   surf: Cairo.Surface.t;
   cairo: Cairo.context;
   font: Pango.font_description;
 }
 
-let parse_color (color: string) =
-  let color_l =
-    match String.to_seq color |> List.of_seq with
-    | '#' :: xs -> xs
-    | xs -> xs
-  in
-  let str_of_list l = String.of_seq (List.to_seq l) in
-  let color_of_chars x0 x1 =
-    Scanf.sscanf (str_of_list [x0; x1]) "%x"
-      (fun i -> float i /. 255.)
-  in
-  try
-    match color_l with
-    | [r0; r1; g0; g1; b0; b1] ->
-      Some (
-        color_of_chars r0 r1,
-        color_of_chars g0 g1,
-        color_of_chars b0 b1
-      )
-    | _ ->
-      None
-  with Scanf.Scan_failure _ -> None
+let cairo_ctx state = state.cairo
 
-let validate_color (color: string): bool =
-  match parse_color color with Some _ -> true | None -> false
+let set_source_rgb' cairo col =
+  let r, g, b = col in
+  Cairo.set_source_rgb cairo r g b
 
-let parse_color_exn color =
-  match parse_color color with
-  | Some c -> c
-  | None ->
-    raise (Invalid_argument ("parse_color_exn: " ^ color))
+let set_source_rgb state col =
+  set_source_rgb' state.cairo col
 
 let get_pango_layout state text =
   let layout = Cairo_pango.create_layout state.cairo in
@@ -80,14 +90,6 @@ let draw_text_hl_raw state
       (text: prepared_text)
       (matching_result: (bool * int * int) list)
   =
-  let r, g, b = color and rhl, ghl, bhl = color_hl in
-  Printf.printf "text: \'%s\'\n" text.text;
-  Printf.printf "matching res:";
-  List.iter (fun (b, start, stop) ->
-    Printf.printf " %b, %d, %d |" b start stop
-  ) matching_result;
-  print_endline "";
-
   let matched, text_parts =
     List.fold_right (fun (m, start, stop) (matched, text_parts) ->
       (m :: matched,
@@ -99,8 +101,8 @@ let draw_text_hl_raw state
   let x, y = Cairo.Path.get_current_point state.cairo in
   Cairo.save state.cairo;
   List.iter2 (fun m part ->
-    if m then Cairo.set_source_rgb state.cairo rhl ghl bhl
-    else Cairo.set_source_rgb state.cairo r g b;
+    if m then set_source_rgb state color_hl
+    else set_source_rgb state color;
     let offset_y = float (text.baseline - part.baseline) in
     Cairo.rel_move_to state.cairo 0. offset_y;
     Cairo_pango.show_layout state.cairo part.layout;
@@ -111,8 +113,7 @@ let draw_text_hl_raw state
 
 let draw_sharp_filled_rectangle cairo ~color ~x ~y ~w ~h =
   Cairo.save cairo;
-  let r, g, b = color in
-  Cairo.set_source_rgb cairo r g b;
+  set_source_rgb' cairo color;
   Cairo.set_antialias cairo Cairo.ANTIALIAS_NONE;
   Cairo.rectangle cairo x y ~w ~h;
   Cairo.fill cairo;
@@ -121,8 +122,7 @@ let draw_sharp_filled_rectangle cairo ~color ~x ~y ~w ~h =
 
 let draw_sharp_rectangle cairo ~color ~x ~y ~w ~h =
   Cairo.save cairo;
-  let r, g, b = color in
-  Cairo.set_source_rgb cairo r g b;
+  set_source_rgb' cairo color;
   Cairo.set_antialias cairo Cairo.ANTIALIAS_NONE;
   (* not completely sure about this *)
   Cairo.rectangle cairo (x +. 0.5) (y +. 0.5) ~w:(w-.1.) ~h:(h-.1.);
@@ -143,8 +143,7 @@ let draw_text_aux ?color_background ~color_foreground ?(xoff = 0)
   let yoff = float (baseline - prepared.baseline) in
   Cairo.move_to state.cairo (x +. float xoff) (y +. yoff);
   Cairo.save state.cairo;
-  let r, g, b = color_foreground in
-  Cairo.set_source_rgb state.cairo r g b;
+  set_source_rgb state color_foreground;
   show_layout state prepared;
   Cairo.restore state.cairo;
   Cairo.rel_move_to state.cairo (float (prepared.width + xoff)) (-. yoff)
@@ -161,6 +160,10 @@ let draw_text_hl ?color_background ~color_foreground ?xoff
     ~height ~baseline ~state text (fun state prepared ->
       draw_text_hl_raw state ~color:color_foreground ~color_hl
         prepared matching_result)
+
+let text_width state txt =
+  let text_size = prepare_text state txt in
+  text_size.width
 
 let init ~font ~topbar =
   let open Backend in
@@ -179,7 +182,7 @@ let init ~font ~topbar =
 let terminate _state =
   Backend.X11.terminate ()
 
-let render state height draw_f =
+let render state ~height draw_f =
   Backend.X11.resize_height height;
 
   Cairo.Group.push state.cairo;
