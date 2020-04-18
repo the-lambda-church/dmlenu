@@ -29,8 +29,8 @@ val right: 'a t -> 'a t
 
 val page_left: 'a t -> 'a t
 val page_right: 'a t -> 'a t
-val fold_visible: ('b -> bool -> 'a -> 'b) -> 'b -> 'a t -> 'b
-(** Fold over the visible elements of a pagination data.  The boolean
+val visible: 'a t -> ('a * bool) Base.Sequence.t
+(** The visible elements of a pagination data. The boolean
     tell you whether the current element is the selected one. *)
     
 val is_empty: 'a t -> bool

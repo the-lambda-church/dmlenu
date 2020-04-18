@@ -3,7 +3,8 @@ name: "dmlenu"
 version: "0.1"
 maintainer: "opam-devel@lists.ocaml.org"
 authors: [ "Simon Castellan"
-           "Thomas Refis" ]
+           "Thomas Refis"
+           "Armaël Guéneau" ]
 license: "MIT"
 homepage: "http://the-lambda-church.github.io/dmlenu/"
 dev-repo: "https://github.com/the-lambda-church/dmlenu.git"
@@ -17,7 +18,9 @@ build-doc: [ make "doc" ]
 depends: [
   "base"
   "stdio"
-  "dune" {build & >= "1.0"}
-  "ocamlfind" {build}
+  "base-unix"
+  "cairo2"
+  "cairo2-pango"
+  "dune" {>= "1.0"}
 ]
 available: [ ocaml-version >= "4.00.1" ]

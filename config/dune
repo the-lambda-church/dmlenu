@@ -1,0 +1,9 @@
+(executables
+ (names discover)
+ (libraries base stdio dune.configurator)
+ (modules discover))
+
+(rule
+ (targets ccopt.sexp cclib.sexp)
+ (deps (:discover discover.exe))
+ (action (run %{discover} --cairo2 %{lib:cairo2:cairo_ocaml.h})))

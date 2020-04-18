@@ -7,7 +7,6 @@ type column = {
   pages : (Candidate.t * Matching.result) Pagination.t ;
 }
 
-
 type layout =
   | SingleLine       (** Display the candidates horizontally on a single line *)
   | MultiLine of int (** Display the candidates vertically on several lines *)
