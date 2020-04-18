@@ -21,6 +21,6 @@ depends: [
   "base-unix"
   "cairo2"
   "cairo2-pango"
-  "dune" {build & >= "1.0"}
+  "dune" {>= "1.0"}
 ]
 available: [ ocaml-version >= "4.00.1" ]
