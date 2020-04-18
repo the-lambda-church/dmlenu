@@ -181,11 +181,13 @@ let binaries =
     with _ -> []
   in
   let lower_compare s1 s2 = String.(compare (lowercase s1) (lowercase s2)) in
-  String.split ~on:':' (getenv "PATH")
-  |> List.concat_map ~f:aux
-  |> List.sort ~compare:(fun (s1, _) (s2, _) -> lower_compare s1 s2)
-  |> List.map ~f:(fun (x, y) -> (x, y, ""))
-  |> from_list
+  lazy (
+    String.split ~on:':' (getenv "PATH")
+    |> List.concat_map ~f:aux
+    |> List.sort ~compare:(fun (s1, _) (s2, _) -> lower_compare s1 s2)
+    |> List.map ~f:(fun (x, y) -> (x, y, ""))
+    |> from_list
+  )
 
 let empty = S {
   delay = false;

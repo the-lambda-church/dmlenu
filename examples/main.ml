@@ -70,7 +70,7 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
   let program =
     if stdin then Engine.singleton (Source.stdin ())
     else {
-      Engine.sources = [ Source.binaries ];
+      Engine.sources = [ Lazy.force Source.binaries ];
       transition = fun o -> Dmlenu_extra.Sources.stm_from_file o.display
     }
   in

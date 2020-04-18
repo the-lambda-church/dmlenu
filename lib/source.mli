@@ -52,7 +52,7 @@ val from_list_ : string list -> t
 val from_list_rev_ : string list -> t
 (** Same as {!from_list_} but reverses its argument.*)
 
-val binaries : t
+val binaries : t lazy_t
 (** A source that list all the binaries in your PATH. 
 
     The display is the binary name and the display its absolute path.
