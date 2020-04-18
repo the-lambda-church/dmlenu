@@ -38,7 +38,6 @@ let () =
       "x11";
       "xinerama";
       "cairo-xlib";
-      "pangocairo";
     ];
     write_sexp "cclib.sexp" (sexp_of_list sexp_of_string !libs);
     write_sexp "ccopt.sexp" (sexp_of_list sexp_of_string !cflags);
