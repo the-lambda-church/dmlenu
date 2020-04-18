@@ -34,10 +34,10 @@ let draw_horizontal { ui_state; state; colors; _ } =
     Ui.draw_text ~colors ~focus:false ui_state "<";
     incr ui_state
   );
-  Pagination.fold_visible (fun () visible (candidate, result) ->
+  Sequence.iter ~f:(fun ((candidate, result), visible) ->
     Ui.draw_text_hl ~colors ~focus:visible ui_state candidate.display result;
     incr ui_state
-  ) () candidates;
+  ) (Pagination.visible candidates);
   if not (List.is_empty candidates.Pagination.unvisible_right) then (
     Ui.draw_text ~colors ~focus:false ui_state ">"
   )
@@ -52,13 +52,12 @@ let rec shorten ui_state candidate s =
        with _ -> "")
 
 let draw_vertical { ui_state; colors; _ } extra_lines_geometry candidates =
-  Pagination.fold_visible (fun lines_geom focus (candidate, result) ->
-    (* XXX *)
-    let (line_geom: Ui.line_geometry), lines_geom_tl =
-      match lines_geom with
-      | x :: xs -> x, xs
-      | [] -> assert false
-    in
+  let candidates_with_geometry =
+    Sequence.zip
+      (Sequence.of_list extra_lines_geometry)
+      (Pagination.visible candidates)
+  in
+  Sequence.iter ~f:(fun (line_geom, ((candidate, result), focus)) ->
     let cairo_ctx = Ui.cairo_ctx ui_state in
     Ui.set_x ui_state 0.;
     Ui.clear_line ~geometry:line_geom ~focus ~colors ui_state;
@@ -70,10 +69,8 @@ let draw_vertical { ui_state; colors; _ } extra_lines_geometry candidates =
       Ui.set_x ui_state x;
       Ui.draw_text ~geometry:line_geom ~focus ~colors ui_state candidate.doc
     );
-    Cairo.rel_move_to cairo_ctx 0. (float line_geom.height);
-    lines_geom_tl
-  ) extra_lines_geometry candidates
-  |> ignore
+    Cairo.rel_move_to cairo_ctx 0. (float line_geom.height)
+  ) candidates_with_geometry
 
 let compute_geometry { ui_state; prompt; state; _ }: Ui.line_geometry list =
   let open State in
@@ -89,8 +86,9 @@ let compute_geometry { ui_state; prompt; state; _ }: Ui.line_geometry list =
          | MultiLine _ -> []
          | _ ->
            "<" :: ">" ::
-           Pagination.fold_visible (fun txts _ (c, _) -> c.display :: txts)
-             [] state.candidates);
+           (Pagination.visible state.candidates
+            |> Sequence.map ~f:(fun ((c, _), _) -> c.display)
+            |> Sequence.to_list_rev));
       ]
     in
     let Draw.{ aligned_height; aligned_baseline; _ } =

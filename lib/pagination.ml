@@ -62,12 +62,12 @@ let right p =
   else
     { p with selected = p.selected + 1 }
 
-let fold_visible f state p =
-  List.fold ~f:(fun (counter, state) elem ->
-    (counter + 1, f state (counter = p.selected) elem))
-    ~init:(0, state)
-    p.visible |> snd
-
+let visible p =
+  Sequence.unfold_step ~init:(0, p.visible) ~f:(fun (i, l) ->
+    match l with
+    | [] -> Sequence.Step.Done
+    | x :: l' -> Yield ((x, i = p.selected), (i+1, l'))
+  )
 
 let selected p =
   if List.is_empty p.visible then failwith "Pagination.selected: empty list"
