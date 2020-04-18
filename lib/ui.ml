@@ -40,10 +40,7 @@ let cairo_ctx state = Draw.cairo_ctx state.dstate
 let dstate state = state.dstate
 
 let make dstate =
-  let xoff =
-    let Draw.{ height; _ } = Draw.prepare_text dstate "" in
-    height / 2
-  in
+  let xoff = Draw.approx_char_width dstate in
   { dstate; xoff; bar_geometry = { height = 0; baseline = 0 } }
 
 let text_foreground ~focus colors =

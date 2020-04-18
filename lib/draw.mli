@@ -29,6 +29,7 @@ type aligned_texts = {
 }
 
 val text_width : state -> string -> int
+val approx_char_width : state -> int
 val prepare_text : state -> string -> prepared_text
 val prepare_aligned_texts : state -> string list -> aligned_texts
 

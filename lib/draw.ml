@@ -34,7 +34,9 @@ end
 type state = {
   surf: Cairo.Surface.t;
   cairo: Cairo.context;
-  font: Pango.font_description;
+  pango: Pango.context;
+  font: Pango.font;
+  fontdesc: Pango.font_description;
 }
 
 let init ~font ~topbar =
@@ -43,13 +45,15 @@ let init ~font ~topbar =
   let surf = X11.get_cairo_surface () in
   let cairo = Cairo.create surf in
   Cairo.set_antialias cairo Cairo.ANTIALIAS_SUBPIXEL;
+  let pango = Cairo_pango.create_context cairo in
   let fo = Cairo.Font_options.create () in
   Cairo.Font_options.set_hint_style fo Cairo.HINT_STYLE_FULL;
   Cairo.Font_options.set_antialias fo Cairo.ANTIALIAS_SUBPIXEL;
   Cairo.Font_options.set_subpixel_order fo Cairo.SUBPIXEL_ORDER_DEFAULT;
   Cairo.Font_options.set cairo fo;
-  let font = Pango.Font.from_string font in
-  { cairo = cairo; font; surf }
+  let fontdesc = Pango.Font.from_string font in
+  let font = Pango.Context.load_font pango fontdesc in
+  { cairo = cairo; pango; font; fontdesc; surf }
 
 let terminate _state =
   Backend.X11.terminate ()
@@ -58,12 +62,6 @@ let render state ~height draw_f =
   Backend.X11.resize_height height;
 
   Cairo.Group.push state.cairo;
-
-  (* useless? *)
-  (* Cairo.save state.cairo;
-   * Cairo.set_operator state.cairo Cairo.CLEAR;
-   * Cairo.paint state.cairo;
-   * Cairo.restore state.cairo; *)
 
   draw_f ();
 
@@ -84,7 +82,7 @@ let set_source_rgb state col =
 let get_pango_layout state text =
   let layout = Cairo_pango.create_layout state.cairo in
   Pango.Layout.set_text layout text;
-  Pango.Layout.set_font_description layout state.font;
+  Pango.Layout.set_font_description layout state.fontdesc;
   Pango.Layout.set_single_paragraph_mode layout true;
   (* TODO: handle scaling *)
   layout
@@ -200,6 +198,10 @@ let text_width state txt =
   let text_size = prepare_text state txt in
   text_size.width
 
-
-(* Higher-level, more domain-specific drawing functions *)
-
+(* No precise text positioning computations should rely on this. This is just to
+   get a somewhat reasonable value for the width of a character space in the
+   font, typically, to use as spacing in UI elements. *)
+let approx_char_width state =
+  let metrics =
+    Pango.Context.get_metrics state.pango state.fontdesc None in
+  Pango.Font.get_approximate_char_width metrics / Pango.scale
