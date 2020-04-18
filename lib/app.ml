@@ -53,17 +53,12 @@ let compute_xoff ~dstate =
   height / 2
 
 let text_foreground ~focus (st: app_state) =
-  if focus then
-    (* XXX *)
-    st.colors.focus_foreground
-  else
-    st.colors.normal_foreground
+  if focus then st.colors.focus_foreground
+  else st.colors.normal_foreground
 
 let text_background ~focus (st: app_state) =
-  if focus then
-    st.colors.focus_background
-  else
-    st.colors.normal_background
+  if focus then st.colors.focus_background
+  else st.colors.normal_background
 
 let draw_horizontal ~xoff ({ dstate; state; _ } as st) bar_geometry  =
   let open State in
@@ -141,25 +136,8 @@ let draw_vertical ~xoff ({ dstate; _} as st)
     );
     Cairo.move_to cairo_ctx 0. (y +. float line_geom.height);
     lines_geom_tl
-
-    (* X.Draw.clear_line line (X.colors xstate).X.Colors.focus_background ;
-     * X.Draw.text_hl ~state: xstate ~focus ~result candidate.display;
-     * if not (String.is_empty candidate.doc) then (
-     *   let str = shorten ~state: xstate candidate candidate.doc in
-     *   let x = X.width ~state: xstate - (X.text_width ~state: xstate str) - 10 in
-     *   let () = X.Draw.set_x ~state: xstate ~x in
-     *   X.Draw.text ~focus ~state: xstate "%s" candidate.doc
-     * ) *)
   ) extra_lines_geometry candidates
   |> ignore
-
-(* let resize =
- *   let current = ref 0 in
- *   fun ~state ~lines ->
- *     if !current <> lines then (
- *       current := lines ;
- *       X.resize ~state ~lines
- *     ) *)
 
 let compute_geometry ({ dstate; prompt; state; _ } as app_state):
   app_state * State.line_geometry list
@@ -271,6 +249,26 @@ let draw ({ dstate; prompt; state; topbar; _ } as app_state) =
   );
   app_state
 
+(* From Uutf (Uutf.Buffer.add_utf_8) *)
+let utf8_of_uchar u =
+  let b = Buffer.create 8 in
+  let u = Uchar.to_scalar u in
+  let w byte = Buffer.add_char b (Char.unsafe_of_int byte) in
+  if u <= 0x007F then
+    (w u)
+  else if u <= 0x07FF then
+    (w (0xC0 lor (u lsr 6));
+     w (0x80 lor (u land 0x3F)))
+  else if u <= 0xFFFF then
+    (w (0xE0 lor (u lsr 12));
+     w (0x80 lor ((u lsr 6) land 0x3F));
+     w (0x80 lor (u land 0x3F)))
+  else
+    (w (0xF0 lor (u lsr 18));
+     w (0x80 lor ((u lsr 12) land 0x3F));
+     w (0x80 lor ((u lsr 6) land 0x3F));
+     w (0x80 lor (u land 0x3F)));
+  Buffer.contents b
 
 let run_list ?(topbar = true) ?(separator = " ") ?(colors = Colors.default)
       ?(font = "DejaVu Sans Mono 9") ?(layout = State.SingleLine) ?(prompt = "")
@@ -296,11 +294,6 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = Colors.default)
     in
 
     let Key (ksym, mods, unicode) = X11.Events.wait () in
-    let utf8_of_uchar u =
-      let b = Buffer.create 8 in
-      Uutf.Buffer.add_utf_8 b u;
-      Buffer.contents b
-    in
     if List.mem ~equal:Poly.(=) mods X11.Key.Control then (
       match ksym with
       | X11.Key.K_b -> loop_pure State.left
@@ -340,15 +333,6 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = Colors.default)
           loop state
         else (
           let s = utf8_of_uchar unicode in
-          (* let s =
-           *   if String.equal s "z" then
-           *     "は世界"
-           *   else if String.equal s "w" then
-           *     "こんにち"
-           *   else if String.equal s "j" then
-           *     "🤔"
-           *   else s
-           * in *)
           loop_transition (State.add_char s)
         )
     )

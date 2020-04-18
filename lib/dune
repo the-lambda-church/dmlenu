@@ -1,4 +1,4 @@
 (library
  (name dmlenu)
  (public_name dmlenu)
- (libraries base stdio str unix backend cairo2 cairo2-pango uutf))
+ (libraries base stdio str unix backend cairo2 cairo2-pango))
