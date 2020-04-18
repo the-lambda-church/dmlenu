@@ -59,8 +59,14 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
       normal_background match_foreground window_background lines =
   let () = Matching.(set_match_query_fun (subset ~case:false)) in
   let () = Ordering.(set_reorder_matched_fun prefixes_first) in
-  let colors = { X.Colors.focus_foreground; focus_background;
-                 normal_foreground; normal_background; match_foreground; window_background } in
+  let colors = Ui.Colors.({
+    focus_foreground = Draw.Color.of_string_exn focus_foreground;
+    focus_background = Draw.Color.of_string_exn focus_background;
+    normal_foreground = Draw.Color.of_string_exn normal_foreground;
+    normal_background = Draw.Color.of_string_exn normal_background;
+    match_foreground = Draw.Color.of_string_exn match_foreground;
+    window_background = Draw.Color.of_string_exn window_background;
+  }) in
   let program =
     if stdin then Engine.singleton (Source.stdin ())
     else {

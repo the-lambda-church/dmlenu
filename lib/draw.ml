@@ -37,6 +37,41 @@ type state = {
   font: Pango.font_description;
 }
 
+let init ~font ~topbar =
+  let open Backend in
+  let () = X11.init ~topbar () in
+  let surf = X11.get_cairo_surface () in
+  let cairo = Cairo.create surf in
+  Cairo.set_antialias cairo Cairo.ANTIALIAS_SUBPIXEL;
+  let fo = Cairo.Font_options.create () in
+  Cairo.Font_options.set_hint_style fo Cairo.HINT_STYLE_FULL;
+  Cairo.Font_options.set_antialias fo Cairo.ANTIALIAS_SUBPIXEL;
+  Cairo.Font_options.set_subpixel_order fo Cairo.SUBPIXEL_ORDER_DEFAULT;
+  Cairo.Font_options.set cairo fo;
+  let font = Pango.Font.from_string font in
+  { cairo = cairo; font; surf }
+
+let terminate _state =
+  Backend.X11.terminate ()
+
+let render state ~height draw_f =
+  Backend.X11.resize_height height;
+
+  Cairo.Group.push state.cairo;
+
+  (* useless? *)
+  (* Cairo.save state.cairo;
+   * Cairo.set_operator state.cairo Cairo.CLEAR;
+   * Cairo.paint state.cairo;
+   * Cairo.restore state.cairo; *)
+
+  draw_f ();
+
+  Cairo.Group.pop_to_source state.cairo;
+  Cairo.paint state.cairo;
+  Cairo.Surface.flush state.surf;
+  Backend.X11.flush ()
+
 let cairo_ctx state = state.cairo
 
 let set_source_rgb' cairo col =
@@ -165,37 +200,6 @@ let text_width state txt =
   let text_size = prepare_text state txt in
   text_size.width
 
-let init ~font ~topbar =
-  let open Backend in
-  let () = X11.init ~topbar () in
-  let surf = X11.get_cairo_surface () in
-  let cairo = Cairo.create surf in
-  Cairo.set_antialias cairo Cairo.ANTIALIAS_SUBPIXEL;
-  let fo = Cairo.Font_options.create () in
-  Cairo.Font_options.set_hint_style fo Cairo.HINT_STYLE_FULL;
-  Cairo.Font_options.set_antialias fo Cairo.ANTIALIAS_SUBPIXEL;
-  Cairo.Font_options.set_subpixel_order fo Cairo.SUBPIXEL_ORDER_DEFAULT;
-  Cairo.Font_options.set cairo fo;
-  let font = Pango.Font.from_string font in
-  { cairo = cairo; font; surf }
 
-let terminate _state =
-  Backend.X11.terminate ()
+(* Higher-level, more domain-specific drawing functions *)
 
-let render state ~height draw_f =
-  Backend.X11.resize_height height;
-
-  Cairo.Group.push state.cairo;
-
-  (* useless? *)
-  Cairo.save state.cairo;
-  Cairo.set_operator state.cairo Cairo.CLEAR;
-  Cairo.paint state.cairo;
-  Cairo.restore state.cairo;
-
-  draw_f ();
-
-  Cairo.Group.pop_to_source state.cairo;
-  Cairo.paint state.cairo;
-  Cairo.Surface.flush state.surf;
-  Backend.X11.flush ()

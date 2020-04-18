@@ -4,7 +4,13 @@ module Color : sig
   val of_string_exn : string -> t
 end
 
+(** {2} Low-level drawing primitives. Used internally by the [Ui] module. *)
+
 type state
+
+val init : font:string -> topbar:bool -> state
+val render : state -> height:int -> (unit -> unit) -> unit
+val terminate : state -> unit
 
 val cairo_ctx : state -> Cairo.context
 val set_source_rgb : state -> Color.t -> unit
@@ -46,6 +52,3 @@ val draw_sharp_filled_rectangle :
   x:float -> y:float -> w:float -> h:float ->
   unit
 
-val init : font:string -> topbar:bool -> state
-val render : state -> height:int -> (unit -> unit) -> unit
-val terminate : state -> unit

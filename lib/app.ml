@@ -2,35 +2,14 @@ open Base
 open Candidate
 open Backend
 
-(* The set of colors of the bar *)
-module Colors = struct
-  type t = {
-    focus_foreground: Draw.Color.t;
-    focus_background: Draw.Color.t;
-    normal_foreground: Draw.Color.t;
-    normal_background: Draw.Color.t;
-    match_foreground: Draw.Color.t;
-    window_background: Draw.Color.t;
-  }
-
-  let default = Draw.({
-    normal_background = Color.of_string_exn "#222222";
-    normal_foreground = Color.of_string_exn "#bbbbbb";
-    focus_background = Color.of_string_exn "#005577";
-    focus_foreground = Color.of_string_exn "#eeeeee";
-    match_foreground = Color.of_string_exn "#ff0000";
-    window_background = Color.of_string_exn "#000000";
-  })
-end
-
 type app_state = {
-  colors: Colors.t; (** The set of colors to use *)
+  colors: Ui.Colors.t; (** The set of colors to use *)
   font: string;
   prompt: string; (** The prompt to the user *)
   topbar: bool;  (** Shall dmlenu sit on the bottom or on the top of the screen? *)
   hook: (app_state -> app_state); (** Hook called whenever a token is added *)
   state: State.t; (** The state of the current engine *)
-  dstate: Draw.state;
+  ui_state: Ui.state; (** Data related to the drawing backend *)
 }
 
 let float = Float.of_int
@@ -46,103 +25,59 @@ let splith dstate list =
   in
   go 0 list
 
-let incr ~dstate = Cairo.rel_move_to (Draw.cairo_ctx dstate) 5. 0.
+let incr ui_state = Cairo.rel_move_to (Ui.cairo_ctx ui_state) 5. 0.
 
-let compute_xoff ~dstate =
-  let Draw.{ height; _ } = Draw.prepare_text dstate "" in
-  height / 2
-
-let text_foreground ~focus (st: app_state) =
-  if focus then st.colors.focus_foreground
-  else st.colors.normal_foreground
-
-let text_background ~focus (st: app_state) =
-  if focus then st.colors.focus_background
-  else st.colors.normal_background
-
-let draw_horizontal ~xoff ({ dstate; state; _ } as st) bar_geometry  =
+let draw_horizontal { ui_state; state; colors; _ } =
   let open State in
   let candidates = state.candidates in
-  let draw_text ~focus txt =
-    Draw.draw_text ~xoff
-      ~color_background:(text_background ~focus st)
-      ~color_foreground:(text_foreground ~focus st)
-      ~height:bar_geometry.height ~baseline:bar_geometry.baseline
-      ~state:dstate txt
-  in
-  let draw_text_hl ~focus txt matching_result =
-    Draw.draw_text_hl ~xoff
-      ~color_background:(text_background ~focus st)
-      ~color_foreground:(text_foreground ~focus st)
-      ~height:bar_geometry.height ~baseline:bar_geometry.baseline
-      ~state:dstate txt matching_result
-  in
-
   if not (List.is_empty candidates.Pagination.unvisible_left) then (
-    draw_text ~focus:false "<";
-    incr ~dstate
+    Ui.draw_text ~colors ~focus:false ui_state "<";
+    incr ui_state
   );
   Pagination.fold_visible (fun () visible (candidate, result) ->
-    draw_text_hl ~focus:visible
-      ~color_hl:st.colors.match_foreground
-      candidate.display result;
-    incr ~dstate
+    Ui.draw_text_hl ~colors ~focus:visible ui_state candidate.display result;
+    incr ui_state
   ) () candidates;
   if not (List.is_empty candidates.Pagination.unvisible_right) then (
-    draw_text ~focus:false ">"
+    Ui.draw_text ~colors ~focus:false ui_state ">"
   )
 
-let rec shorten ~dstate candidate s =
-  if Draw.text_width dstate (candidate.display ^ s)
+let rec shorten ui_state candidate s =
+  if Draw.text_width (Ui.dstate ui_state) (candidate.display ^ s)
      <= X11.get_width () - 10 then
     s
   else
-    shorten ~dstate candidate
+    shorten ui_state candidate
       (try "..." ^ String.sub s ~pos:10 ~len:(String.length s - 10)
        with _ -> "")
 
-let draw_vertical ~xoff ({ dstate; _} as st)
-      extra_lines_geometry candidates =
-
+let draw_vertical { ui_state; colors; _ } extra_lines_geometry candidates =
   Pagination.fold_visible (fun lines_geom focus (candidate, result) ->
     (* XXX *)
-    let (line_geom: State.line_geometry), lines_geom_tl =
+    let (line_geom: Ui.line_geometry), lines_geom_tl =
       match lines_geom with
       | x :: xs -> x, xs
       | [] -> assert false
     in
-    let cairo_ctx = Draw.cairo_ctx dstate in
-    let _, y = Cairo.Path.get_current_point cairo_ctx in
-    if focus then
-      Draw.draw_sharp_filled_rectangle cairo_ctx
-        ~color:st.colors.focus_background
-        ~x:0. ~y ~w:(float (X11.get_width ())) ~h:(float line_geom.height);
-    Cairo.move_to cairo_ctx 0. y;
-    Draw.draw_text_hl ~xoff
-      ~color_background:(text_background ~focus st)
-      ~color_foreground:(text_foreground ~focus st)
-      ~color_hl:st.colors.match_foreground
-      ~height:line_geom.height ~baseline:line_geom.baseline
-      ~state:dstate candidate.display result;
+    let cairo_ctx = Ui.cairo_ctx ui_state in
+    Ui.set_x ui_state 0.;
+    Ui.clear_line ~geometry:line_geom ~focus ~colors ui_state;
+    Ui.draw_text_hl ~geometry:line_geom ~focus ~colors
+      ui_state candidate.display result;
     if not (String.is_empty candidate.doc) then (
-      let str = shorten ~dstate candidate candidate.doc in
-      let x = float @@ X11.get_width () - (Draw.text_width dstate str) - 10 in
-      Cairo.move_to cairo_ctx x y;
-      Draw.draw_text ~xoff
-        ~color_background:(text_background ~focus st)
-        ~color_foreground:(text_foreground ~focus st)
-        ~height:line_geom.height ~baseline:line_geom.baseline
-        ~state:dstate candidate.doc
+      let str = shorten ui_state candidate candidate.doc in
+      let x = float @@ X11.get_width () - (Ui.text_width ui_state str) - 10 in
+      Ui.set_x ui_state x;
+      Ui.draw_text ~geometry:line_geom ~focus ~colors ui_state candidate.doc
     );
-    Cairo.move_to cairo_ctx 0. (y +. float line_geom.height);
+    Cairo.rel_move_to cairo_ctx 0. (float line_geom.height);
     lines_geom_tl
   ) extra_lines_geometry candidates
   |> ignore
 
-let compute_geometry ({ dstate; prompt; state; _ } as app_state):
-  app_state * State.line_geometry list
-  =
+let compute_geometry { ui_state; prompt; state; _ }: Ui.line_geometry list =
   let open State in
+  let dstate = Ui.dstate ui_state in
   let main_line_geometry =
     let texts =
       List.join [
@@ -150,7 +85,7 @@ let compute_geometry ({ dstate; prompt; state; _ } as app_state):
         (List.map ~f:(fun (_, c) -> c.Candidate.display)
            state.State.entries);
         [state.before_cursor; state.after_cursor];
-        (match app_state.state.layout with
+        (match state.layout with
          | MultiLine _ -> []
          | _ ->
            "<" :: ">" ::
@@ -160,11 +95,9 @@ let compute_geometry ({ dstate; prompt; state; _ } as app_state):
     in
     let Draw.{ aligned_height; aligned_baseline; _ } =
       Draw.prepare_aligned_texts dstate texts in
-    if state.bar_geometry.height >= aligned_height then
-      state.bar_geometry
-    else
-      { height = aligned_height; baseline = aligned_baseline }
+    Ui.{ height = aligned_height; baseline = aligned_baseline }
   in
+  Ui.update_bar_geometry ui_state main_line_geometry;
 
   let extra_lines_geometry =
     let extra_lines =
@@ -179,38 +112,23 @@ let compute_geometry ({ dstate; prompt; state; _ } as app_state):
       let Draw.{ aligned_height; aligned_baseline; _ } =
         Draw.prepare_aligned_texts dstate
           [c.Candidate.display; c.Candidate.doc] in
-      { height = aligned_height; baseline = aligned_baseline }
+      Ui.{ height = aligned_height; baseline = aligned_baseline }
     ) extra_lines
   in
-
-  { app_state with state = { state with bar_geometry = main_line_geometry } },
   extra_lines_geometry
 
-let draw ({ dstate; prompt; state; topbar; _ } as app_state) =
+let draw ({ ui_state; prompt; state; topbar; colors; _ } as app_state) =
   let open State in
-  let app_state, extra_lines_geometry = compute_geometry app_state in
-  let bar_geometry =
-    (* XX *)
-    let voff = 2 in
-    { height = app_state.state.bar_geometry.height + 2 * voff;
-      baseline = app_state.state.bar_geometry.baseline + voff }
-  in
+  let extra_lines_geometry = compute_geometry app_state in
+  let bar_geometry = Ui.current_bar_geometry ui_state in
   let total_height =
     bar_geometry.height +
     (List.fold_left ~init:0 ~f:(fun s { height; _ } -> s + height)
-       extra_lines_geometry)
-  in
-  let xoff = compute_xoff ~dstate in
-  let draw_bar_text ~focus text =
-    Draw.draw_text
-      ~color_background:(text_background ~focus app_state)
-      ~color_foreground:(text_foreground ~focus app_state)
-      ~xoff ~height:bar_geometry.height ~baseline:bar_geometry.baseline
-      ~state:dstate text
-  in
+       extra_lines_geometry) in
+  let dstate = Ui.dstate ui_state in
+  let cairo_ctx = Draw.cairo_ctx dstate in
 
   Draw.render dstate ~height:total_height (fun () ->
-    let cairo_ctx = Draw.cairo_ctx dstate in
     Draw.set_source_rgb dstate app_state.colors.window_background;
     Cairo.paint cairo_ctx;
 
@@ -218,32 +136,33 @@ let draw ({ dstate; prompt; state; topbar; _ } as app_state) =
     Cairo.move_to cairo_ctx 0. oy;
 
     if not (String.is_empty prompt) then (
-      draw_bar_text ~focus:true prompt;
-      incr ~dstate
+      Ui.draw_text ~colors ~focus:true ui_state prompt;
+      incr ui_state
     );
 
     state.State.entries |> List.iter ~f:(fun (_, candidate) ->
-      draw_bar_text ~focus:false candidate.display;
-      incr ~dstate
+      Ui.draw_text ~colors ~focus:false ui_state candidate.display;
+      incr ui_state
     );
 
-    draw_bar_text ~focus:false (state.before_cursor ^ "|" ^ state.after_cursor);
-    incr ~dstate;
+    Ui.draw_text ~colors ~focus:false ui_state
+      (state.before_cursor ^ "|" ^ state.after_cursor);
+    incr ui_state;
 
     let extra_lines_y = if topbar then float bar_geometry.height else 0. in
     begin match app_state.state.State.layout with
     | State.Grid (_, None)
-    | State.SingleLine  -> draw_horizontal ~xoff app_state bar_geometry
+    | State.SingleLine  -> draw_horizontal app_state
 
     | State.MultiLine _ ->
       Cairo.move_to cairo_ctx 0. extra_lines_y;
-      draw_vertical ~xoff app_state extra_lines_geometry
+      draw_vertical app_state extra_lines_geometry
         app_state.state.State.candidates
 
     | State.Grid (_, Some { pages ; _ }) ->
-      draw_horizontal ~xoff app_state bar_geometry;
+      draw_horizontal app_state;
       Cairo.move_to cairo_ctx 0. extra_lines_y;
-      draw_vertical ~xoff app_state extra_lines_geometry pages
+      draw_vertical app_state extra_lines_geometry pages
     end;
     ()
   );
@@ -270,7 +189,7 @@ let utf8_of_uchar u =
      w (0x80 lor (u land 0x3F)));
   Buffer.contents b
 
-let run_list ?(topbar = true) ?(separator = " ") ?(colors = Colors.default)
+let run_list ?(topbar = true) ?(separator = " ") ?(colors = Ui.Colors.default)
       ?(font = "DejaVu Sans Mono 9") ?(layout = State.SingleLine) ?(prompt = "")
       ?(hook = fun x -> x) program
   =
@@ -279,8 +198,9 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = Colors.default)
     { state with state = State.normalize state.state }
   in
   let dstate = Draw.init ~font ~topbar in
+  let ui_state = Ui.make dstate in
   let state = {
-    colors; prompt; font; topbar; hook; dstate;
+    colors; prompt; font; topbar; hook; ui_state;
     state = State.initial ~layout ~separator ~program ~split:(splith dstate);
   } in
 
@@ -311,7 +231,7 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = Colors.default)
       | _ -> loop state
     ) else (
       match ksym with
-      | X11.Key.Escape -> Draw.terminate state.dstate; []
+      | X11.Key.Escape -> Draw.terminate (Ui.dstate ui_state); []
 
       | X11.Key.Left  -> loop_pure State.left
       | X11.Key.Up    -> loop_pure State.up
@@ -322,7 +242,7 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = Colors.default)
       | X11.Key.Scroll_down -> loop_pure State.scroll_down
 
       | X11.Key.Enter ->
-        Draw.terminate state.dstate; State.get_list state.state
+        Draw.terminate (Ui.dstate ui_state); State.get_list state.state
 
       | X11.Key.Tab -> loop_transition State.complete
 
@@ -338,7 +258,7 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = Colors.default)
     )
   in
   try loop state with e ->
-    Draw.terminate state.dstate;
+    Draw.terminate (Ui.dstate ui_state);
     raise e
 
 let run ?topbar ?separator ?colors ?layout ?prompt ?hook program =

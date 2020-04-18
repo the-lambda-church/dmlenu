@@ -8,11 +8,6 @@ type column = {
   pages : (Candidate.t * Matching.result) Pagination.t ;
 }
 
-type line_geometry = {
-  height : int;
-  baseline : int;
-}
-
 type layout =
   | SingleLine
   | MultiLine of int
@@ -28,7 +23,6 @@ type t = {
   entries: (Engine.t * Candidate.t) list;
   split: (Candidate.t * Matching.result) list -> (Candidate.t * Matching.result) list * (Candidate.t * Matching.result) list;
   layout : layout ;
-  bar_geometry: line_geometry;
 }
 
 let nb_lines = function
@@ -87,7 +81,6 @@ let initial ~separator ~program ~layout ~split =
     entries = [];
     sources = List.map ~f:Source.initialize program.Engine.sources;
     candidates = Pagination.from_list (if lines > 0 then take lines else split) [];
-    bar_geometry = { height = 0; baseline = 0 };
   }
 
 let next_entry candidate state =
