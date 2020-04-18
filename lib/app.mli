@@ -26,7 +26,8 @@ val run_list :
     default values are
     - topbar: [true]
     - separator: [" "]
-    - colors: [X.Colors.default]
+    - colors: [Ui.Colors.default]
+    - font: ["DejaVu Sans Mono 9"]
     - lines: [0]
     - prompt: [""]
     - hook: the identity function
@@ -36,6 +37,7 @@ val run :
   ?topbar: bool
   -> ?separator: string
   -> ?colors: Ui.Colors.t
+  -> ?font: string
   -> ?layout:State.layout
   -> ?prompt: string
   -> ?hook : (app_state -> app_state)
