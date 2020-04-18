@@ -14,11 +14,11 @@ type app_state = {
 
 let float = Float.of_int
 
-let splith dstate list =
+let splith ui_state list =
   let rec go index = function
     | [] -> [], []
     | (candidate, rest) :: q as l->
-      let size = Draw.text_width dstate candidate.display + 10 in
+      let size = Ui.text_width ui_state candidate.display + 10 in
       if (index + size) > X11.get_width () - 5 then [], l else
       let a, b = go (index+size) q in
       (candidate, rest) :: a, b
@@ -43,7 +43,7 @@ let draw_horizontal { ui_state; state; colors; _ } =
   )
 
 let rec shorten ui_state candidate s =
-  if Draw.text_width (Ui.dstate ui_state) (candidate.display ^ s)
+  if Ui.text_width ui_state (candidate.display ^ s)
      <= X11.get_width () - 10 then
     s
   else
@@ -199,7 +199,7 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = Ui.Colors.default)
   let ui_state = Ui.make dstate in
   let state = {
     colors; prompt; font; topbar; hook; ui_state;
-    state = State.initial ~layout ~separator ~program ~split:(splith dstate);
+    state = State.initial ~layout ~separator ~program ~split:(splith ui_state);
   } in
 
   let rec loop state =
