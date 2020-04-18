@@ -259,9 +259,9 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = Ui.Colors.default)
     Draw.terminate (Ui.dstate ui_state);
     raise e
 
-let run ?topbar ?separator ?colors ?layout ?prompt ?hook program =
+let run ?topbar ?separator ?colors ?font ?layout ?prompt ?hook program =
   match
-    (run_list ?topbar ?separator ?colors ?layout ?prompt ?hook program)
+    (run_list ?topbar ?separator ?colors ?font ?layout ?prompt ?hook program)
   with
   | [] -> None
   | l -> Some (String.concat ~sep:(Option.value ~default:" " separator) l)
