@@ -21,8 +21,3 @@
 (alias
  (name examples)
  (deps main.exe i3_workspaces.exe mpc2D.exe with_subcommands.exe))
-
-(executable
- (name cairotest)
- (modules cairotest)
- (libraries cairo2 cairo2-pango dmlenu.backend))
