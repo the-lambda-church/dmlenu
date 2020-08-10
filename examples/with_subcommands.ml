@@ -4,7 +4,7 @@ open Candidate
 let stm =
   let open Engine in
   {
-    sources = [ Source.binaries ] ;
+    sources = [ Lazy.force Source.binaries ] ;
     transition =
       fun cmd ->
         if cmd.display = "chromium" then
