@@ -206,11 +206,7 @@ let get_list state =
     else
       (fst (Pagination.selected state.candidates)).real
   in
-  let l =
-    if String.is_empty (state.before_cursor ^ state.after_cursor)
-    then []
-    else [ s ]
-  in
+  let l = if String.is_empty s then [] else [ s ] in
   List.map ~f:(fun (_, s) -> s.real) state.entries @ l
 
 let normalize state =
