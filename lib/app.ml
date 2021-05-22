@@ -43,8 +43,8 @@ let draw_horizontal { ui_state; state; colors; _ } =
   )
 
 let rec shorten ui_state candidate s =
-  if Ui.text_width ui_state (candidate.display ^ s)
-     <= X11.get_width () - 10 then
+  if String.equal s "" ||
+     Ui.text_width ui_state (candidate.display ^ s) <= X11.get_width () - 10 then
     s
   else
     shorten ui_state candidate
@@ -127,7 +127,7 @@ let draw ({ ui_state; prompt; state; topbar; colors; _ } as app_state) =
   let cairo_ctx = Draw.cairo_ctx dstate in
 
   Draw.render dstate ~height:total_height (fun () ->
-    Draw.set_source_rgb dstate app_state.colors.window_background;
+    Draw.set_source_rgb dstate colors.window_background;
     Cairo.paint cairo_ctx;
 
     let oy = if topbar then 0. else float (total_height - bar_geometry.height) in
@@ -138,7 +138,7 @@ let draw ({ ui_state; prompt; state; topbar; colors; _ } as app_state) =
       incr ui_state
     );
 
-    state.State.entries |> List.iter ~f:(fun (_, candidate) ->
+    state.entries |> List.iter ~f:(fun (_, candidate) ->
       Ui.draw_text ~colors ~focus:false ui_state candidate.display;
       incr ui_state
     );
@@ -148,14 +148,13 @@ let draw ({ ui_state; prompt; state; topbar; colors; _ } as app_state) =
     incr ui_state;
 
     let extra_lines_y = if topbar then float bar_geometry.height else 0. in
-    begin match app_state.state.State.layout with
+    begin match state.layout with
     | State.Grid (_, None)
     | State.SingleLine  -> draw_horizontal app_state
 
     | State.MultiLine _ ->
       Cairo.move_to cairo_ctx 0. extra_lines_y;
-      draw_vertical app_state extra_lines_geometry
-        app_state.state.State.candidates
+      draw_vertical app_state extra_lines_geometry state.candidates
 
     | State.Grid (_, Some { pages ; _ }) ->
       draw_horizontal app_state;
