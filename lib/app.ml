@@ -43,8 +43,8 @@ let draw_horizontal { ui_state; state; colors; _ } =
   )
 
 let rec shorten ui_state candidate s =
-  if Ui.text_width ui_state (candidate.display ^ s)
-     <= X11.get_width () - 10 then
+  if String.equal s "" ||
+     Ui.text_width ui_state (candidate.display ^ s) <= X11.get_width () - 10 then
     s
   else
     shorten ui_state candidate
